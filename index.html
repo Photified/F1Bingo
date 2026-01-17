@@ -5,553 +5,512 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>F1 2026: CHAMPIONSHIP BINGO</title>
     <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,400;0,600;0,700;0,900;1,400&display=swap" rel="stylesheet">
+    
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+
     <style>
         :root {
-            --f1-red: #e10600;
-            --f1-dark: #15151e;
+            --brand-red: #e10600;
+            --brand-dark: #15151e;
             --bg-body: #f4f4f8;
             --card-shadow: 0 4px 12px rgba(0,0,0,0.08);
             
-            /* Scoring Colors */
-            --score-tile: #e10600;
-            --score-line: #00d2be;
-            --score-bingo: #ffb800;
-            
             /* Category Colors */
-            --c-driver: #ff9500; 
-            --c-team: #00d2be;   
-            --c-tech: #2962ff;   
-            --c-chaos: #d50000;  
+            --c-driver: #ff9500; --c-team: #00d2be;   
+            --c-tech: #2962ff;   --c-chaos: #d50000;  
         }
 
         body {
             font-family: 'Titillium Web', sans-serif;
             background: var(--bg-body);
-            color: var(--f1-dark);
-            margin: 0;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
+            color: var(--brand-dark);
+            margin: 0; height: 100vh;
+            display: flex; flex-direction: column;
             overflow: hidden;
         }
 
-        /* --- HEADER & NAV --- */
+        /* --- LOGIN OVERLAY --- */
+        #loginOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--brand-dark);
+            z-index: 1000;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center; color: white;
+        }
+        .login-box {
+            background: #222; padding: 40px; border-radius: 10px;
+            text-align: center; border: 2px solid var(--brand-red);
+            box-shadow: 0 0 50px rgba(225, 6, 0, 0.3);
+        }
+        .login-input {
+            padding: 12px; border-radius: 5px; border: 1px solid #444;
+            background: #111; color: white; font-size: 16px; margin-top: 20px;
+            width: 250px; text-align: center;
+        }
+        .login-btn {
+            margin-top: 15px; padding: 12px 30px;
+            background: var(--brand-red); color: white; border: none;
+            font-weight: 900; font-size: 16px; cursor: pointer;
+            text-transform: uppercase; border-radius: 5px; width: 100%;
+        }
+
+        /* --- HEADER & RACE BAR --- */
         header {
-            background: white;
-            border-bottom: 4px solid var(--f1-red);
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            z-index: 20;
+            background: white; border-bottom: 3px solid var(--brand-red);
+            padding: 10px 20px; display: flex; justify-content: space-between;
+            align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
+        .user-profile { font-weight: 700; display: flex; align-items: center; gap: 10px; }
+        .status-dot { width: 10px; height: 10px; background: #ccc; border-radius: 50%; }
+        .status-dot.online { background: #00d2be; box-shadow: 0 0 10px #00d2be; }
 
-        .header-title {
-            font-size: 24px;
-            font-weight: 900;
-            font-style: italic;
-            text-transform: uppercase;
-        }
-
-        .header-controls { display: flex; gap: 10px; }
-
-        .btn {
-            padding: 8px 16px;
-            border-radius: 4px;
-            border: none;
-            font-weight: 700;
-            font-size: 13px;
-            cursor: pointer;
-            text-transform: uppercase;
-        }
-
-        .btn-score { background: var(--f1-dark); color: white; }
-        .btn-score:hover { background: #333; }
-        
-        /* --- RACE BAR --- */
         .race-bar {
-            background: #fff;
-            padding: 10px 20px;
-            display: flex;
-            gap: 15px;
-            overflow-x: auto;
-            border-bottom: 1px solid #ddd;
+            background: #fff; padding: 10px 0; display: flex;
+            overflow-x: auto; border-bottom: 1px solid #ddd;
             scrollbar-width: thin;
         }
-
-        .race-item {
-            flex: 0 0 auto;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 5px 12px;
-            border-radius: 20px;
-            background: #f0f0f0;
-            opacity: 0.5;
-            cursor: default;
-            font-weight: 700;
-            font-size: 12px;
+        .race-card {
+            flex: 0 0 90px; padding: 8px; text-align: center;
+            border-right: 1px solid #eee; cursor: pointer;
+            opacity: 0.5; transition: 0.2s; position: relative;
         }
-
-        .race-item.active {
-            opacity: 1;
-            background: var(--f1-red);
-            color: white;
-            box-shadow: 0 4px 8px rgba(225, 6, 0, 0.3);
-        }
-
-        .race-item.past {
-            opacity: 0.7;
-            background: #333;
-            color: white;
-        }
+        .race-card:hover { opacity: 0.8; background: #fafafa; }
+        .race-card.active { opacity: 1; background: #fff0f0; border-bottom: 3px solid var(--brand-red); }
+        .race-flag { font-size: 24px; display: block; margin-bottom: 4px; }
+        .race-name { font-size: 10px; font-weight: 800; text-transform: uppercase; display: block; }
+        .race-date { font-size: 9px; color: #888; display: block; }
 
         /* --- MAIN LAYOUT --- */
         .main-stage {
-            flex: 1;
-            display: flex;
-            padding: 20px;
-            gap: 20px;
-            overflow: hidden;
+            flex: 1; display: flex; padding: 20px; gap: 20px; overflow: hidden;
         }
 
-        /* --- SIDEBAR (Leaderboard & Pool) --- */
-        .sidebar {
-            width: 350px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
+        /* --- SIDEBAR --- */
+        .sidebar { width: 340px; display: flex; flex-direction: column; gap: 15px; }
+        
         .panel {
-            background: white;
-            border-radius: 10px;
-            box-shadow: var(--card-shadow);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
+            background: white; border-radius: 8px; box-shadow: var(--card-shadow);
+            overflow: hidden; display: flex; flex-direction: column;
         }
-
         .panel-header {
-            padding: 12px;
-            background: #f9f9f9;
-            font-weight: 800;
-            font-size: 14px;
-            text-transform: uppercase;
-            border-bottom: 1px solid #eee;
-            text-align: center;
+            padding: 10px; background: #f8f8f8; font-weight: 800;
+            font-size: 12px; text-transform: uppercase; border-bottom: 1px solid #eee;
+            display: flex; justify-content: space-between;
         }
 
-        /* LEADERBOARD */
-        .leaderboard-list {
-            padding: 0;
-            margin: 0;
-            list-style: none;
-            overflow-y: auto;
-            max-height: 200px;
-        }
-
+        /* Leaderboard */
+        .leaderboard { flex: 1; overflow-y: auto; font-size: 13px; }
         .lb-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 15px;
+            display: flex; justify-content: space-between; padding: 8px 12px;
             border-bottom: 1px solid #f0f0f0;
-            font-size: 13px;
         }
-        .lb-row:nth-child(1) { background: rgba(255, 184, 0, 0.1); font-weight: bold; border-left: 4px solid #ffb800; }
-        .lb-row:nth-child(2) { border-left: 4px solid #c0c0c0; }
-        .lb-row:nth-child(3) { border-left: 4px solid #cd7f32; }
+        .lb-row.me { background: #fff8e1; border-left: 3px solid #ffb800; }
 
-        /* POOL */
-        .pool-list {
-            flex: 1;
-            overflow-y: auto;
-            padding: 10px;
+        /* Pool */
+        .pool-tabs { display: flex; border-bottom: 1px solid #eee; }
+        .tab { 
+            flex: 1; text-align: center; padding: 10px; font-size: 11px; 
+            font-weight: 700; cursor: pointer; color: #888;
         }
+        .tab.active { color: #000; border-bottom: 2px solid var(--brand-red); }
 
-        .pool-item {
-            padding: 8px 12px;
-            margin-bottom: 6px;
-            background: white;
-            border: 1px solid #eee;
-            border-left: 4px solid #555;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: grab;
+        .pool-list { flex: 1; overflow-y: auto; padding: 10px; height: 300px; }
+        .chip {
+            padding: 8px 10px; margin-bottom: 5px; background: white;
+            border: 1px solid #eee; border-left: 4px solid #555;
+            border-radius: 4px; font-size: 11px; font-weight: 600; cursor: grab;
         }
-        .pool-item.driver { border-left-color: var(--c-driver); }
-        .pool-item.team { border-left-color: var(--c-team); }
-        .pool-item.tech { border-left-color: var(--c-tech); }
-        .pool-item.chaos { border-left-color: var(--c-chaos); }
+        .chip:hover { transform: translateX(2px); }
+        .chip.driver { border-left-color: var(--c-driver); }
+        .chip.team { border-left-color: var(--c-team); }
+        .chip.tech { border-left-color: var(--c-tech); }
+        .chip.chaos { border-left-color: var(--c-chaos); }
 
-        /* --- GAME GRID --- */
-        .grid-container {
-            flex: 1;
-            background: white;
-            border-radius: 10px;
-            box-shadow: var(--card-shadow);
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-
-        .bingo-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 8px;
-            width: 100%;
-            max-width: 650px;
-            aspect-ratio: 1/1;
-        }
-
-        .slot {
-            background: #f8f8f8;
-            border: 2px dashed #e0e0e0;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 4px;
-            font-size: 11px;
-            font-weight: 700;
-            position: relative;
-        }
-
-        .slot.filled {
-            border: none;
-            color: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        /* --- GRID --- */
+        .grid-area {
+            flex: 1; background: white; border-radius: 8px;
+            box-shadow: var(--card-shadow); padding: 20px;
+            display: flex; flex-direction: column;
         }
         
-        .slot[data-type="driver"].filled { background: var(--c-driver); }
-        .slot[data-type="team"].filled { background: var(--c-team); }
-        .slot[data-type="tech"].filled { background: var(--c-tech); }
-        .slot[data-type="chaos"].filled { background: var(--c-chaos); }
-        .slot.free { background: #111; color: var(--f1-red); font-size: 14px; text-transform: uppercase; border:none; }
-
-        /* SCORING HIGHLIGHTS */
-        .slot.correct { 
-            opacity: 1; 
-            box-shadow: inset 0 0 0 3px #fff, 0 0 15px var(--score-tile); 
+        .strategy-bar {
+            display: flex; gap: 10px; margin-bottom: 15px; justify-content: center;
         }
-        .slot.correct::after {
-            content: '✓'; position: absolute; top: -5px; right: -5px;
-            background: white; color: var(--score-tile);
-            border-radius: 50%; width: 16px; height: 16px; font-size: 12px;
+        .strat-btn {
+            padding: 5px 15px; border: 1px solid #eee; border-radius: 20px;
+            font-size: 11px; font-weight: 700; cursor: pointer; background: white;
+        }
+        .strat-btn:hover { border-color: #ccc; }
+        .strat-btn.active { background: var(--brand-dark); color: white; border-color: var(--brand-dark); }
+
+        .bingo-grid {
+            display: grid; grid-template-columns: repeat(5, 1fr);
+            gap: 8px; width: 100%; max-width: 650px; aspect-ratio: 1/1;
+            margin: 0 auto;
+        }
+        .slot {
+            background: #f8f8f8; border: 2px dashed #eee; border-radius: 6px;
             display: flex; align-items: center; justify-content: center;
-        }
-
-        /* --- MODAL --- */
-        .modal {
-            display: none;
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 100;
-            align-items: center; justify-content: center;
-        }
-        .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            max-width: 500px;
-            width: 90%;
+            text-align: center; padding: 5px; font-size: 11px; font-weight: 700;
             position: relative;
         }
-        .close-btn { position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; }
+        .slot[data-req="driver"] { background: #fffbf0; border-color: #ffe0b2; color: var(--c-driver); }
+        .slot[data-req="team"] { background: #f0fffc; border-color: #b2dfdb; color: var(--c-team); }
+        .slot[data-req="tech"] { background: #f0f7ff; border-color: #bbdefb; color: var(--c-tech); }
+        .slot[data-req="chaos"] { background: #fff5f5; border-color: #ffcdd2; color: var(--c-chaos); }
 
-        .score-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
-        .score-val { font-weight: 900; color: var(--f1-red); }
+        .slot.filled { border: none; color: white !important; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .slot.filled[data-type="driver"] { background: var(--c-driver); }
+        .slot.filled[data-type="team"] { background: var(--c-team); }
+        .slot.filled[data-type="tech"] { background: var(--c-tech); }
+        .slot.filled[data-type="chaos"] { background: var(--c-chaos); }
+        
+        .slot.center { background: #222 !important; color: var(--brand-red) !important; border:none; }
 
-        /* --- ADMIN TEST PANEL (Bottom) --- */
-        .admin-panel {
-            background: #222; color: white; padding: 10px; font-size: 12px;
-            display: flex; gap: 10px; align-items: center;
+        .slot:hover::after {
+            content: '×'; position: absolute; top:0; right:5px; font-size:16px; opacity:0.5;
         }
-        .admin-input { padding: 5px; background: #333; border: 1px solid #555; color: white; width: 300px; }
-
     </style>
 </head>
 <body>
 
-<header>
-    <div class="header-title">F1 <span style="color:var(--f1-red)">2026</span> BINGO</div>
-    <div class="header-controls">
-        <button class="btn btn-score" onclick="openModal()">Scoring Rules</button>
-        <button class="btn" style="background:#e0e0e0" onclick="reset()">Reset</button>
+<div id="loginOverlay">
+    <div class="login-box">
+        <h1 style="margin:0; font-style:italic;">F1 <span style="color:var(--brand-red)">2026</span> BINGO</h1>
+        <p style="color:#888; font-size:12px;">OFFICIAL TEAM PRINCIPAL LOGIN</p>
+        
+        <input type="text" id="teamNameInput" class="login-input" placeholder="Enter Team Name...">
+        <button class="login-btn" onclick="login()">Enter Paddock</button>
+        <p style="font-size:10px; color:#555; margin-top:10px;">Connecting to FIA Servers...</p>
     </div>
+</div>
+
+<header>
+    <div class="user-profile">
+        <div class="status-dot" id="connectionDot"></div>
+        <span id="displayTeamName">GUEST TEAM</span>
+    </div>
+    <div style="font-weight:900; font-style:italic; font-size:20px;">F1 <span style="color:var(--brand-red)">2026</span></div>
+    <button onclick="saveToServer()" style="background:var(--brand-red); color:white; border:none; padding:8px 15px; border-radius:4px; font-weight:bold; cursor:pointer;">CLOUD SAVE</button>
 </header>
 
-<div class="race-bar">
-    <div class="race-item active">🇦🇺 Melbourne</div>
-    <div class="race-item">🇨🇳 Shanghai</div>
-    <div class="race-item">🇯🇵 Suzuka</div>
-    <div class="race-item">🇧🇭 Sakhir</div>
-    <div class="race-item">🇪🇸 Madrid</div>
-</div>
+<div class="race-bar" id="raceBar">
+    </div>
 
 <div class="main-stage">
     
     <div class="sidebar">
-        <div class="panel" style="flex:0 0 auto; height: 200px;">
-            <div class="panel-header">🏆 Championship Standings</div>
-            <ul class="leaderboard-list" id="leaderboard">
-                </ul>
+        <div class="panel" style="height:250px;">
+            <div class="panel-header">
+                <span>🏆 Championship</span>
+                <span id="totalPoints">0 pts</span>
+            </div>
+            <div class="leaderboard" id="leaderboardList">
+                <div class="lb-row"><span>Loading Standings...</span></div>
+            </div>
         </div>
 
         <div class="panel" style="flex:1;">
-            <div class="panel-header">Prediction Pool</div>
-            
-            <div style="display:flex; padding:5px; gap:5px; background:#f0f0f0;">
-                <button class="btn" style="flex:1; font-size:10px; background:#fff;" onclick="filterPool('driver')">Drivers</button>
-                <button class="btn" style="flex:1; font-size:10px; background:#fff;" onclick="filterPool('team')">Teams</button>
-                <button class="btn" style="flex:1; font-size:10px; background:#fff;" onclick="filterPool('tech')">Tech</button>
-                <button class="btn" style="flex:1; font-size:10px; background:#fff;" onclick="filterPool('chaos')">Chaos</button>
+            <div class="panel-header">Components Pool</div>
+            <div class="pool-tabs">
+                <div class="tab active" onclick="setPool('driver')" id="tab-driver">Drivers</div>
+                <div class="tab" onclick="setPool('team')" id="tab-team">Teams</div>
+                <div class="tab" onclick="setPool('tech')" id="tab-tech">Tech</div>
+                <div class="tab" onclick="setPool('chaos')" id="tab-chaos">Chaos</div>
             </div>
-
             <div id="pool" class="pool-list"></div>
         </div>
     </div>
 
-    <div class="grid-container">
-        <div class="bingo-grid" id="grid"></div>
-    </div>
-</div>
+    <div class="grid-area">
+        <div class="strategy-bar">
+            <button class="strat-btn active" onclick="applyTemplate('balanced')">⚖️ Balanced</button>
+            <button class="strat-btn" onclick="applyTemplate('tech')">🔧 Tech Spec</button>
+            <button class="strat-btn" onclick="applyTemplate('chaos')">🚩 Chaos</button>
+            <button class="strat-btn" onclick="applyTemplate('driver')">🏎️ Driver Market</button>
+        </div>
 
-<div id="scoreModal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeModal()">&times;</span>
-        <h2 style="margin-top:0; color:var(--f1-red)">OFFICIAL SCORING</h2>
-        <p style="font-size:12px; color:#666;">Points are awarded after the race based on verified results.</p>
+        <div id="grid" class="bingo-grid"></div>
         
-        <div class="score-row">
-            <span>✅ Single Correct Tile</span>
-            <span class="score-val">+10 pts</span>
-        </div>
-        <div class="score-row">
-            <span>➖ Horizontal Line</span>
-            <span class="score-val">+50 pts</span>
-        </div>
-        <div class="score-row">
-            <span>⬇️ Vertical Line</span>
-            <span class="score-val">+50 pts</span>
-        </div>
-        <div class="score-row">
-            <span>❌ Diagonal Line</span>
-            <span class="score-val">+75 pts</span>
-        </div>
-        <div class="score-row">
-            <span>🔲 4 Corners (Outer)</span>
-            <span class="score-val">+100 pts</span>
-        </div>
-        <div class="score-row">
-            <span>🔠 Letter 'H' Pattern</span>
-            <span class="score-val">+150 pts</span>
-        </div>
-        <div class="score-row">
-            <span>🔠 Letter 'T' Pattern</span>
-            <span class="score-val">+150 pts</span>
+        <div style="text-align:center; margin-top:10px; font-size:10px; color:#999;">
+            * Changes are auto-saved locally. Click CLOUD SAVE to update leaderboard.
         </div>
     </div>
-</div>
-
-<div class="admin-panel">
-    <strong>👨‍💻 ADMIN:</strong>
-    <input type="text" id="adminResults" class="admin-input" placeholder="Enter comma-separated events (e.g., Norris Win, Lap 1 Safety Car)">
-    <button class="btn" style="background:var(--f1-red); color:white" onclick="adminSubmitResults()">Verify & Score</button>
 </div>
 
 <script>
-    // --- 1. DATA SOURCES ---
-    // In a real app, this comes from a database
-    const poolData = {
-        driver: ["Norris Win", "Verstappen Pole", "Hamilton Podium", "Antonelli Top 5", "Leclerc DNF", "Piastri Fastest Lap", "Alonso Radio Rant"],
-        team: ["McLaren 1-2", "Red Bull Slow Stop", "Ferrari Strategy Fail", "Williams Double Q3", "Audi DNF", "Mercedes Double Points"],
-        tech: ["Manual Override Pass", "Active Aero Stuck", "MGU-K Issue", "Underweight Car", "Front Wing Dmg"],
-        chaos: ["Lap 1 Safety Car", "Red Flag", "Rain", "Turn 1 Pile-up", "5s Penalty", "VSC"]
+    // --- FIREBASE CONFIGURATION (REPLACE WITH YOUR KEYS) ---
+    // 1. Go to console.firebase.google.com -> Create Project
+    // 2. Add Web App -> Copy config here
+    // 3. Enable Firestore Database & Auth (Anonymous)
+    const firebaseConfig = {
+        apiKey: "YOUR_API_KEY_HERE",
+        authDomain: "YOUR_PROJECT.firebaseapp.com",
+        projectId: "YOUR_PROJECT_ID",
+        storageBucket: "YOUR_PROJECT.appspot.com",
+        messagingSenderId: "SENDER_ID",
+        appId: "APP_ID"
     };
 
-    // Simulated Leaderboard Data
-    let leaderboardData = [
-        { name: "You (Team Principal)", score: 0, grid: [] }, // This is the user
-        { name: "Toto Wolff", score: 120, grid: [] },
-        { name: "Christian Horner", score: 85, grid: [] },
-        { name: "Fred Vasseur", score: 40, grid: [] }
-    ];
-
-    let myGrid = Array(25).fill(null);
-    let currentCat = 'driver';
-
-    // --- 2. INIT ---
-    function init() {
-        createGrid();
-        filterPool('driver');
-        updateLeaderboard();
+    // Initialize Firebase (Safely)
+    let db, auth;
+    try {
+        firebase.initializeApp(firebaseConfig);
+        db = firebase.firestore();
+        auth = firebase.auth();
+    } catch(e) {
+        console.warn("Firebase not configured. Running in Offline Mode.");
     }
 
-    // --- 3. GRID & DRAG LOGIC ---
-    function createGrid() {
+    // --- DATA ---
+    const races2026 = [
+        {id:'aus', f:'🇦🇺', n:'Australia', d:'Mar 6-8'},
+        {id:'chn', f:'🇨🇳', n:'China', d:'Mar 13-15'},
+        {id:'jpn', f:'🇯🇵', n:'Japan', d:'Mar 27-29'},
+        {id:'bhr', f:'🇧🇭', n:'Bahrain', d:'Apr 10-12'},
+        {id:'sau', f:'🇸🇦', n:'Saudi', d:'Apr 17-19'},
+        {id:'mia', f:'🇺🇸', n:'Miami', d:'May 1-3'},
+        {id:'can', f:'🇨🇦', n:'Canada', d:'May 22-24'}, // New date
+        {id:'mon', f:'🇲🇨', n:'Monaco', d:'Jun 5-7'},
+        {id:'bar', f:'🇪🇸', n:'Barcelona', d:'Jun 12-14'},
+        {id:'aut', f:'🇦🇹', n:'Austria', d:'Jun 26-28'},
+        {id:'gbr', f:'🇬🇧', n:'Silverstone', d:'Jul 3-5'},
+        {id:'bel', f:'🇧🇪', n:'Spa', d:'Jul 17-19'},
+        {id:'hun', f:'🇭🇺', n:'Hungary', d:'Jul 24-26'},
+        {id:'ned', f:'🇳🇱', n:'Zandvoort', d:'Aug 21-23'},
+        {id:'ita', f:'🇮🇹', n:'Monza', d:'Sep 4-6'},
+        {id:'mad', f:'🇪🇸', n:'Madrid', d:'Sep 11-13'}, // Debut
+        {id:'aze', f:'🇦🇿', n:'Baku', d:'Sep 25-27'},
+        {id:'sin', f:'🇸🇬', n:'Singapore', d:'Oct 9-11'},
+        {id:'usa', f:'🇺🇸', n:'Austin', d:'Oct 23-25'},
+        {id:'mex', f:'🇲🇽', n:'Mexico', d:'Oct 30-Nov 1'},
+        {id:'bra', f:'🇧🇷', n:'Brazil', d:'Nov 6-8'},
+        {id:'lvg', f:'🇺🇸', n:'Las Vegas', d:'Nov 19-21'},
+        {id:'qat', f:'🇶🇦', n:'Qatar', d:'Nov 27-29'},
+        {id:'abu', f:'🇦🇪', n:'Abu Dhabi', d:'Dec 4-6'}
+    ];
+
+    const templates = {
+        balanced: ['driver','driver','team','tech','chaos','driver','team','tech','chaos','driver','team','tech','FREE','driver','team','tech','chaos','driver','team','tech','chaos','driver','team','tech','chaos'],
+        tech: ['tech','tech','team','driver','tech','tech','team','driver','tech','chaos','team','driver','FREE','tech','tech','driver','tech','chaos','tech','team','tech','team','tech','driver','chaos'],
+        chaos: ['chaos','chaos','driver','team','chaos','chaos','driver','team','chaos','tech','driver','team','FREE','chaos','chaos','team','chaos','tech','chaos','driver','chaos','driver','chaos','team','chaos'],
+        driver: ['driver','driver','driver','team','driver','driver','team','chaos','driver','driver','team','driver','FREE','driver','team','driver','chaos','team','driver','driver','driver','driver','team','driver','chaos']
+    };
+
+    // App State
+    let currentUser = null;
+    let poolData = {};
+    let activeRace = 'aus';
+    let currentGrid = Array(25).fill(null);
+    let currentPoolCat = 'driver';
+
+    // --- INITIALIZATION ---
+    async function init() {
+        // Load Pool Data
+        try {
+            const res = await fetch('data.json');
+            poolData = await res.json();
+        } catch(e) { console.log('Err loading JSON'); }
+
+        renderRaces();
+        applyTemplate('balanced'); // Default grid
+        renderPool();
+        
+        // If user already logged in (localStorage), skip login screen
+        const savedTeam = localStorage.getItem('f1_team_name');
+        if(savedTeam) {
+            document.getElementById('teamNameInput').value = savedTeam;
+            login();
+        }
+    }
+
+    // --- AUTH & SERVER ---
+    function login() {
+        const teamName = document.getElementById('teamNameInput').value;
+        if(!teamName) return alert("Enter Team Name");
+
+        currentUser = { name: teamName, id: teamName.replace(/\s+/g, '_').toLowerCase() };
+        localStorage.setItem('f1_team_name', teamName);
+        
+        // UI Updates
+        document.getElementById('loginOverlay').style.display = 'none';
+        document.getElementById('displayTeamName').innerText = teamName.toUpperCase();
+        document.getElementById('connectionDot').classList.add('online');
+
+        // Firebase Login
+        if(auth) {
+            auth.signInAnonymously().catch(console.error);
+            loadCloudData(); // Fetch existing grid if any
+            listenToLeaderboard();
+        } else {
+            // Mock Leaderboard for Offline Mode
+            renderLeaderboard([
+                {name: teamName, score: 0},
+                {name: "Christian Horner", score: 150},
+                {name: "Toto Wolff", score: 120}
+            ]);
+        }
+    }
+
+    function saveToServer() {
+        if(!db || !currentUser) return alert("Server not configured. Saved locally.");
+        
+        db.collection('players').doc(currentUser.id).set({
+            name: currentUser.name,
+            score: 0, // In real app, this would be calculated by server
+            [`grid_${activeRace}`]: currentGrid,
+            lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true })
+        .then(() => alert("Grid Synced to Cloud!"))
+        .catch(e => alert("Sync Error: " + e.message));
+    }
+
+    function loadCloudData() {
+        if(!db) return;
+        db.collection('players').doc(currentUser.id).get().then(doc => {
+            if(doc.exists) {
+                const data = doc.data();
+                const savedGrid = data[`grid_${activeRace}`];
+                if(savedGrid) {
+                    currentGrid = savedGrid;
+                    renderGrid();
+                }
+            }
+        });
+    }
+
+    function listenToLeaderboard() {
+        if(!db) return;
+        db.collection('players').orderBy('score', 'desc').limit(10)
+          .onSnapshot(snapshot => {
+              const players = [];
+              snapshot.forEach(doc => players.push(doc.data()));
+              renderLeaderboard(players);
+          });
+    }
+
+    function renderLeaderboard(players) {
+        const list = document.getElementById('leaderboardList');
+        list.innerHTML = '';
+        players.forEach((p, i) => {
+            const div = document.createElement('div');
+            div.className = `lb-row ${p.name === currentUser.name ? 'me' : ''}`;
+            div.innerHTML = `<span>#${i+1} ${p.name}</span> <strong>${p.score || 0}</strong>`;
+            list.appendChild(div);
+        });
+    }
+
+    // --- UI RENDERING ---
+    function renderRaces() {
+        const bar = document.getElementById('raceBar');
+        races2026.forEach(r => {
+            const el = document.createElement('div');
+            el.className = `race-card ${r.id === activeRace ? 'active' : ''}`;
+            el.onclick = () => { activeRace = r.id; renderRaces(); loadCloudData(); };
+            el.innerHTML = `
+                <span class="race-flag">${r.f}</span>
+                <span class="race-name">${r.n}</span>
+                <span class="race-date">${r.d}</span>
+            `;
+            bar.appendChild(el);
+        });
+    }
+
+    function setPool(cat) {
+        currentPoolCat = cat;
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.getElementById(`tab-${cat}`).classList.add('active');
+        renderPool();
+    }
+
+    function renderPool() {
+        const container = document.getElementById('pool');
+        container.innerHTML = '';
+        if(!poolData[currentPoolCat]) return;
+
+        poolData[currentPoolCat].forEach(text => {
+            const div = document.createElement('div');
+            div.className = `chip ${currentPoolCat}`;
+            div.innerText = text;
+            div.draggable = true;
+            div.ondragstart = e => {
+                e.dataTransfer.setData('text', text);
+                e.dataTransfer.setData('type', currentPoolCat);
+            };
+            container.appendChild(div);
+        });
+    }
+
+    function applyTemplate(type) {
+        const pattern = templates[type];
         const grid = document.getElementById('grid');
         grid.innerHTML = '';
         
-        for(let i=0; i<25; i++) {
+        // Update Grid UI Structure
+        pattern.forEach((reqType, i) => {
             const slot = document.createElement('div');
             
-            if(i===12) {
-                slot.className = 'slot free';
+            if(reqType === 'FREE') {
+                slot.className = 'slot center';
                 slot.innerText = "LIGHTS OUT";
-                // Free space is effectively "filled" for logic
-                myGrid[i] = "FREE"; 
+                currentGrid[i] = { text: "LIGHTS OUT", type: "FREE" };
             } else {
                 slot.className = 'slot';
+                slot.dataset.index = i;
+                slot.dataset.req = reqType;
+                
                 slot.ondragover = e => e.preventDefault();
-                slot.ondrop = e => handleDrop(e, i);
-                slot.onclick = () => removeTile(i);
-            }
-            
-            // Re-render if state exists
-            if(myGrid[i] && i !== 12) {
-                slot.classList.add('filled');
-                slot.innerText = myGrid[i].text;
-                slot.dataset.type = myGrid[i].type;
-            }
+                slot.ondrop = e => handleDrop(e, i, reqType);
+                slot.onclick = () => clearSlot(i);
 
+                // Restore if data exists
+                if(currentGrid[i]) {
+                    slot.innerText = currentGrid[i].text;
+                    slot.className = `slot filled`;
+                    slot.dataset.type = currentGrid[i].type;
+                }
+            }
             grid.appendChild(slot);
-        }
-    }
-
-    function filterPool(cat) {
-        const pool = document.getElementById('pool');
-        pool.innerHTML = '';
-        currentCat = cat;
-        
-        poolData[cat].forEach(text => {
-            const el = document.createElement('div');
-            el.className = `pool-item ${cat}`;
-            el.innerText = text;
-            el.draggable = true;
-            el.ondragstart = e => {
-                e.dataTransfer.setData('text', text);
-                e.dataTransfer.setData('type', cat);
-            };
-            pool.appendChild(el);
         });
     }
 
-    function handleDrop(e, index) {
+    function handleDrop(e, index, reqType) {
         e.preventDefault();
         const text = e.dataTransfer.getData('text');
         const type = e.dataTransfer.getData('type');
-        
-        myGrid[index] = { text, type };
-        createGrid(); // Re-render
+
+        if(type !== reqType) return alert(`Wrong Type! This slot needs a ${reqType.toUpperCase()}`);
+
+        currentGrid[index] = { text, type };
+        renderGrid(); // Re-render to show filled state
     }
 
-    function removeTile(index) {
-        myGrid[index] = null;
-        createGrid();
-    }
-
-    // --- 4. SCORING ENGINE (The Logic you asked for) ---
-    function calculateScore(grid, verifiedEvents) {
-        let score = 0;
-        let matches = []; // indices of correct tiles
-
-        // 1. Check Individual Tiles
-        grid.forEach((item, index) => {
-            if(index === 12) { matches.push(12); return; } // Free space always matches
-            if(item && verifiedEvents.includes(item.text)) {
-                score += 10;
-                matches.push(index);
+    function renderGrid() {
+        // Refresh grid UI based on currentGrid state
+        const slots = document.querySelectorAll('.slot:not(.center)');
+        slots.forEach(slot => {
+            const idx = slot.dataset.index;
+            const data = currentGrid[idx];
+            if(data) {
+                slot.innerText = data.text;
+                slot.dataset.type = data.type;
+                slot.classList.add('filled');
+            } else {
+                slot.innerText = '';
+                slot.classList.remove('filled');
+                delete slot.dataset.type;
             }
         });
-
-        // 2. Check Lines (50pts)
-        // Rows
-        for(let r=0; r<5; r++) {
-            if([0,1,2,3,4].every(o => matches.includes(r*5 + o))) score += 50;
-        }
-        // Cols
-        for(let c=0; c<5; c++) {
-            if([0,1,2,3,4].every(o => matches.includes(o*5 + c))) score += 50;
-        }
-
-        // 3. Diagonals (X) (75pts)
-        const diag1 = [0,6,12,18,24];
-        const diag2 = [4,8,12,16,20];
-        if(diag1.every(i => matches.includes(i))) score += 75;
-        if(diag2.every(i => matches.includes(i))) score += 75;
-
-        // 4. Four Corners (100pts)
-        const corners = [0,4,20,24];
-        if(corners.every(i => matches.includes(i))) score += 100;
-
-        // 5. Letter T (Row 0 + Col 2) (150pts)
-        const letterT = [0,1,2,3,4, 7,12,17,22]; // Top row + Middle Col
-        if(letterT.every(i => matches.includes(i))) score += 150;
-
-        // 6. Letter H (Col 0 + Col 4 + Row 2) (150pts)
-        const letterH = [0,5,10,15,20, 4,9,14,19,24, 11,12,13];
-        if(letterH.every(i => matches.includes(i))) score += 150;
-
-        return { score, matches };
     }
 
-    // --- 5. ADMIN / SERVER SIMULATION ---
-    function adminSubmitResults() {
-        const input = document.getElementById('adminResults').value;
-        const events = input.split(',').map(s => s.trim());
-
-        // Calculate User Score
-        const result = calculateScore(myGrid, events);
-        
-        // Update User in Leaderboard Array
-        leaderboardData[0].score = result.score;
-        
-        // Visualize Correct Tiles on Board
-        const slots = document.querySelectorAll('.slot');
-        slots.forEach((s, i) => {
-            s.classList.remove('correct');
-            if(result.matches.includes(i) && i !== 12) s.classList.add('correct');
-        });
-
-        // Randomize CPU scores for fun
-        leaderboardData[1].score += Math.floor(Math.random()*50);
-        leaderboardData[2].score += Math.floor(Math.random()*50);
-        leaderboardData[3].score += Math.floor(Math.random()*50);
-
-        // Sort and Update UI
-        leaderboardData.sort((a,b) => b.score - a.score);
-        updateLeaderboard();
-        alert(`Scoring Complete! You scored ${result.score} points.`);
+    function clearSlot(index) {
+        currentGrid[index] = null;
+        renderGrid();
     }
-
-    function updateLeaderboard() {
-        const list = document.getElementById('leaderboard');
-        list.innerHTML = '';
-        leaderboardData.forEach((p, i) => {
-            const li = document.createElement('li');
-            li.className = 'lb-row';
-            li.innerHTML = `
-                <span>#${i+1} ${p.name}</span>
-                <span style="font-weight:900">${p.score} pts</span>
-            `;
-            list.appendChild(li);
-        });
-    }
-
-    // --- 6. MODAL UTILS ---
-    function openModal() { document.getElementById('scoreModal').style.display = 'flex'; }
-    function closeModal() { document.getElementById('scoreModal').style.display = 'none'; }
-    function reset() { location.reload(); }
 
     window.onload = init;
-
 </script>
 
 </body>
