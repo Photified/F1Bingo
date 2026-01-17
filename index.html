@@ -37,12 +37,12 @@
         .race-flag-img { width: 32px; height: 24px; object-fit: cover; border-radius: 3px; margin-bottom: 6px; }
         .race-name { font-size: 11px; font-weight: 800; text-transform: uppercase; line-height: 1; }
 
-        /* LAYOUT */
+        /* MAIN GRID */
         .main-stage { flex: 1; display: grid; grid-template-columns: 300px 1fr 280px; padding: 20px; gap: 20px; overflow: hidden; height: 100%; }
         .panel { background: white; border-radius: 10px; box-shadow: var(--card-shadow); overflow: hidden; display: flex; flex-direction: column; border: 1px solid #e0e0e0; height: 100%; }
         .panel-header { padding: 12px; background: #f8f8f8; font-weight: 800; font-size: 13px; text-transform: uppercase; border-bottom: 1px solid #ddd; text-align: center; color: #666; flex-shrink: 0; }
 
-        /* LEFT POOL */
+        /* POOL & TABS */
         .pool-container { display: flex; flex-direction: column; height: 100%; }
         .pool-tabs-header { padding: 10px; background: white; border-bottom: 1px solid #eee; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; flex-shrink: 0; }
         .tab-btn { padding: 8px; text-align: center; cursor: pointer; font-weight: 700; font-size: 11px; text-transform: uppercase; border-radius: 4px; background: #f4f4f4; color: #888; border-left: 4px solid transparent; }
@@ -65,24 +65,28 @@
         .login-input { padding: 15px; width: 100%; margin-top: 15px; text-align: center; border: 2px solid #eee; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
         .login-btn { padding: 15px; width: 100%; margin-top: 15px; background: var(--brand-red); color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 8px; }
         
+        /* STRATEGY SCREEN */
         .view-strategy { width: 100%; height: 100%; overflow-y: auto; text-align: center; display: flex; flex-direction: column; align-items: center; }
         .strat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; max-width: 500px; width: 100%; }
-        .strat-card { background: #f9f9f9; border: 2px solid #eee; border-radius: 10px; padding: 20px; cursor: pointer; display: flex; flex-direction: column; align-items: center; }
-        .strat-card:hover { border-color: var(--brand-red); background: #fff; }
-        .mini-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; width: 50px; height: 50px; margin-bottom: 10px; opacity: 0.8; }
+        .strat-card { background: #f9f9f9; border: 2px solid #eee; border-radius: 10px; padding: 20px; cursor: pointer; display: flex; flex-direction: column; align-items: center; transition: 0.2s; }
+        .strat-card:hover { border-color: var(--brand-red); background: #fff; transform: translateY(-3px); }
+        .strat-title { font-weight: 800; text-transform: uppercase; margin-top: 10px; }
+        .strat-desc { font-size: 11px; color: #666; margin-top: 5px; }
+
+        .mini-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; width: 60px; height: 60px; opacity: 0.8; pointer-events: none; }
         .mg-c { background: #ddd; border-radius: 1px; }
 
         .view-game { width: 100%; height: 100%; display: flex; flex-direction: column; }
         .bingo-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; width: 100%; aspect-ratio: 1/1; margin: 0 auto; max-height: 550px; }
         
-        /* SLOT STYLING - COLOR LOCKS */
+        /* SLOT STYLING */
         .slot { 
             background: #fafafa; border: 2px dashed #ddd; border-radius: 8px; 
             display: flex; align-items: center; justify-content: center; text-align: center; 
             padding: 4px; font-size: 11px; font-weight: 700; position: relative; user-select: none; 
         }
         
-        /* Empty Slot Color Hints */
+        /* Color Hints */
         .slot[data-req="driver"] { background: #fff8e1; border-color: var(--c-driver); color: var(--c-driver); opacity: 0.7; }
         .slot[data-req="team"] { background: #e0f2f1; border-color: var(--c-team); color: var(--c-team); opacity: 0.7; }
         .slot[data-req="tech"] { background: #e3f2fd; border-color: var(--c-tech); color: var(--c-tech); opacity: 0.7; }
@@ -94,7 +98,7 @@
         .slot.filled[data-type="team"] { background: var(--c-team); }
         .slot.filled[data-type="tech"] { background: var(--c-tech); }
         .slot.filled[data-type="chaos"] { background: var(--c-chaos); }
-        .slot.center { background: linear-gradient(135deg, #222, #000) !important; color: var(--brand-red) !important; border:none; font-size: 14px; text-transform: uppercase; }
+        .slot.center { background: linear-gradient(135deg, #222, #000) !important; color: var(--brand-red) !important; border:none; font-size: 14px; text-transform: uppercase; opacity: 1 !important; }
         .slot.matched::after { content: '✓'; position: absolute; top: -8px; right: -8px; background: var(--score-win); color: black; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
 
         /* ADMIN */
@@ -153,10 +157,47 @@
         <div id="view-strategy" class="view-strategy hidden">
             <h2 id="stratRaceTitle" style="margin-top:20px;">RACE STRATEGY</h2>
             <div class="strat-grid">
-                <div class="strat-card" onclick="confirmStrategy('balanced')"><strong>⚖️ Balanced</strong></div>
-                <div class="strat-card" onclick="confirmStrategy('tech')"><strong>🔧 Tech Heavy</strong></div>
-                <div class="strat-card" onclick="confirmStrategy('chaos')"><strong>🚩 Chaos Agent</strong></div>
-                <div class="strat-card" onclick="confirmStrategy('driver')"><strong>🏎️ Silly Season</strong></div>
+                
+                <div class="strat-card" onclick="confirmStrategy('balanced')">
+                    <div class="mini-grid">
+                        <div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-team)"></div>
+                        <div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-team)"></div>
+                        <div class="mg-c" style="background:var(--c-chaos)"></div>
+                    </div>
+                    <div class="strat-title">⚖️ Balanced</div>
+                    <div class="strat-desc">Standard Mix</div>
+                </div>
+
+                <div class="strat-card" onclick="confirmStrategy('tech')">
+                    <div class="mini-grid">
+                        <div class="mg-c" style="background:var(--c-tech)"></div><div class="mg-c" style="background:var(--c-tech)"></div>
+                        <div class="mg-c" style="background:var(--c-team)"></div><div class="mg-c" style="background:var(--c-tech)"></div>
+                        <div class="mg-c" style="background:var(--c-tech)"></div>
+                    </div>
+                    <div class="strat-title">🔧 Tech Heavy</div>
+                    <div class="strat-desc">Regs Focused</div>
+                </div>
+
+                <div class="strat-card" onclick="confirmStrategy('chaos')">
+                    <div class="mini-grid">
+                        <div class="mg-c" style="background:var(--c-chaos)"></div><div class="mg-c" style="background:var(--c-chaos)"></div>
+                        <div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-chaos)"></div>
+                        <div class="mg-c" style="background:var(--c-chaos)"></div>
+                    </div>
+                    <div class="strat-title">🚩 Chaos Agent</div>
+                    <div class="strat-desc">Crash & SC</div>
+                </div>
+
+                <div class="strat-card" onclick="confirmStrategy('driver')">
+                    <div class="mini-grid">
+                        <div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-driver)"></div>
+                        <div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-driver)"></div>
+                        <div class="mg-c" style="background:var(--c-driver)"></div>
+                    </div>
+                    <div class="strat-title">🏎️ Silly Season</div>
+                    <div class="strat-desc">Driver Drama</div>
+                </div>
+
             </div>
         </div>
 
@@ -189,8 +230,9 @@
 
     // --- INIT ---
     window.onload = function() {
+        // Safety Check for Data File
         if (typeof BINGO_CONFIG === 'undefined') {
-            alert("Error: bingo_data.js is missing! Please make sure it is in the same folder.");
+            alert("CRITICAL ERROR: bingo_data.js not found!\n\nPlease make sure bingo_data.js is in the same folder.");
             return;
         }
         
@@ -205,6 +247,11 @@
 
     // --- CORE FLOW ---
     function login() {
+        if (typeof BINGO_CONFIG === 'undefined') {
+            alert("Cannot login: Data file missing.");
+            return;
+        }
+
         const name = document.getElementById('teamNameInput').value.trim();
         if (!name) return alert("Please enter a team name.");
 
@@ -214,7 +261,7 @@
         document.getElementById('connectionDot').style.background = "#e10600"; // Offline color
 
         // Mock Leaderboard
-        renderLeaderboard([{name: name, score: 0}, {name: "Max V.", score: 150}]);
+        renderLeaderboard([{name: name, score: 0}, {name: "Max V.", score: 150}, {name: "Lewis H.", score: 140}]);
 
         checkLocalGrid();
     }
@@ -233,7 +280,7 @@
                 
                 switchState('game');
                 renderGrid();
-                setPool('driver'); // Ensure pool is loaded
+                setPool('driver');
                 updateScore();
             } else {
                 prepareStrategyView();
@@ -254,8 +301,10 @@
 
     // --- STRATEGY ---
     function prepareStrategyView() {
+        // Safe access to race data
+        if (!BINGO_CONFIG || !BINGO_CONFIG.races) return;
         const r = BINGO_CONFIG.races.find(x => x.id === activeRace);
-        document.getElementById('stratRaceTitle').innerText = r.n.toUpperCase() + " STRATEGY";
+        if (r) document.getElementById('stratRaceTitle').innerText = r.n.toUpperCase() + " STRATEGY";
     }
 
     function confirmStrategy(type) {
@@ -272,7 +321,7 @@
                 slot.className = 'slot center'; slot.innerText = "LIGHTS OUT";
             } else {
                 slot.className = 'slot'; 
-                slot.dataset.req = reqType; // THIS ENABLES COLOR LOCK
+                slot.dataset.req = reqType; // ENABLES COLOR LOCK
                 slot.ondragover = e => e.preventDefault();
                 slot.ondrop = e => handleDrop(e, i, reqType);
                 slot.onclick = () => { currentGrid[i] = null; renderGrid(); };
@@ -296,21 +345,25 @@
         
         const container = document.getElementById('pool');
         container.innerHTML = '';
-        BINGO_CONFIG.pool[cat].forEach(text => {
-            const chip = document.createElement('div');
-            chip.className = `chip ${cat}`;
-            chip.innerText = text;
-            chip.draggable = true;
-            chip.ondragstart = e => { e.dataTransfer.setData('text', text); e.dataTransfer.setData('type', cat); };
-            container.appendChild(chip);
-        });
+        if (BINGO_CONFIG.pool[cat]) {
+            BINGO_CONFIG.pool[cat].forEach(text => {
+                const chip = document.createElement('div');
+                chip.className = `chip ${cat}`;
+                chip.innerText = text;
+                chip.draggable = true;
+                chip.ondragstart = e => { e.dataTransfer.setData('text', text); e.dataTransfer.setData('type', cat); };
+                container.appendChild(chip);
+            });
+        }
     }
 
     function handleDrop(e, index, reqType) {
         e.preventDefault();
         const text = e.dataTransfer.getData('text');
         const type = e.dataTransfer.getData('type');
-        if(type !== reqType) return; // Strict Mode
+        
+        // STRICT MODE: Check if type matches requirement
+        if(type !== reqType) return; 
         
         currentGrid[index] = { text, type };
         renderGrid();
@@ -329,8 +382,7 @@
                 s.className = 'slot';
                 s.innerText = '';
                 delete s.dataset.type;
-                // Important: We need to know the requirement from the template.
-                // For simplicity, we rely on the DOM state `dataset.req` which persists.
+                // Important: Persist dataset.req from HTML
             } else {
                 s.innerText = data.text;
                 s.className = `slot filled`;
@@ -346,13 +398,15 @@
     function renderRaces() {
         const bar = document.getElementById('raceBar');
         bar.innerHTML = '';
-        BINGO_CONFIG.races.forEach(r => {
-            const div = document.createElement('div');
-            div.className = `race-card ${r.id === activeRace ? 'active' : ''}`;
-            div.onclick = () => { activeRace = r.id; renderRaces(); checkLocalGrid(); };
-            div.innerHTML = `<img src="https://flagcdn.com/w40/${r.c}.png" class="race-flag-img"><span class="race-name">${r.n}</span>`;
-            bar.appendChild(div);
-        });
+        if (BINGO_CONFIG && BINGO_CONFIG.races) {
+            BINGO_CONFIG.races.forEach(r => {
+                const div = document.createElement('div');
+                div.className = `race-card ${r.id === activeRace ? 'active' : ''}`;
+                div.onclick = () => { activeRace = r.id; renderRaces(); checkLocalGrid(); };
+                div.innerHTML = `<img src="https://flagcdn.com/w40/${r.c}.png" class="race-flag-img"><span class="race-name">${r.n}</span>`;
+                bar.appendChild(div);
+            });
+        }
     }
 
     // --- ADMIN ---
