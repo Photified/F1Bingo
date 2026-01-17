@@ -22,8 +22,8 @@
             --c-team: #00d2be;
             --c-tech: #0070ff;
             --c-chaos: #e10600;
-
-            /* Scoring Highlights */
+            
+            /* Scoring */
             --score-win: #39ff14; 
         }
 
@@ -36,7 +36,33 @@
             overflow: hidden;
         }
 
-        /* --- HEADER & ADMIN --- */
+        /* --- 1. LOGIN OVERLAY --- */
+        #loginOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(21, 21, 30, 0.98);
+            z-index: 2000;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center; color: white;
+        }
+        .login-box {
+            background: #222; padding: 40px; border-radius: 12px;
+            text-align: center; border: 2px solid var(--brand-red);
+            box-shadow: 0 0 50px rgba(225, 6, 0, 0.3);
+        }
+        .login-input {
+            padding: 15px; border-radius: 6px; border: 1px solid #444;
+            background: #111; color: white; font-size: 18px; margin-top: 20px;
+            width: 280px; text-align: center; font-weight: bold;
+        }
+        .login-btn {
+            margin-top: 20px; padding: 12px 30px;
+            background: var(--brand-red); color: white; border: none;
+            font-weight: 900; font-size: 16px; cursor: pointer;
+            text-transform: uppercase; border-radius: 6px; width: 100%;
+        }
+        .login-btn:hover { background: #b00; }
+
+        /* --- 2. HEADER & ADMIN --- */
         header {
             background: white; border-bottom: 3px solid var(--brand-red);
             padding: 10px 25px; display: flex; justify-content: space-between;
@@ -45,7 +71,6 @@
         }
         .header-title { font-weight:900; font-style:italic; font-size:22px; cursor: help; user-select: none; }
         
-        /* Admin Panel (Hidden) */
         #adminPanel {
             position: fixed; top: 60px; left: 50%; transform: translateX(-50%);
             background: #222; color: white; padding: 20px; border-radius: 8px;
@@ -55,13 +80,12 @@
         }
         .admin-input { background: #333; border: 1px solid #555; color: white; padding: 10px; font-size: 12px; width: 100%; box-sizing: border-box; }
         .admin-btn { background: var(--brand-red); border: none; padding: 10px; color: white; cursor: pointer; font-weight: bold; border-radius: 4px; }
-        .admin-btn:hover { background: #b00; }
 
         .user-profile { font-weight: 700; display: flex; align-items: center; gap: 10px; font-size: 14px; }
         .status-dot { width: 10px; height: 10px; background: #ccc; border-radius: 50%; }
         .status-dot.online { background: #00d2be; box-shadow: 0 0 8px #00d2be; }
 
-        /* --- RACE BAR --- */
+        /* --- 3. MAIN LAYOUT --- */
         .race-bar {
             background: #fff; padding: 0; display: flex;
             overflow-x: auto; border-bottom: 1px solid #ddd;
@@ -73,17 +97,10 @@
             opacity: 0.6; transition: 0.2s; background: #fff;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
-        .race-card:hover { opacity: 1; background: #f9f9f9; }
-        .race-card.active { 
-            opacity: 1; background: #fff; 
-            border-bottom: 4px solid var(--brand-red); 
-            box-shadow: inset 0 -10px 10px -10px rgba(0,0,0,0.1);
-        }
-        .race-flag-img { width: 32px; height: 24px; object-fit: cover; border-radius: 3px; margin-bottom: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .race-name { font-size: 11px; font-weight: 800; text-transform: uppercase; line-height: 1; margin-bottom: 3px; }
-        .race-date { font-size: 9px; color: #888; font-weight: 600; }
+        .race-card.active { opacity: 1; border-bottom: 4px solid var(--brand-red); }
+        .race-flag-img { width: 32px; height: 24px; object-fit: cover; border-radius: 3px; margin-bottom: 6px; }
+        .race-name { font-size: 11px; font-weight: 800; text-transform: uppercase; line-height: 1; }
 
-        /* --- MAIN LAYOUT --- */
         .main-stage {
             flex: 1; display: grid; 
             grid-template-columns: 300px 1fr 280px; 
@@ -101,66 +118,46 @@
             text-align: center; color: #666; flex-shrink: 0;
         }
 
-        /* --- LEFT PANEL: POOL --- */
+        /* POOL */
         .pool-container { display: flex; flex-direction: column; height: 100%; }
         .pool-tabs-header {
             padding: 10px; background: white; border-bottom: 1px solid #eee;
-            display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02); z-index: 5; flex-shrink: 0;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 8px; flex-shrink: 0;
         }
         .tab-btn {
             padding: 8px; text-align: center; cursor: pointer;
             font-weight: 700; font-size: 11px; text-transform: uppercase;
             border-radius: 4px; transition: 0.2s; background: #f4f4f4;
-            color: #888; border: 1px solid transparent;
-            border-left-width: 4px; border-left-style: solid;
+            color: #888; border-left: 4px solid transparent;
         }
         .tab-btn[data-cat="driver"] { border-left-color: var(--c-driver); }
-        .tab-btn[data-cat="team"]   { border-left-color: var(--c-team); }
-        .tab-btn[data-cat="tech"]   { border-left-color: var(--c-tech); }
-        .tab-btn[data-cat="chaos"]  { border-left-color: var(--c-chaos); }
+        .tab-btn[data-cat="team"] { border-left-color: var(--c-team); }
+        .tab-btn[data-cat="tech"] { border-left-color: var(--c-tech); }
+        .tab-btn[data-cat="chaos"] { border-left-color: var(--c-chaos); }
         .tab-btn.active { background: #333; color: white; border-color: #333; }
 
         .pool-list { flex: 1; overflow-y: auto; padding: 12px; background: #fbfbfb; }
         .chip {
             padding: 10px; margin-bottom: 8px; background: white;
             border-radius: 6px; font-size: 11px; font-weight: 700; cursor: grab;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: space-between;
-            border-left: 5px solid #ccc; transition: transform 0.1s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); border-left: 5px solid #ccc;
         }
-        .chip:active { cursor: grabbing; transform: scale(0.98); }
         .chip.driver { border-left-color: var(--c-driver); }
         .chip.team { border-left-color: var(--c-team); }
         .chip.tech { border-left-color: var(--c-tech); }
         .chip.chaos { border-left-color: var(--c-chaos); }
 
-        /* --- CENTER PANEL: ACTIVE --- */
+        /* CENTER ACTIVE PANEL */
         .active-panel {
             background: white; border-radius: 10px; box-shadow: var(--card-shadow);
             border: 1px solid #e0e0e0; padding: 20px;
-            display: flex; flex-direction: column; 
-            align-items: center; justify-content: center;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
             position: relative; overflow: hidden; height: 100%;
         }
 
-        /* View 1: Login */
-        .view-login { text-align: center; width: 100%; max-width: 400px; animation: fadeIn 0.5s ease-out; }
-        .login-input {
-            width: 100%; padding: 15px; border: 2px solid #eee; border-radius: 8px;
-            font-size: 16px; margin-top: 20px; text-align: center; font-weight: bold;
-            transition: 0.2s; box-sizing: border-box;
-        }
-        .login-input:focus { border-color: var(--brand-red); outline: none; }
-        .login-btn {
-            width: 100%; padding: 15px; background: var(--brand-red); color: white;
-            border: none; border-radius: 8px; margin-top: 15px; font-weight: 900;
-            font-size: 16px; cursor: pointer; text-transform: uppercase;
-            transition: transform 0.1s;
-        }
-        .login-btn:active { transform: scale(0.98); background: #b00500; }
-
-        /* View 2: Strategy */
+        .view-login { text-align: center; width: 100%; max-width: 400px; }
         .view-strategy { text-align: center; width: 100%; height: 100%; overflow-y: auto; padding-top: 20px; }
+        
         .strat-grid {
             display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;
             margin-top: 20px; max-width: 600px; margin-left: auto; margin-right: auto;
@@ -170,14 +167,14 @@
             padding: 20px; cursor: pointer; transition: 0.2s;
             display: flex; flex-direction: column; align-items: center;
         }
-        .strat-card:hover { border-color: var(--brand-red); background: white; transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .strat-card:hover { border-color: var(--brand-red); background: white; }
+        
         .mini-grid {
             display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px;
             width: 50px; height: 50px; margin-bottom: 10px; opacity: 0.8;
         }
         .mg-c { background: #ddd; border-radius: 1px; }
 
-        /* View 3: Game Grid */
         .view-game { width: 100%; height: 100%; display: flex; flex-direction: column; }
         .bingo-grid {
             display: grid; grid-template-columns: repeat(5, 1fr);
@@ -194,33 +191,20 @@
         .slot[data-req="team"] { background: #e0f2f1; border-color: #b2dfdb; color: var(--c-team); }
         .slot[data-req="tech"] { background: #e3f2fd; border-color: #bbdefb; color: var(--c-tech); }
         .slot[data-req="chaos"] { background: #fff5f5; border-color: #ffcdd2; color: var(--c-chaos); }
-        
+
         .slot.filled { border: none; color: white !important; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
         .slot.filled[data-type="driver"] { background: var(--c-driver); }
         .slot.filled[data-type="team"] { background: var(--c-team); }
         .slot.filled[data-type="tech"] { background: var(--c-tech); }
         .slot.filled[data-type="chaos"] { background: var(--c-chaos); }
+        
+        .slot.matched { opacity: 1; box-shadow: inset 0 0 0 4px var(--score-win); }
         .slot.center { background: linear-gradient(135deg, #222, #000) !important; color: var(--brand-red) !important; border:none; font-size: 14px; text-transform: uppercase; }
 
-        /* Winning Slot */
-        .slot.matched { opacity: 1; box-shadow: inset 0 0 0 4px var(--score-win); }
-        .slot.matched::after {
-            content: '✓'; position: absolute; top: -5px; right: -5px;
-            background: var(--score-win); color: black;
-            border-radius: 50%; width: 20px; height: 20px; font-weight: bold;
-            display: flex; align-items: center; justify-content: center;
-        }
-
-        /* --- RIGHT PANEL: LEADERBOARD --- */
         .leaderboard { flex: 1; overflow-y: auto; font-size: 12px; }
         .lb-row { display: flex; justify-content: space-between; padding: 10px 15px; border-bottom: 1px solid #f0f0f0; }
-        .lb-row.me { background: #fffde7; border-left: 4px solid #ffb800; }
-        .lb-rank { font-weight: 900; width: 20px; color: #888; }
-        .lb-name { flex: 1; font-weight: 700; }
-        .lb-score { font-weight: 900; color: var(--brand-red); }
-
         .hidden { display: none !important; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
     </style>
 </head>
 <body>
@@ -231,26 +215,21 @@
         <span id="displayTeamName">GUEST</span>
     </div>
     <div class="header-title" ondblclick="toggleAdmin()">F1 <span style="color:var(--brand-red)">2026</span> BINGO</div>
-    <button onclick="saveToServer()" style="background:var(--brand-red); color:white; border:none; padding:8px 20px; border-radius:20px; font-weight:bold; cursor:pointer; box-shadow:0 4px 6px rgba(225,6,0,0.2);">CLOUD SAVE</button>
+    <button onclick="saveToServer()" style="background:var(--brand-red); color:white; border:none; padding:8px 20px; border-radius:20px; font-weight:bold; cursor:pointer;">CLOUD SAVE</button>
 </header>
 
 <div id="adminPanel">
     <h3 style="margin:0; color:var(--brand-red); display:flex; justify-content:space-between;">
-        🏁 RACE DIRECTOR
-        <span onclick="toggleAdmin()" style="cursor:pointer; color:white;">&times;</span>
+        🏁 RACE DIRECTOR <span onclick="toggleAdmin()" style="cursor:pointer; color:white;">&times;</span>
     </h3>
-    <p style="font-size:11px; margin:5px 0; color:#aaa;">Enter Race Results to calculate scores.</p>
-    <textarea id="adminResults" class="admin-input" rows="5" placeholder="Events (comma separated): 
-Hamilton (Ferrari) Win,
-Lap 1 Safety Car, 
-Red Flag in Q1"></textarea>
+    <p style="font-size:11px; margin:5px 0; color:#aaa;">Enter Race Results to score points.</p>
+    <textarea id="adminResults" class="admin-input" rows="5" placeholder="Events (comma separated)"></textarea>
     <button class="admin-btn" onclick="calculateScore()">CALCULATE POINTS</button>
 </div>
 
 <div class="race-bar" id="raceBar"></div>
 
 <div class="main-stage">
-    
     <div class="panel">
         <div class="panel-header">Components</div>
         <div class="pool-container">
@@ -265,24 +244,15 @@ Red Flag in Q1"></textarea>
     </div>
 
     <div class="active-panel" id="mainPanel">
-        
         <div id="view-login" class="view-login">
-            <h1 style="font-style:italic; margin-bottom:5px;">TEAM PRINCIPAL LOGIN</h1>
-            <p style="color:#888; font-size:12px;">Enter your credentials to access the paddock.</p>
+            <h1 style="font-style:italic;">TEAM PRINCIPAL LOGIN</h1>
             <input type="text" id="teamNameInput" class="login-input" placeholder="Team Name (e.g. McLaren Boys)">
             <button class="login-btn" onclick="login()">Enter Paddock</button>
-            <div id="loginStatus" style="margin-top:10px; font-size:10px; color:#999; min-height:15px;"></div>
+            <div id="loginStatus" style="margin-top:10px; font-size:10px; color:#999;"></div>
         </div>
 
         <div id="view-strategy" class="view-strategy hidden">
-            <div style="display:flex; align-items:center; justify-content:center; gap:15px; margin-top:10px;">
-                <img id="stratFlag" src="" style="width:60px; border-radius:4px; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
-                <div style="text-align:left;">
-                    <div style="font-weight:900; font-size:20px; font-style:italic;" id="stratRaceName">RACE</div>
-                    <div style="font-size:11px; color:#888;">SELECT STRATEGY CARD</div>
-                </div>
-            </div>
-            
+            <h2 id="stratRaceTitle">RACE STRATEGY</h2>
             <div class="strat-grid">
                 <div class="strat-card" onclick="confirmStrategy('balanced')">
                     <div class="mini-grid">
@@ -333,7 +303,10 @@ Red Flag in Q1"></textarea>
 </div>
 
 <script>
-    // --- FIREBASE CONFIG (Add Keys for Cloud) ---
+    // --- APP LOGIC ---
+    // 1. Check if Firebase exists (window.firebase)
+    // 2. If yes, try init. If no, or if init fails, run Offline Mode.
+
     const firebaseConfig = {
         apiKey: "YOUR_API_KEY",
         authDomain: "YOUR_PROJECT.firebaseapp.com",
@@ -344,11 +317,23 @@ Red Flag in Q1"></textarea>
     };
 
     let db, auth;
-    try {
-        firebase.initializeApp(firebaseConfig);
-        db = firebase.firestore();
-        auth = firebase.auth();
-    } catch(e) { console.log("Offline Mode Active"); }
+    let isOffline = true;
+
+    function initFirebase() {
+        if (window.firebase) {
+            try {
+                firebase.initializeApp(firebaseConfig);
+                db = firebase.firestore();
+                auth = firebase.auth();
+                isOffline = false;
+                console.log("Firebase Initialized");
+            } catch (e) {
+                console.warn("Firebase Init Failed (Check Keys). Running Offline.");
+            }
+        } else {
+            console.warn("Firebase SDK not loaded. Running Offline.");
+        }
+    }
 
     // --- DATA ---
     const races = [
@@ -373,7 +358,6 @@ Red Flag in Q1"></textarea>
         driver: ['driver','driver','driver','team','driver','driver','team','chaos','driver','driver','team','driver','FREE','driver','team','driver','chaos','team','driver','driver','driver','driver','team','driver','chaos']
     };
 
-    // APP STATE
     let currentUser = null;
     let poolData = {};
     let activeRace = 'aus';
@@ -381,23 +365,17 @@ Red Flag in Q1"></textarea>
     let currentPoolCat = 'driver';
     let isAdminOpen = false;
 
-    // --- STATE MANAGER ---
-    function switchState(stateName) {
-        document.getElementById('view-login').classList.add('hidden');
-        document.getElementById('view-strategy').classList.add('hidden');
-        document.getElementById('view-game').classList.add('hidden');
-        document.getElementById(`view-${stateName}`).classList.remove('hidden');
-    }
-
+    // --- MAIN INIT ---
     async function init() {
+        initFirebase();
+        
         // Fetch JSON logic
         try {
             const res = await fetch('data.json');
             poolData = await res.json();
         } catch(e) {
-            console.error("Using Fallback Data. Make sure data.json is present.");
-            // Fallback so app doesn't break if fetch fails
-            poolData = { driver: ["Data.json Missing"], team: [], tech: [], chaos: [] };
+            console.error("Data.json Missing. Using Fallback.");
+            poolData = { driver: ["Data Error"], team: [], tech: [], chaos: [] };
         }
         
         renderRaces();
@@ -405,29 +383,35 @@ Red Flag in Q1"></textarea>
         const saved = localStorage.getItem('f1_team_name');
         if(saved) {
             document.getElementById('teamNameInput').value = saved;
-            login();
-        } else {
-            switchState('login');
+            // Auto-login logic would go here, but let's force button click for safety
         }
+        switchState('login');
+    }
+
+    function switchState(name) {
+        document.getElementById('view-login').classList.add('hidden');
+        document.getElementById('view-strategy').classList.add('hidden');
+        document.getElementById('view-game').classList.add('hidden');
+        document.getElementById(`view-${name}`).classList.remove('hidden');
     }
 
     // --- LOGIN ---
     function login() {
         const name = document.getElementById('teamNameInput').value;
-        if(!name) { alert("Enter Name"); return; }
+        if(!name) return alert("Enter Team Name");
         
         currentUser = { name, id: name.replace(/\s+/g, '_').toLowerCase() };
         localStorage.setItem('f1_team_name', name);
         
         document.getElementById('displayTeamName').innerText = name.toUpperCase();
-        document.getElementById('connectionDot').classList.add('online');
-
-        if(auth) {
-            auth.signInAnonymously().catch(e => console.warn(e));
+        
+        if(!isOffline && auth) {
+            auth.signInAnonymously().catch(e => console.log(e));
+            document.getElementById('connectionDot').classList.add('online');
             loadCloud();
             listenLeaderboard();
         } else {
-            // Mock Leaderboard
+            // Offline Fallback
             renderLeaderboard([{name: name, score: 0}, {name: "Max V.", score: 120}]);
             checkLocalGrid();
         }
@@ -448,8 +432,7 @@ Red Flag in Q1"></textarea>
     // --- STRATEGY ---
     function prepareStrategyView() {
         const r = races.find(x => x.id === activeRace);
-        document.getElementById('stratFlag').src = `https://flagcdn.com/w160/${r.c}.png`;
-        document.getElementById('stratRaceName').innerText = r.n.toUpperCase();
+        document.getElementById('stratRaceTitle').innerText = r.n.toUpperCase() + " STRATEGY";
     }
 
     function confirmStrategy(type) {
@@ -458,7 +441,7 @@ Red Flag in Q1"></textarea>
         saveToServer();
     }
 
-    // --- UI RENDERERS ---
+    // --- RENDERERS ---
     function renderRaces() {
         const bar = document.getElementById('raceBar');
         bar.innerHTML = '';
@@ -468,7 +451,7 @@ Red Flag in Q1"></textarea>
             div.onclick = () => { 
                 activeRace = r.id; 
                 renderRaces(); 
-                if(auth) loadCloud(); else checkLocalGrid(); 
+                if(!isOffline) loadCloud(); else checkLocalGrid(); 
             };
             div.innerHTML = `
                 <img src="https://flagcdn.com/w40/${r.c}.png" class="race-flag-img">
@@ -553,7 +536,7 @@ Red Flag in Q1"></textarea>
         });
     }
 
-    // --- ADMIN / SCORING ---
+    // --- ADMIN ---
     function toggleAdmin() {
         isAdminOpen = !isAdminOpen;
         document.getElementById('adminPanel').style.display = isAdminOpen ? 'flex' : 'none';
@@ -565,28 +548,19 @@ Red Flag in Q1"></textarea>
         let score = 0;
 
         const slots = document.querySelectorAll('.slot');
-        
-        // Reset matches
         slots.forEach(s => s.classList.remove('matched'));
 
-        // Check Matches (Simple Text Check)
         currentGrid.forEach((item, i) => {
             if(!item) return;
             const slot = document.querySelector(`.slot[data-index="${i}"]`) || document.querySelector('.slot.center');
-            
-            // Match Logic
             if(item.type === 'FREE' || events.includes(item.text.toLowerCase())) {
                 slot.classList.add('matched');
                 score += 10;
             }
         });
-
-        // Basic Line Logic would go here (omitted for brevity)
         
-        alert(`Calculated Score: ${score} Points`);
-        
-        // Save score to cloud
-        if(db && currentUser) {
+        alert(`Points for Round: ${score}`);
+        if(!isOffline && db) {
             db.collection('players').doc(currentUser.id).update({
                 score: firebase.firestore.FieldValue.increment(score)
             });
@@ -595,7 +569,7 @@ Red Flag in Q1"></textarea>
 
     // --- CLOUD ---
     function saveToServer() {
-        if(!db) {
+        if(isOffline) {
             localStorage.setItem(`grid_${activeRace}`, JSON.stringify(currentGrid));
             return;
         }
@@ -606,7 +580,7 @@ Red Flag in Q1"></textarea>
     }
 
     function loadCloud() {
-        if(!db) { checkLocalGrid(); return; }
+        if(isOffline) { checkLocalGrid(); return; }
         db.collection('players').doc(currentUser.id).get().then(doc => {
             if(doc.exists && doc.data()[`grid_${activeRace}`]) {
                 currentGrid = doc.data()[`grid_${activeRace}`];
@@ -619,7 +593,7 @@ Red Flag in Q1"></textarea>
     }
 
     function listenLeaderboard() {
-        if(!db) return;
+        if(isOffline) return;
         db.collection('players').orderBy('score', 'desc').limit(15).onSnapshot(snap => {
             const players = [];
             snap.forEach(doc => players.push(doc.data()));
