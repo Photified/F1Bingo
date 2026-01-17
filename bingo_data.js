@@ -1,12 +1,11 @@
-/* F1 2026 BINGO DATA - COMPLETE 
-   Contains: 
-   1. 25-Race Calendar
-   2. Driver Roster + Race Control (FIA)
-   3. Logic Templates
+/* F1 2026 BINGO DATA - FINAL COMPLETE VERIFIED
+   - 25 Races (Full Calendar including Madrid)
+   - Tech Removed
+   - "Race Control" added for Chaos Events
 */
 
 const BINGO_CONFIG = {
-    // 25 RACES (Full Calendar)
+    // 25 RACES - FULL LIST
     races: [
         {id:'aus', c:'au', n:'Australia', d:'Mar 8'},
         {id:'chn', c:'cn', n:'China', d:'Mar 15'},
@@ -35,7 +34,7 @@ const BINGO_CONFIG = {
         {id:'abu', c:'ae', n:'Abu Dhabi', d:'Dec 6'}
     ],
 
-    // DRIVER ROSTER (Race Control first, then Teams)
+    // DRIVER ROSTER
     drivers: [
         { name: "Race Control", team: "FIA", color: "#333333" }, 
         { name: "Max Verstappen", team: "Red Bull", color: "#3671C6" },
@@ -62,7 +61,7 @@ const BINGO_CONFIG = {
         { name: "Sergio Perez", team: "Cadillac", color: "#FFD700" }
     ],
 
-    // TEMPLATES
+    // TEMPLATES (Tech Removed)
     templates: {
         quali: [
             "Pole Position", "Front Row Start", "Q3 Appearance", 
@@ -78,15 +77,11 @@ const BINGO_CONFIG = {
         ],
         team: [
             "Double Podium", "1-2 Finish", "Double Points", "Double DNF", 
-            "Pit Stop Error (>4s)", "Strategy Error", "Engine Failure"
-        ],
-        tech: [
-            "MOM Pass", "X-Mode Stuck", "Z-Mode Fail", "MGU-K Clipping", 
-            "Underweight", "Fuel Breach", "Active Aero Damage"
+            "Pit Stop Error (>4s)", "Strategy Error", "Engine Failure", "Mechanical DNF"
         ],
         chaos: [
             "Safety Car", "Virtual SC", "Red Flag", "Rain", "Turn 1 Pile-up",
-            "Start Aborted", "Track Limits", "Animal on Track"
+            "Start Aborted", "Track Limits", "Animal on Track", "Safety Car Finish"
         ]
     }
 };
