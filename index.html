@@ -158,14 +158,12 @@
 </head>
 <body>
 
-<div id="resetModal" class="modal-overlay hidden">
+<div id="customModal" class="modal-overlay hidden">
     <div class="modal-box">
-        <div class="modal-title">⚠ Race Control</div>
-        <div class="modal-text">Are you sure you want to retire this card? All current predictions for this race will be deleted.</div>
-        <div class="modal-actions">
-            <button class="btn-modal btn-cancel" onclick="closeModal()">Cancel</button>
-            <button class="btn-modal btn-confirm" onclick="confirmReset()">Reset Card</button>
-        </div>
+        <div class="modal-title" id="modalTitle">Race Control</div>
+        <div class="modal-text" id="modalText">Message here...</div>
+        <div class="modal-actions" id="modalActions">
+            </div>
     </div>
 </div>
 
@@ -230,7 +228,7 @@
 
         <div id="view-game" class="view-game hidden" style="width:100%;">
             <div id="grid" class="bingo-grid"></div>
-            <button class="reset-btn" onclick="showResetModal()">Reset Card / Change Strategy</button>
+            <button class="reset-btn" onclick="triggerReset()">Reset Card / Change Strategy</button>
         </div>
     </div>
 
@@ -284,6 +282,7 @@
     let activeRace = 'aus';
     let currentGrid = Array(25).fill(null);
     let verifiedResults = [];
+    let modalCallback = null;
 
     const templates = {
         balanced: ['driver','driver','team','driver','chaos','driver','team','chaos','driver','team','team','driver','FREE','driver','team','team','chaos','driver','team','chaos','driver','team','team','driver','chaos'],
@@ -308,18 +307,44 @@
         if(savedName && savedGrid) login();
     };
 
-    // --- NEW UI FUNCTIONS ---
-    function showResetModal() {
-        document.getElementById('resetModal').classList.remove('hidden');
+    // --- GENERIC MODAL SYSTEM ---
+    function showModal(title, text, isConfirm, callback) {
+        document.getElementById('modalTitle').innerText = title;
+        document.getElementById('modalText').innerText = text;
+        const actions = document.getElementById('modalActions');
+        actions.innerHTML = '';
+
+        if(isConfirm) {
+            modalCallback = callback;
+            actions.innerHTML = `
+                <button class="btn-modal btn-cancel" onclick="closeModal()">Cancel</button>
+                <button class="btn-modal btn-confirm" onclick="execCallback()">Confirm</button>
+            `;
+        } else {
+            actions.innerHTML = `<button class="btn-modal btn-confirm" onclick="closeModal()">OK</button>`;
+        }
+        document.getElementById('customModal').classList.remove('hidden');
     }
+
     function closeModal() {
-        document.getElementById('resetModal').classList.add('hidden');
+        document.getElementById('customModal').classList.add('hidden');
+        modalCallback = null;
     }
-    function confirmReset() {
+
+    function execCallback() {
+        if(modalCallback) modalCallback();
+        closeModal();
+    }
+
+    function triggerReset() {
+        showModal("Race Control", "Are you sure you want to retire this card? All current predictions for this race will be deleted.", true, performReset);
+    }
+
+    function performReset() {
         localStorage.removeItem(`grid_${activeRace}`);
         currentGrid = Array(25).fill(null);
-        closeModal();
         
+        // Ensure UI updates to correct flag/title
         const r = BINGO_CONFIG.races.find(r=>r.id===activeRace);
         if(r) {
             document.getElementById('stratRaceTitle').innerText = r.n.toUpperCase() + " STRATEGY";
@@ -419,7 +444,7 @@
                 item && item.driver === driverName && item.subtype === subType
             );
             if (hasConflict) {
-                alert(`Cannot add: ${driverName} already has a ${subType.toUpperCase()} prediction.`);
+                showModal("Rule Violation", `Cannot add: ${driverName} already has a ${subType.toUpperCase()} prediction.`, false);
                 return;
             }
         }
@@ -577,33 +602,25 @@
         let lineCount = 0;
 
         // 1. STRAIGHT LINES (Rows & Cols)
-        // Rows
         for(let r=0; r<5; r++) {
             let isLine = true;
-            for(let c=0; c<5; c++) {
-                if(!matches[r*5 + c]) isLine = false;
-            }
+            for(let c=0; c<5; c++) { if(!matches[r*5 + c]) isLine = false; }
             if(isLine) { score += 30; lineCount++; }
         }
-        // Cols
         for(let c=0; c<5; c++) {
             let isLine = true;
-            for(let r=0; r<5; r++) {
-                if(!matches[r*5 + c]) isLine = false;
-            }
+            for(let r=0; r<5; r++) { if(!matches[r*5 + c]) isLine = false; }
             if(isLine) { score += 30; lineCount++; }
         }
         if(lineCount > 0) bonuses.push(`${lineCount} LINE${lineCount>1?'S':''} (+${lineCount*30})`);
 
-        // 2. CORNERS (0, 4, 20, 24)
+        // 2. CORNERS
         if(matches[0] && matches[4] && matches[20] && matches[24]) {
             score += 50;
             bonuses.push("4 CORNERS (+50)");
         }
 
         // 3. THE "X"
-        // Diag 1: 0, 6, 12, 18, 24
-        // Diag 2: 4, 8, 12, 16, 20
         const d1 = matches[0] && matches[6] && matches[12] && matches[18] && matches[24];
         const d2 = matches[4] && matches[8] && matches[12] && matches[16] && matches[20];
         if(d1 && d2) {
