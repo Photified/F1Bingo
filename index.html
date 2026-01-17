@@ -11,8 +11,12 @@
         :root {
             --brand-red: #e10600; --brand-dark: #15151e; --bg-body: #f4f4f8;
             --card-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            /* Colors */
-            --c-driver: #ff9500; --c-team: #00d2be; --c-tech: #0070ff; --c-chaos: #e10600;
+            
+            /* CORE COLORS */
+            --c-driver: #ff9500; 
+            --c-team: #00d2be; 
+            --c-tech: #0070ff; 
+            --c-chaos: #e10600;
             --score-win: #39ff14; 
         }
         body { font-family: 'Titillium Web', sans-serif; background: var(--bg-body); color: var(--brand-dark); margin: 0; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
@@ -30,7 +34,7 @@
         .race-flag-img { width: 36px; height: 26px; object-fit: cover; border-radius: 3px; margin-bottom: 6px; }
         .race-name { font-size: 11px; font-weight: 800; text-transform: uppercase; line-height: 1; }
 
-        /* LAYOUT */
+        /* MAIN LAYOUT */
         .main-stage { flex: 1; display: grid; grid-template-columns: 360px 1fr 280px; padding: 20px; gap: 20px; overflow: hidden; height: 100%; }
         .panel { background: white; border-radius: 12px; box-shadow: var(--card-shadow); overflow: hidden; display: flex; flex-direction: column; border: 1px solid #e0e0e0; height: 100%; }
         .panel-header { padding: 15px; background: #f8f8f8; font-weight: 800; font-size: 14px; text-transform: uppercase; border-bottom: 1px solid #ddd; text-align: center; color: #444; flex-shrink: 0; }
@@ -48,7 +52,7 @@
         }
         .driver-header:hover { background: #f5f5f5; }
         
-        /* HELMET */
+        /* HELMET ICON */
         .helmet-icon {
             width: 28px; height: 28px; 
             background: var(--team-color);
@@ -60,7 +64,7 @@
             content: ''; position: absolute; top: 8px; left: 2px; right: 2px; height: 8px;
             background: rgba(0,0,0,0.6); border-radius: 2px;
         }
-        /* FIA ICON OVERRIDE */
+        /* FIA OVERRIDE */
         .driver-header[data-team="FIA"] .helmet-icon { border-radius: 4px; background: #333; }
         .driver-header[data-team="FIA"] .helmet-icon::after { display: none; }
         .driver-header[data-team="FIA"] .helmet-icon::before { content: '🏁'; position: absolute; top: 2px; left: 4px; font-size: 16px; }
@@ -68,62 +72,64 @@
         .driver-name { font-weight: 800; font-size: 14px; color: #333; }
         .driver-team { font-size: 10px; color: #888; text-transform: uppercase; margin-top:2px; }
 
-        /* PREDICTIONS (Hidden by default) */
+        /* PREDICTIONS ACCORDION */
         .predictions-wrapper { display: none; background: #fff; border-top: 1px solid #eee; }
         .driver-row.open .predictions-wrapper { display: block; animation: slideDown 0.2s ease-out; }
         .driver-row.open .driver-header { background: #eee; border-bottom: 1px solid #ddd; }
 
-        /* SECTION HEADERS */
         .section-header {
             padding: 8px 12px; background: #f8f9fa; font-size: 10px; font-weight: 900; 
             color: #666; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #eee;
             border-top: 1px solid #eee; margin-top: -1px;
         }
-        .section-header:first-child { border-top: none; }
-
         .pred-grid { display: grid; grid-template-columns: 1fr; gap: 6px; padding: 10px; }
 
         .chip {
             padding: 8px 10px; background: white; border: 1px solid #ddd; border-radius: 4px;
             font-size: 11px; font-weight: 700; cursor: grab; text-align: left;
-            border-left: 4px solid #ccc; transition: 0.1s; display: flex; align-items: center;
+            border-left-width: 5px; border-left-style: solid; transition: 0.1s; display: flex; align-items: center;
         }
-        .chip:hover { transform: translateX(3px); box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-color: #bbb; }
+        .chip:hover { transform: translateX(3px); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         
-        /* CHIP COLORS */
-        .chip.quali { border-left-color: #9c27b0; }
-        .chip.race { border-left-color: var(--c-driver); }
-        .chip.extras { border-left-color: #4caf50; }
+        /* CHIP COLORS - NOW MATCH THE GRID SLOTS EXACTLY */
+        .chip.driver { border-left-color: var(--c-driver); }
         .chip.team { border-left-color: var(--c-team); }
+        .chip.tech { border-left-color: var(--c-tech); }
         .chip.chaos { border-left-color: var(--c-chaos); }
 
         /* CENTER GRID */
         .active-panel { background: white; border-radius: 12px; border: 1px solid #e0e0e0; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; height: 100%; }
         .bingo-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; width: 100%; aspect-ratio: 1/1; max-height: 650px; }
         
+        /* SLOT STYLING */
         .slot { 
             background: #fafafa; border: 2px dashed #ddd; border-radius: 8px; 
             display: flex; align-items: center; justify-content: center; text-align: center; 
             padding: 5px; font-size: 11px; font-weight: 700; position: relative; user-select: none;
             transition: 0.2s;
         }
+        /* Empty Slot Hints */
         .slot[data-req="driver"] { background: #fff8e6; border-color: var(--c-driver); color: var(--c-driver); opacity: 0.8; }
         .slot[data-req="team"] { background: #e0fbf8; border-color: var(--c-team); color: var(--c-team); opacity: 0.8; }
         .slot[data-req="tech"] { background: #e8f4ff; border-color: var(--c-tech); color: var(--c-tech); opacity: 0.8; }
         .slot[data-req="chaos"] { background: #fff2f2; border-color: var(--c-chaos); color: var(--c-chaos); opacity: 0.8; }
 
+        /* FILLED SLOT - FULL COLOR BACKGROUND */
         .slot.filled { 
-            background: white !important; border: 2px solid #ddd !important; 
-            color: #333 !important; opacity: 1; box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            font-size: 12px; line-height: 1.2;
+            border: none !important; 
+            color: white !important; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); 
+            opacity: 1; font-size: 13px; line-height: 1.2; padding: 8px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
-        .slot.filled[data-type="driver"] { border-left: 4px solid var(--c-driver) !important; }
-        .slot.filled[data-type="team"] { border-left: 4px solid var(--c-team) !important; }
-        .slot.filled[data-type="tech"] { border-left: 4px solid var(--c-tech) !important; }
-        .slot.filled[data-type="chaos"] { border-left: 4px solid var(--c-chaos) !important; }
+        .slot.filled[data-type="driver"] { background: var(--c-driver) !important; }
+        .slot.filled[data-type="team"] { background: var(--c-team) !important; }
+        .slot.filled[data-type="tech"] { background: var(--c-tech) !important; }
+        .slot.filled[data-type="chaos"] { background: var(--c-chaos) !important; }
 
-        .slot.center { background: #222 !important; color: white !important; border: none !important; font-size: 14px; text-transform: uppercase; }
+        .slot.center { background: #222 !important; color: white !important; border: none !important; font-size: 16px; text-transform: uppercase; }
         .slot.matched { opacity: 1; box-shadow: inset 0 0 0 5px var(--score-win); transform: scale(1.02); z-index: 5; }
+        .slot.matched::after { content: '✓'; position: absolute; top: -8px; right: -8px; background: var(--score-win); color: black; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
 
         /* VIEWS */
         .view-login, .view-strategy { text-align: center; width: 100%; }
@@ -259,7 +265,7 @@
             const row = document.createElement('div');
             row.className = 'driver-row';
             
-            // Generate Header with proper coloring
+            // Header
             row.innerHTML = `
                 <div class="driver-header" onclick="toggleDriver(this)" data-team="${d.team}" style="--team-color:${d.color}">
                     <div class="helmet-icon"></div>
@@ -273,24 +279,32 @@
             
             const predWrapper = row.querySelector('.predictions-wrapper');
             
-            // IF "Race Control" (Chaos Only)
+            // IF FIA (Chaos Only)
             if(d.team === "FIA") {
                 const head = document.createElement('div'); head.className = 'section-header'; head.innerText = "TRACK EVENTS"; head.style.color = '#e10600';
                 predWrapper.appendChild(head);
                 const grid = document.createElement('div'); grid.className = 'pred-grid';
                 predWrapper.appendChild(grid);
-                BINGO_CONFIG.templates.chaos.forEach(t => createChip(grid, t, 'chaos', false));
+                BINGO_CONFIG.templates.chaos.forEach(t => createChip(grid, t, 'chaos', false)); // Chaos is RED
             } 
             // IF Real Driver
             else {
-                // 1. Quali
+                // 1. Quali (Orange for Driver Slot)
                 addSection(predWrapper, "QUALIFYING (Max 1)", BINGO_CONFIG.templates.quali, `${d.name} `, 'driver', 'quali', d.name);
-                // 2. Race
+                // 2. Race (Orange for Driver Slot)
                 addSection(predWrapper, "RACE RESULT (Max 1)", BINGO_CONFIG.templates.race, `${d.name} `, 'driver', 'race', d.name);
-                // 3. Extras
+                // 3. Extras (Orange for Driver Slot)
                 addSection(predWrapper, "EXTRAS", BINGO_CONFIG.templates.extras, `${d.name} `, 'driver', 'extras');
-                // 4. Team
+                
+                // 4. Team (Teal for Team Slot)
                 addSection(predWrapper, "TEAM", BINGO_CONFIG.templates.team, `${d.team} `, 'team', '');
+                // 5. Tech (Blue for Tech Slot)
+                // Note: Tech is generic, but associated with the driver's car for dragging ease
+                const tHead = document.createElement('div'); tHead.className = 'section-header'; tHead.innerText = "TECH & CAR";
+                predWrapper.appendChild(tHead);
+                const tGrid = document.createElement('div'); tGrid.className = 'pred-grid';
+                predWrapper.appendChild(tGrid);
+                BINGO_CONFIG.templates.tech.forEach(t => createChip(tGrid, t, 'tech', false));
             }
 
             container.appendChild(row);
@@ -306,18 +320,15 @@
     }
 
     function toggleDriver(header) {
-        // Close others
         const allRows = document.querySelectorAll('.driver-row');
-        allRows.forEach(r => {
-            if(r !== header.parentElement) r.classList.remove('open');
-        });
-        // Toggle active
+        allRows.forEach(r => { if(r !== header.parentElement) r.classList.remove('open'); });
         header.parentElement.classList.toggle('open');
     }
 
     function createChip(container, text, type, subType = '', driverName = null) {
         const chip = document.createElement('div');
-        chip.className = `chip ${type} ${subType}`;
+        // Class will determine color: .driver (Orange), .team (Teal), etc.
+        chip.className = `chip ${type}`; 
         chip.innerText = text;
         chip.draggable = true;
         chip.ondragstart = e => {
@@ -336,8 +347,7 @@
         const driverName = e.dataTransfer.getData('exclusive_driver');
         const subType = e.dataTransfer.getData('subtype'); 
 
-        // 1. Slot Type Check (Drivers in Driver slots, etc)
-        // Note: For simplicity, "Race Control" chaos items fit in "Chaos" slots.
+        // 1. Slot Type Check
         if(type !== reqType) return; 
 
         // 2. EXCLUSIVE LOGIC
@@ -356,7 +366,7 @@
         saveLocal();
     }
 
-    // --- (Standard Logic) ---
+    // --- Standard Functions ---
     function login() {
         const name = document.getElementById('teamNameInput').value;
         if(!name) return alert("Enter Name");
@@ -417,7 +427,7 @@
             if(data) {
                 s.innerText = data.text;
                 s.className = `slot filled`;
-                s.dataset.type = data.type;
+                s.dataset.type = data.type; // This applies the Full Background Color
                 if(verifiedResults.includes(data.text)) s.classList.add('matched');
                 else s.classList.remove('matched');
             } else {
