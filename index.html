@@ -3,33 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>F1 FANTASY BINGO 2026</title>
-    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <title>F1 2026: AUSTRALIAN GP BINGO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,400;0,600;0,700;0,900;1,400&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* F1 FANTASY PALETTE */
+            /* CORE THEME */
             --brand-red: #e10600;
             --brand-dark: #15151e;
-            --bg-body: #f4f4f4;
-            --card-bg: #ffffff;
+            --bg-body: #f0f0f5;
+            --card-shadow: 0 4px 12px rgba(0,0,0,0.08);
             
-            /* CATEGORY COLORS - HIGH CONTRAST */
-            --cat-driver: #ff9500; /* Solid Orange */
-            --cat-driver-bg: #fff0e0;
-            
-            --cat-team: #00d2be;   /* Solid Teal */
-            --cat-team-bg: #e0faf8;
-            
-            --cat-tech: #0066cc;   /* Solid Blue */
-            --cat-tech-bg: #e6f0ff;
-            
-            --cat-chaos: #cc0000;  /* Solid Red */
-            --cat-chaos-bg: #ffe6e6;
+            /* CATEGORY COLORS (Vibrant & Distinct) */
+            --c-driver: #ff9500; 
+            --c-team: #00d2be;   
+            --c-tech: #2962ff;   
+            --c-chaos: #d50000;  
         }
 
         body {
-            font-family: 'Titillium Web', system-ui, sans-serif;
-            background-color: var(--bg-body);
+            font-family: 'Titillium Web', sans-serif;
+            background: var(--bg-body);
             color: var(--brand-dark);
             margin: 0;
             height: 100vh;
@@ -41,247 +34,274 @@
         /* --- HEADER --- */
         header {
             background: white;
-            border-bottom: 3px solid var(--brand-red);
+            border-bottom: 4px solid var(--brand-red);
             padding: 15px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            z-index: 10;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            z-index: 20;
         }
 
-        .logo {
-            font-size: 24px;
+        .brand-section h1 {
+            margin: 0;
+            font-size: 26px;
             font-weight: 900;
             font-style: italic;
-            letter-spacing: -1px;
-            color: var(--brand-dark);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .logo span { color: var(--brand-red); }
-
-        .controls {
-            display: flex;
-            gap: 15px;
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+            line-height: 1;
         }
 
-        select, button {
-            padding: 10px 20px;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-            font-weight: 700;
-            font-family: inherit;
-            cursor: pointer;
+        .brand-section .subtitle {
             font-size: 14px;
+            color: #888;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-top: 2px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 10px 24px;
+            border-radius: 50px;
+            border: none;
+            font-weight: 700;
+            font-size: 13px;
+            text-transform: uppercase;
+            cursor: pointer;
             transition: all 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
-        button.primary {
-            background: var(--brand-red);
-            color: white;
-            border-color: var(--brand-red);
-        }
-        button.primary:hover { background: #b30000; }
+        .btn-save { background: var(--brand-red); color: white; }
+        .btn-save:hover { background: #b30000; transform: translateY(-1px); }
         
-        button.secondary {
-            background: transparent;
-            color: #666;
-        }
-        button.secondary:hover { background: #eee; color: #000; }
+        .btn-reset { background: #e0e0e0; color: #555; }
+        .btn-reset:hover { background: #d0d0d0; color: #000; }
 
-        /* --- MAIN LAYOUT --- */
-        .app-container {
+        /* --- LAYOUT --- */
+        .main-layout {
             display: flex;
             flex: 1;
             padding: 20px;
-            gap: 20px;
+            gap: 25px;
             overflow: hidden;
         }
 
-        /* --- LEFT SIDEBAR (POOL) --- */
+        /* --- LEFT SIDEBAR (The Market) --- */
         .sidebar {
-            width: 350px;
-            background: var(--card-bg);
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            width: 380px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
             display: flex;
             flex-direction: column;
-            border: 1px solid #eee;
+            overflow: hidden;
         }
 
-        .tabs {
+        .category-nav {
             display: flex;
             border-bottom: 1px solid #eee;
         }
 
-        .tab {
+        .nav-item {
             flex: 1;
             text-align: center;
-            padding: 15px 0;
-            font-weight: 700;
-            font-size: 13px;
-            color: #999;
+            padding: 16px 5px;
+            font-size: 12px;
+            font-weight: 800;
+            color: #bbb;
             cursor: pointer;
             transition: 0.2s;
-            background: #fafafa;
+            text-transform: uppercase;
         }
+
+        .nav-item:hover { background: #fafafa; color: #888; }
         
-        .tab:first-child { border-radius: 12px 0 0 0; }
-        .tab:last-child { border-radius: 0 12px 0 0; }
+        /* Active States with Underline glow */
+        .nav-item.active { background: white; color: var(--brand-dark); position: relative; }
+        .nav-item.active::after {
+            content:''; position: absolute; bottom:0; left:0; width:100%; height:4px;
+        }
+        .nav-item[data-cat="driver"].active::after { background: var(--c-driver); }
+        .nav-item[data-cat="team"].active::after { background: var(--c-team); }
+        .nav-item[data-cat="tech"].active::after { background: var(--c-tech); }
+        .nav-item[data-cat="chaos"].active::after { background: var(--c-chaos); }
 
-        /* Active Tab Colors */
-        .tab[data-cat="driver"].active { background: var(--cat-driver); color: white; }
-        .tab[data-cat="team"].active { background: var(--cat-team); color: white; }
-        .tab[data-cat="tech"].active { background: var(--cat-tech); color: white; }
-        .tab[data-cat="chaos"].active { background: var(--cat-chaos); color: white; }
-
-        .pool-list {
+        .pool-container {
             flex: 1;
             overflow-y: auto;
             padding: 15px;
+            background: #fafafa;
         }
 
-        /* Loading State */
-        .loading-msg { text-align: center; color: #999; margin-top: 20px; }
-
-        /* Draggable Chips */
-        .chip {
-            padding: 12px 15px;
-            margin-bottom: 8px;
-            border-radius: 6px;
+        /* --- DRAGGABLE CARDS (Improved) --- */
+        .card-chip {
+            background: white;
+            padding: 14px 18px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 6px solid #ccc;
             font-weight: 600;
-            font-size: 13px;
-            color: white;
+            font-size: 14px;
+            color: #333;
             cursor: grab;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            transition: transform 0.1s;
+            justify-content: space-between;
         }
 
-        .chip:active { cursor: grabbing; transform: scale(0.98); }
-        .chip:hover { transform: translateY(-1px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
-
-        /* Chip Colors */
-        .chip.driver { background: var(--cat-driver); }
-        .chip.team { background: var(--cat-team); }
-        .chip.tech { background: var(--cat-tech); }
-        .chip.chaos { background: var(--cat-chaos); }
-
-        .chip::after {
-            content: '⋮⋮';
-            opacity: 0.6;
-            letter-spacing: -2px;
-            font-size: 16px;
+        .card-chip:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-        /* --- RIGHT AREA (GRID) --- */
-        .workspace {
+        .card-chip.driver { border-left-color: var(--c-driver); }
+        .card-chip.team { border-left-color: var(--c-team); }
+        .card-chip.tech { border-left-color: var(--c-tech); }
+        .card-chip.chaos { border-left-color: var(--c-chaos); }
+
+        .card-chip i { font-style: normal; font-size: 16px; opacity: 0.5; }
+
+        /* --- RIGHT AREA (Game Board) --- */
+        .game-board {
             flex: 1;
-            background: var(--card-bg);
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            border: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            padding: 25px;
+            position: relative;
+        }
+
+        /* TEMPLATE SELECTOR (New UX) */
+        .strategy-deck {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .strat-card {
+            padding: 8px 16px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            opacity: 0.6;
+            transition: 0.2s;
+            background: white;
+        }
+
+        .strat-card:hover { opacity: 1; border-color: #ccc; }
+        
+        .strat-card.active {
+            opacity: 1;
+            border-color: var(--brand-red);
+            background: #fff5f5;
+            color: var(--brand-red);
+            font-weight: 700;
+            box-shadow: 0 4px 10px rgba(225, 6, 0, 0.15);
+        }
+
+        .strat-title { font-size: 13px; text-transform: uppercase; }
+        .strat-desc { font-size: 10px; font-weight: 400; color: #777; margin-top: 2px; }
+
+        /* BINGO GRID */
+        .bingo-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(5, 1fr);
+            gap: 10px;
+            height: 100%;
+            width: 100%;
+            max-width: 800px;
+            aspect-ratio: 1/1;
+            margin: 0 auto;
+        }
+
+        .slot {
+            position: relative;
+            border-radius: 8px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px;
-            position: relative;
-        }
-
-        .template-bar {
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: #f9f9f9;
-            padding: 8px 16px;
-            border-radius: 30px;
-            border: 1px solid #eee;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 12px;
-            width: 100%;
-            max-width: 750px;
-            aspect-ratio: 1/1;
-        }
-
-        /* Grid Slots */
-        .slot {
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             text-align: center;
-            padding: 8px;
-            font-size: 12px;
-            font-weight: 700;
+            padding: 5px;
             transition: all 0.2s;
-            position: relative;
-            border: 2px dashed transparent;
+            border: 2px solid transparent;
         }
 
-        /* Empty State Colors (The "Paint by Numbers" look) */
+        /* Empty Slot Visuals */
         .slot:empty {
-            border-style: solid;
-            opacity: 0.8;
-        }
-        
-        .slot:empty[data-req="driver"] { 
-            background: var(--cat-driver-bg); 
-            border-color: var(--cat-driver); 
-            color: var(--cat-driver);
-        }
-        .slot:empty[data-req="team"] { 
-            background: var(--cat-team-bg); 
-            border-color: var(--cat-team); 
-            color: var(--cat-team);
-        }
-        .slot:empty[data-req="tech"] { 
-            background: var(--cat-tech-bg); 
-            border-color: var(--cat-tech); 
-            color: var(--cat-tech);
-        }
-        .slot:empty[data-req="chaos"] { 
-            background: var(--cat-chaos-bg); 
-            border-color: var(--cat-chaos); 
-            color: var(--cat-chaos);
+            background: #f8f8f8;
+            border-color: #eee;
         }
 
-        /* Label inside empty slot */
-        .slot:empty::before {
+        .slot:empty::after {
             content: attr(data-label);
-            text-transform: uppercase;
             font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            opacity: 0.5;
             letter-spacing: 1px;
         }
 
-        /* Filled State */
+        /* Color Coding for Empty Slots */
+        .slot[data-req="driver"]:empty { background: #fff8f0; border-color: #ffe0b2; color: var(--c-driver); }
+        .slot[data-req="team"]:empty   { background: #f0fdfc; border-color: #b2dfdb; color: var(--c-team); }
+        .slot[data-req="tech"]:empty   { background: #f0f7ff; border-color: #bbdefb; color: var(--c-tech); }
+        .slot[data-req="chaos"]:empty  { background: #fff0f0; border-color: #ffcdd2; color: var(--c-chaos); }
+
+        /* Filled Slot */
         .slot.filled {
-            color: white !important;
-            border: none !important;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            font-size: 11px;
+            color: white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            font-size: 12px;
+            font-weight: 600;
             line-height: 1.3;
+            padding: 8px;
             cursor: pointer;
+            border: none;
         }
 
-        .slot.filled[data-type="driver"] { background: var(--cat-driver); }
-        .slot.filled[data-type="team"] { background: var(--cat-team); }
-        .slot.filled[data-type="tech"] { background: var(--cat-tech); }
-        .slot.filled[data-type="chaos"] { background: var(--cat-chaos); }
+        .slot.filled[data-type="driver"] { background: var(--c-driver); }
+        .slot.filled[data-type="team"]   { background: var(--c-team); }
+        .slot.filled[data-type="tech"]   { background: var(--c-tech); }
+        .slot.filled[data-type="chaos"]  { background: var(--c-chaos); }
 
-        /* Drag Over Feedback */
-        .slot.drag-over { transform: scale(1.05); z-index: 2; opacity: 1; }
-        .slot.drag-deny { animation: shake 0.4s; }
+        .slot.filled:hover::before {
+            content: '×';
+            position: absolute;
+            top: 2px;
+            right: 5px;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        /* Center Free Space */
+        .slot.free-space {
+            background: radial-gradient(circle, #222, #000);
+            color: var(--brand-red);
+            font-weight: 900;
+            font-size: 18px;
+            text-transform: uppercase;
+            border: 3px solid var(--brand-red);
+        }
+
+        /* Drag Interactions */
+        .slot.drag-hover { transform: scale(1.05); z-index: 10; opacity: 1; }
+        .slot.drag-reject { animation: shake 0.3s; }
 
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
@@ -289,74 +309,70 @@
             75% { transform: translateX(5px); }
         }
 
-        /* Center Free Space */
-        .slot.center {
-            background: #111 !important;
-            color: var(--brand-red) !important;
-            border: none !important;
-            font-weight: 900;
-            font-size: 16px;
-            text-transform: uppercase;
-        }
-
     </style>
 </head>
 <body>
 
 <header>
-    <div class="logo">
-        F1<span>BINGO</span><span style="font-weight:300; font-size:16px; margin-left:5px; color:#999;">2026 Edition</span>
+    <div class="brand-section">
+        <h1>F1 <span style="color:var(--brand-red)">BINGO</span></h1>
+        <div class="subtitle">🇦🇺 AUSTRALIAN GRAND PRIX 2026</div>
     </div>
-    <div class="controls">
-        <select id="raceSelect" onchange="resetGrid()">
-            <option value="aus">🇦🇺 Australia (Rd 1)</option>
-            <option value="chn">🇨🇳 China (Rd 2)</option>
-            <option value="jpn">🇯🇵 Japan (Rd 3)</option>
-            <option value="bhr">🇧🇭 Bahrain (Rd 4)</option>
-            <option value="sau">🇸🇦 Saudi Arabia (Rd 5)</option>
-            <option value="mia">🇺🇸 Miami (Rd 6)</option>
-            <option value="mad">🇪🇸 Madrid (New)</option>
-        </select>
-        <button class="primary" onclick="saveCard()">Save Card</button>
-        <button class="secondary" onclick="clearCard()">Reset</button>
+    <div class="actions">
+        <button class="btn btn-save" onclick="saveCard()">Save Card</button>
+        <button class="btn btn-reset" onclick="clearCard()">Reset</button>
     </div>
 </header>
 
-<div class="app-container">
+<div class="main-layout">
     
     <div class="sidebar">
-        <div class="tabs">
-            <div class="tab active" data-cat="driver" onclick="switchTab('driver')">DRIVERS</div>
-            <div class="tab" data-cat="team" onclick="switchTab('team')">TEAMS</div>
-            <div class="tab" data-cat="tech" onclick="switchTab('tech')">TECH</div>
-            <div class="tab" data-cat="chaos" onclick="switchTab('chaos')">CHAOS</div>
+        <div class="category-nav">
+            <div class="nav-item active" data-cat="driver" onclick="setCategory('driver')">Drivers</div>
+            <div class="nav-item" data-cat="team" onclick="setCategory('team')">Teams</div>
+            <div class="nav-item" data-cat="tech" onclick="setCategory('tech')">Tech</div>
+            <div class="nav-item" data-cat="chaos" onclick="setCategory('chaos')">Chaos</div>
         </div>
-        <div id="pool" class="pool-list">
-            <div class="loading-msg">Loading Data...</div>
-        </div>
+        
+        <div id="pool" class="pool-container">
+            </div>
     </div>
 
-    <div class="workspace">
-        <div class="template-bar">
-            <span>Strategy Template:</span>
-            <select id="templateSelect" onchange="applyTemplate()">
-                <option value="balanced">Balanced (Recommended)</option>
-                <option value="tech">Tech Inspector (Blue Heavy)</option>
-                <option value="chaos">Chaos Agent (Red Heavy)</option>
-                <option value="driver">Driver Market (Orange Heavy)</option>
-            </select>
+    <div class="game-board">
+        
+        <div class="strategy-deck">
+            <div class="strat-card active" onclick="setTemplate('balanced')" id="t-balanced">
+                <div class="strat-title">⚖️ Balanced</div>
+                <div class="strat-desc">Standard Mix</div>
+            </div>
+            <div class="strat-card" onclick="setTemplate('tech')" id="t-tech">
+                <div class="strat-title">🔧 Tech Spec</div>
+                <div class="strat-desc">Regs Focused</div>
+            </div>
+            <div class="strat-card" onclick="setTemplate('chaos')" id="t-chaos">
+                <div class="strat-title">🚩 Chaos Agent</div>
+                <div class="strat-desc">Crashes & Flags</div>
+            </div>
+            <div class="strat-card" onclick="setTemplate('driver')" id="t-driver">
+                <div class="strat-title">🏎️ Silly Season</div>
+                <div class="strat-desc">Driver Drama</div>
+            </div>
         </div>
 
-        <div id="grid" class="grid"></div>
+        <div id="grid" class="bingo-grid">
+            </div>
+
     </div>
 </div>
 
 <script>
-    // --- GLOBAL VARIABLES ---
-    let poolData = {}; // Will be populated from JSON
-    let currentCat = 'driver';
+    // --- APP STATE ---
+    let poolData = {};
+    let currentCategory = 'driver';
+    let currentTemplate = 'balanced';
     let gridState = Array(25).fill(null);
 
+    // --- TEMPLATES ---
     const templates = {
         balanced: [
             'driver','driver','team','tech','chaos',
@@ -390,189 +406,178 @@
 
     // --- INIT ---
     async function init() {
-        await loadExternalData();
-        applyTemplate();
-        renderPool(); // Now safe to call
-        loadCard();
-    }
-
-    // --- LOAD JSON DATA ---
-    async function loadExternalData() {
-        try {
-            const response = await fetch('./data.json');
-            if (!response.ok) throw new Error("JSON Fetch Failed");
-            poolData = await response.json();
-        } catch (error) {
-            console.error(error);
-            // Fallback just in case JSON fails (so app doesn't break entirely)
-            document.getElementById('pool').innerHTML = "<div class='loading-msg' style='color:red'>Error loading data.json<br>Please ensure file is in same folder.</div>";
-            poolData = { driver:[], team:[], tech:[], chaos:[] };
-        }
-    }
-
-    // --- POOL HANDLING ---
-    function switchTab(cat) {
-        currentCat = cat;
-        document.querySelectorAll('.tab').forEach(t => {
-            t.classList.toggle('active', t.dataset.cat === cat);
-        });
+        await loadData();
+        loadSavedState(); // Tries to load existing game
+        if(!gridState.some(x=>x)) applyTemplate(currentTemplate); // If empty, apply default
         renderPool();
     }
 
-    function renderPool() {
-        const list = document.getElementById('pool');
-        list.innerHTML = '';
-
-        if (!poolData[currentCat]) return;
-
-        poolData[currentCat].forEach(text => {
-            const el = document.createElement('div');
-            el.className = `chip ${currentCat}`;
-            el.innerText = text;
-            el.draggable = true;
-            el.ondragstart = (e) => {
-                e.dataTransfer.setData('text', text);
-                e.dataTransfer.setData('type', currentCat);
-                highlightTargets(currentCat, true);
-            };
-            el.ondragend = () => highlightTargets(currentCat, false);
-            list.appendChild(el);
-        });
+    async function loadData() {
+        try {
+            const res = await fetch('data.json');
+            poolData = await res.json();
+        } catch (e) {
+            console.error("JSON Error:", e);
+            document.getElementById('pool').innerHTML = "<p style='text-align:center; padding:20px; color:red'>Error: data.json not found.</p>";
+        }
     }
 
-    // --- GRID HANDLING ---
-    function applyTemplate() {
-        const type = document.getElementById('templateSelect').value;
-        const pattern = templates[type];
+    // --- TEMPLATE LOGIC ---
+    function setTemplate(name) {
+        // Visual UI update
+        document.querySelectorAll('.strat-card').forEach(el => el.classList.remove('active'));
+        document.getElementById(`t-${name}`).classList.add('active');
+        
+        // Logic update
+        if (confirm("Switching strategy will reset the board. Continue?")) {
+            currentTemplate = name;
+            gridState = Array(25).fill(null);
+            applyTemplate(name);
+        }
+    }
+
+    function applyTemplate(name) {
+        const pattern = templates[name];
         const grid = document.getElementById('grid');
         grid.innerHTML = '';
-        gridState = Array(25).fill(null);
 
-        pattern.forEach((cat, i) => {
+        pattern.forEach((type, index) => {
             const slot = document.createElement('div');
             
-            if (cat === 'FREE') {
-                slot.className = 'slot center';
+            if (type === 'FREE') {
+                slot.className = 'slot free-space';
                 slot.innerText = "LIGHTS OUT";
             } else {
                 slot.className = 'slot';
-                slot.dataset.index = i;
-                slot.dataset.req = cat; // Required type
-                slot.dataset.label = cat;
-                
+                slot.dataset.index = index;
+                slot.dataset.req = type;
+                slot.dataset.label = type;
+
                 // Drag Events
                 slot.ondragover = e => e.preventDefault();
                 slot.ondragenter = e => {
-                    if (e.dataTransfer.types.includes('text/plain')) return;
-                    slot.classList.add('drag-over');
+                    if(!e.dataTransfer.types.includes('text/plain')) return;
+                    slot.classList.add('drag-hover');
                 };
-                slot.ondragleave = () => slot.classList.remove('drag-over');
+                slot.ondragleave = () => slot.classList.remove('drag-hover');
                 slot.ondrop = e => handleDrop(e, slot);
-                slot.onclick = () => clearSlot(i);
+                slot.onclick = () => clearSlot(index);
+                
+                // Re-fill if state exists
+                if (gridState[index]) {
+                    fillSlotUI(slot, gridState[index].text, gridState[index].type);
+                }
             }
             grid.appendChild(slot);
         });
     }
 
+    // --- POOL LOGIC ---
+    function setCategory(cat) {
+        currentCategory = cat;
+        document.querySelectorAll('.nav-item').forEach(el => {
+            el.classList.toggle('active', el.dataset.cat === cat);
+        });
+        renderPool();
+    }
+
+    function renderPool() {
+        const container = document.getElementById('pool');
+        container.innerHTML = '';
+        
+        if (!poolData[currentCategory]) return;
+
+        // Icons map
+        const icons = { driver: '🏎️', team: '🛠️', tech: '🔋', chaos: '🚩' };
+
+        poolData[currentCategory].forEach(text => {
+            const chip = document.createElement('div');
+            chip.className = `card-chip ${currentCategory}`;
+            chip.innerHTML = `<span>${text}</span> <i>${icons[currentCategory]}</i>`;
+            chip.draggable = true;
+            
+            chip.ondragstart = e => {
+                e.dataTransfer.setData('text', text);
+                e.dataTransfer.setData('type', currentCategory);
+            };
+            container.appendChild(chip);
+        });
+    }
+
+    // --- DRAG & DROP ---
     function handleDrop(e, slot) {
         e.preventDefault();
-        slot.classList.remove('drag-over');
+        slot.classList.remove('drag-hover');
 
         const text = e.dataTransfer.getData('text');
-        const incomingType = e.dataTransfer.getData('type');
-        const requiredType = slot.dataset.req;
+        const type = e.dataTransfer.getData('type');
+        const required = slot.dataset.req;
 
-        // STRICT Validation: Color must match
-        if (incomingType !== requiredType) {
-            slot.classList.add('drag-deny');
-            setTimeout(() => slot.classList.remove('drag-deny'), 400);
+        // Validation
+        if (type !== required) {
+            slot.classList.add('drag-reject');
+            setTimeout(() => slot.classList.remove('drag-reject'), 400);
             return;
         }
 
-        fillSlot(slot, text, incomingType);
-        gridState[slot.dataset.index] = { text, type: incomingType };
+        // Save State
+        const idx = slot.dataset.index;
+        gridState[idx] = { text, type };
+        fillSlotUI(slot, text, type);
         saveCard();
     }
 
-    function fillSlot(slot, text, type) {
+    function fillSlotUI(slot, text, type) {
         slot.innerText = text;
         slot.classList.add('filled');
-        slot.dataset.type = type; // Sets the background color
+        slot.dataset.type = type;
     }
 
     function clearSlot(index) {
         if (!gridState[index]) return;
         gridState[index] = null;
         
+        // Re-render just this slot
         const slot = document.querySelector(`.slot[data-index="${index}"]`);
-        slot.innerText = "";
+        slot.innerText = '';
         slot.classList.remove('filled');
         delete slot.dataset.type;
         saveCard();
     }
 
-    function highlightTargets(type, isActive) {
-        const slots = document.querySelectorAll(`.slot[data-req="${type}"]`);
-        slots.forEach(s => {
-            if (isActive && !s.classList.contains('filled')) {
-                s.style.transform = "scale(1.02)";
-                s.style.boxShadow = "0 0 8px rgba(0,0,0,0.1)";
-            } else {
-                s.style.transform = "";
-                s.style.boxShadow = "";
-            }
-        });
-    }
-
-    // --- DATA PERSISTENCE ---
+    // --- SAVING ---
     function saveCard() {
-        const race = document.getElementById('raceSelect').value;
         const data = {
-            template: document.getElementById('templateSelect').value,
+            template: currentTemplate,
             grid: gridState
         };
-        localStorage.setItem(`f1_bingo_2026_${race}`, JSON.stringify(data));
-        alert("Card Saved Locally!");
+        localStorage.setItem('f1_bingo_aus_2026', JSON.stringify(data));
+        // Visual feedback could go here
     }
 
-    function loadCard() {
-        const race = document.getElementById('raceSelect').value;
-        const saved = localStorage.getItem(`f1_bingo_2026_${race}`);
-        
+    function loadSavedState() {
+        const saved = localStorage.getItem('f1_bingo_aus_2026');
         if (saved) {
             const data = JSON.parse(saved);
-            
-            // Sync template
-            if (document.getElementById('templateSelect').value !== data.template) {
-                document.getElementById('templateSelect').value = data.template;
-                applyTemplate();
-            }
-
-            // Fill Grid
-            data.grid.forEach((item, i) => {
-                if (item) {
-                    const slot = document.querySelector(`.slot[data-index="${i}"]`);
-                    if (slot) fillSlot(slot, item.text, item.type);
-                }
-            });
+            currentTemplate = data.template;
             gridState = data.grid;
+            
+            // Highlight correct template button
+            document.querySelectorAll('.strat-card').forEach(el => el.classList.remove('active'));
+            document.getElementById(`t-${currentTemplate}`).classList.add('active');
         }
     }
 
     function clearCard() {
-        if(confirm("Clear this card?")) {
-            applyTemplate();
-            saveCard();
+        if(confirm("Clear the entire board?")) {
+            localStorage.removeItem('f1_bingo_aus_2026');
+            location.reload();
         }
     }
-    
-    function resetGrid() {
-        applyTemplate();
-        loadCard();
-    }
 
+    // Start
     window.onload = init;
-</script>
 
+</script>
 </body>
 </html>
