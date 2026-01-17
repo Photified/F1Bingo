@@ -6,6 +6,8 @@
     <title>F1 2026: CHAMPIONSHIP BINGO</title>
     <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,400;0,600;0,700;0,900;1,400&display=swap" rel="stylesheet">
     
+    <script src="bingo_data.js"></script>
+
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
@@ -17,190 +19,149 @@
             --bg-body: #f4f4f8;
             --card-shadow: 0 4px 15px rgba(0,0,0,0.08);
             
-            /* High Visibility Category Colors */
-            --c-driver: #ff9500;
-            --c-team: #00d2be;
-            --c-tech: #0070ff;
-            --c-chaos: #e10600;
-            
-            /* Scoring */
+            /* Category Colors */
+            --c-driver: #ff9500; --c-team: #00d2be; --c-tech: #0070ff; --c-chaos: #e10600;
             --score-win: #39ff14; 
         }
 
         body {
             font-family: 'Titillium Web', sans-serif;
-            background: var(--bg-body);
-            color: var(--brand-dark);
-            margin: 0; height: 100vh;
-            display: flex; flex-direction: column;
-            overflow: hidden;
+            background: var(--bg-body); color: var(--brand-dark);
+            margin: 0; height: 100vh; display: flex; flex-direction: column; overflow: hidden;
         }
 
-        /* --- 1. LOGIN OVERLAY --- */
-        #loginOverlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(21, 21, 30, 0.98);
-            z-index: 2000;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center; color: white;
-        }
-        .login-box {
-            background: #222; padding: 40px; border-radius: 12px;
-            text-align: center; border: 2px solid var(--brand-red);
-            box-shadow: 0 0 50px rgba(225, 6, 0, 0.3);
-        }
-        .login-input {
-            padding: 15px; border-radius: 6px; border: 1px solid #444;
-            background: #111; color: white; font-size: 18px; margin-top: 20px;
-            width: 280px; text-align: center; font-weight: bold;
-        }
-        .login-btn {
-            margin-top: 20px; padding: 12px 30px;
-            background: var(--brand-red); color: white; border: none;
-            font-weight: 900; font-size: 16px; cursor: pointer;
-            text-transform: uppercase; border-radius: 6px; width: 100%;
-        }
-        .login-btn:hover { background: #b00; }
-
-        /* --- 2. HEADER & ADMIN --- */
+        /* --- LAYOUT COMPONENTS --- */
         header {
             background: white; border-bottom: 3px solid var(--brand-red);
             padding: 10px 25px; display: flex; justify-content: space-between;
-            align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            z-index: 10; flex-shrink: 0;
+            align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); z-index: 10; flex-shrink: 0;
         }
         .header-title { font-weight:900; font-style:italic; font-size:22px; cursor: help; user-select: none; }
         
-        #adminPanel {
-            position: fixed; top: 60px; left: 50%; transform: translateX(-50%);
-            background: #222; color: white; padding: 20px; border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 3000;
-            display: none; flex-direction: column; gap: 10px; width: 400px;
-            border: 2px solid var(--brand-red);
-        }
-        .admin-input { background: #333; border: 1px solid #555; color: white; padding: 10px; font-size: 12px; width: 100%; box-sizing: border-box; }
-        .admin-btn { background: var(--brand-red); border: none; padding: 10px; color: white; cursor: pointer; font-weight: bold; border-radius: 4px; }
-
         .user-profile { font-weight: 700; display: flex; align-items: center; gap: 10px; font-size: 14px; }
         .status-dot { width: 10px; height: 10px; background: #ccc; border-radius: 50%; }
         .status-dot.online { background: #00d2be; box-shadow: 0 0 8px #00d2be; }
 
-        /* --- 3. MAIN LAYOUT --- */
+        /* --- RACE BAR --- */
         .race-bar {
-            background: #fff; padding: 0; display: flex;
-            overflow-x: auto; border-bottom: 1px solid #ddd;
-            scrollbar-width: thin; height: 85px; flex-shrink: 0;
+            background: #fff; padding: 0; display: flex; overflow-x: auto;
+            border-bottom: 1px solid #ddd; scrollbar-width: thin; height: 85px; flex-shrink: 0;
         }
         .race-card {
-            flex: 0 0 80px; padding: 10px 5px; text-align: center;
-            border-right: 1px solid #f0f0f0; cursor: pointer;
-            opacity: 0.6; transition: 0.2s; background: #fff;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            flex: 0 0 80px; padding: 10px 5px; text-align: center; border-right: 1px solid #f0f0f0;
+            cursor: pointer; opacity: 0.6; transition: 0.2s; display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
         }
-        .race-card.active { opacity: 1; border-bottom: 4px solid var(--brand-red); }
-        .race-flag-img { width: 32px; height: 24px; object-fit: cover; border-radius: 3px; margin-bottom: 6px; }
+        .race-card:hover { opacity: 1; background: #f9f9f9; }
+        .race-card.active { opacity: 1; border-bottom: 4px solid var(--brand-red); background: #fff; }
+        .race-flag-img { width: 32px; height: 24px; object-fit: cover; border-radius: 3px; margin-bottom: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .race-name { font-size: 11px; font-weight: 800; text-transform: uppercase; line-height: 1; }
 
+        /* --- MAIN STAGE --- */
         .main-stage {
-            flex: 1; display: grid; 
-            grid-template-columns: 300px 1fr 280px; 
+            flex: 1; display: grid; grid-template-columns: 300px 1fr 280px;
             padding: 20px; gap: 20px; overflow: hidden; height: 100%;
         }
 
         .panel {
             background: white; border-radius: 10px; box-shadow: var(--card-shadow);
-            overflow: hidden; display: flex; flex-direction: column; border: 1px solid #e0e0e0;
-            height: 100%;
+            overflow: hidden; display: flex; flex-direction: column; border: 1px solid #e0e0e0; height: 100%;
         }
         .panel-header {
-            padding: 12px; background: #f8f8f8; font-weight: 800;
-            font-size: 13px; text-transform: uppercase; border-bottom: 1px solid #ddd;
-            text-align: center; color: #666; flex-shrink: 0;
+            padding: 12px; background: #f8f8f8; font-weight: 800; font-size: 13px;
+            text-transform: uppercase; border-bottom: 1px solid #ddd; text-align: center; color: #666; flex-shrink: 0;
         }
 
-        /* POOL */
+        /* --- POOL & TABS --- */
         .pool-container { display: flex; flex-direction: column; height: 100%; }
         .pool-tabs-header {
             padding: 10px; background: white; border-bottom: 1px solid #eee;
             display: grid; grid-template-columns: 1fr 1fr; gap: 8px; flex-shrink: 0;
         }
         .tab-btn {
-            padding: 8px; text-align: center; cursor: pointer;
-            font-weight: 700; font-size: 11px; text-transform: uppercase;
-            border-radius: 4px; transition: 0.2s; background: #f4f4f4;
+            padding: 8px; text-align: center; cursor: pointer; font-weight: 700;
+            font-size: 11px; text-transform: uppercase; border-radius: 4px; background: #f4f4f4;
             color: #888; border-left: 4px solid transparent;
         }
+        .tab-btn.active { background: #333; color: white; border-color: #333; }
+        
         .tab-btn[data-cat="driver"] { border-left-color: var(--c-driver); }
         .tab-btn[data-cat="team"] { border-left-color: var(--c-team); }
         .tab-btn[data-cat="tech"] { border-left-color: var(--c-tech); }
         .tab-btn[data-cat="chaos"] { border-left-color: var(--c-chaos); }
-        .tab-btn.active { background: #333; color: white; border-color: #333; }
 
         .pool-list { flex: 1; overflow-y: auto; padding: 12px; background: #fbfbfb; }
         .chip {
-            padding: 10px; margin-bottom: 8px; background: white;
-            border-radius: 6px; font-size: 11px; font-weight: 700; cursor: grab;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05); border-left: 5px solid #ccc;
+            padding: 10px; margin-bottom: 8px; background: white; border-radius: 6px;
+            font-size: 11px; font-weight: 700; cursor: grab; border-left: 5px solid #ccc;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
         .chip.driver { border-left-color: var(--c-driver); }
         .chip.team { border-left-color: var(--c-team); }
         .chip.tech { border-left-color: var(--c-tech); }
         .chip.chaos { border-left-color: var(--c-chaos); }
 
-        /* CENTER ACTIVE PANEL */
+        /* --- ACTIVE PANEL --- */
         .active-panel {
             background: white; border-radius: 10px; box-shadow: var(--card-shadow);
-            border: 1px solid #e0e0e0; padding: 20px;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            border: 1px solid #e0e0e0; padding: 20px; display: flex;
+            flex-direction: column; align-items: center; justify-content: center;
             position: relative; overflow: hidden; height: 100%;
         }
 
+        /* Views */
         .view-login { text-align: center; width: 100%; max-width: 400px; }
-        .view-strategy { text-align: center; width: 100%; height: 100%; overflow-y: auto; padding-top: 20px; }
-        
-        .strat-grid {
-            display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;
-            margin-top: 20px; max-width: 600px; margin-left: auto; margin-right: auto;
-        }
-        .strat-card {
-            background: #f9f9f9; border: 2px solid #eee; border-radius: 10px;
-            padding: 20px; cursor: pointer; transition: 0.2s;
-            display: flex; flex-direction: column; align-items: center;
-        }
-        .strat-card:hover { border-color: var(--brand-red); background: white; }
-        
-        .mini-grid {
-            display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px;
-            width: 50px; height: 50px; margin-bottom: 10px; opacity: 0.8;
-        }
+        .login-input { padding: 15px; width: 100%; margin-top: 15px; text-align: center; border: 2px solid #eee; border-radius: 8px; }
+        .login-btn { padding: 15px; width: 100%; margin-top: 15px; background: var(--brand-red); color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 8px; }
+
+        .view-strategy { text-align: center; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; overflow-y: auto; padding-top: 10px; }
+        .strat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px; max-width: 600px; width: 100%; }
+        .strat-card { background: #f9f9f9; border: 2px solid #eee; border-radius: 10px; padding: 20px; cursor: pointer; display: flex; flex-direction: column; align-items: center; }
+        .strat-card:hover { border-color: var(--brand-red); background: #fff; }
+        .mini-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; width: 50px; height: 50px; margin-bottom: 10px; opacity: 0.8; }
         .mg-c { background: #ddd; border-radius: 1px; }
 
         .view-game { width: 100%; height: 100%; display: flex; flex-direction: column; }
-        .bingo-grid {
-            display: grid; grid-template-columns: repeat(5, 1fr);
-            gap: 8px; width: 100%; aspect-ratio: 1/1;
-            margin: 0 auto; max-height: 550px;
-        }
-        .slot {
-            background: #fafafa; border: 2px dashed #ddd; border-radius: 8px;
-            display: flex; align-items: center; justify-content: center;
-            text-align: center; padding: 4px; font-size: 11px; font-weight: 700;
-            position: relative; transition: 0.2s; user-select: none;
-        }
-        .slot[data-req="driver"] { background: #fff8e1; border-color: #ffe0b2; color: var(--c-driver); }
-        .slot[data-req="team"] { background: #e0f2f1; border-color: #b2dfdb; color: var(--c-team); }
-        .slot[data-req="tech"] { background: #e3f2fd; border-color: #bbdefb; color: var(--c-tech); }
-        .slot[data-req="chaos"] { background: #fff5f5; border-color: #ffcdd2; color: var(--c-chaos); }
-
+        .bingo-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; width: 100%; aspect-ratio: 1/1; margin: 0 auto; max-height: 550px; }
+        .slot { background: #fafafa; border: 2px dashed #ddd; border-radius: 8px; display: flex; align-items: center; justify-content: center; text-align: center; padding: 4px; font-size: 11px; font-weight: 700; position: relative; }
         .slot.filled { border: none; color: white !important; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
         .slot.filled[data-type="driver"] { background: var(--c-driver); }
         .slot.filled[data-type="team"] { background: var(--c-team); }
         .slot.filled[data-type="tech"] { background: var(--c-tech); }
         .slot.filled[data-type="chaos"] { background: var(--c-chaos); }
+        .slot.center { background: linear-gradient(135deg, #222, #000); color: var(--brand-red); border:none; font-size: 14px; text-transform: uppercase; }
         
-        .slot.matched { opacity: 1; box-shadow: inset 0 0 0 4px var(--score-win); }
-        .slot.center { background: linear-gradient(135deg, #222, #000) !important; color: var(--brand-red) !important; border:none; font-size: 14px; text-transform: uppercase; }
+        .slot.matched { opacity: 1; box-shadow: inset 0 0 0 4px var(--score-win); transform: scale(1.02); z-index: 5; }
+        .slot.matched::after { content: '✓'; position: absolute; top: -8px; right: -8px; background: var(--score-win); color: black; border-radius: 50%; width: 20px; height: 20px; font-weight: bold; display: flex; align-items: center; justify-content: center; }
 
+        /* --- ADMIN OVERLAY --- */
+        #adminOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); z-index: 5000; display: none;
+            align-items: center; justify-content: center;
+        }
+        .admin-box {
+            background: #1a1a1a; color: white; width: 80%; max-width: 900px;
+            height: 80%; border-radius: 12px; display: flex; flex-direction: column;
+            border: 2px solid var(--brand-red); box-shadow: 0 0 50px rgba(225,6,0,0.2);
+        }
+        .admin-header {
+            padding: 20px; background: #111; border-bottom: 1px solid #333;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .admin-content {
+            flex: 1; overflow-y: auto; padding: 20px; display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px;
+        }
+        .toggle-item {
+            background: #333; padding: 10px; border-radius: 4px; font-size: 11px;
+            cursor: pointer; border: 1px solid #444; display: flex; align-items: center; gap: 10px;
+        }
+        .toggle-item.selected { background: var(--brand-red); color: white; border-color: var(--brand-red); }
+        .toggle-check { width: 15px; height: 15px; border: 2px solid #aaa; border-radius: 3px; display: block; }
+        .toggle-item.selected .toggle-check { background: white; border-color: white; }
+
+        /* Utility */
         .leaderboard { flex: 1; overflow-y: auto; font-size: 12px; }
         .lb-row { display: flex; justify-content: space-between; padding: 10px 15px; border-bottom: 1px solid #f0f0f0; }
         .hidden { display: none !important; }
@@ -208,6 +169,23 @@
     </style>
 </head>
 <body>
+
+<div id="adminOverlay">
+    <div class="admin-box">
+        <div class="admin-header">
+            <div>
+                <h2 style="margin:0; font-style:italic;">RACE CONTROL</h2>
+                <div style="font-size:12px; color:#888;">Select verified events for <span id="adminRaceName" style="color:white">AUSTRALIA</span></div>
+            </div>
+            <div style="display:flex; gap:10px;">
+                <button onclick="publishResults()" style="background:var(--score-win); color:black; border:none; padding:10px 20px; font-weight:bold; cursor:pointer;">PUBLISH RESULTS</button>
+                <button onclick="toggleAdmin()" style="background:#333; color:white; border:none; padding:10px 20px; cursor:pointer;">CLOSE</button>
+            </div>
+        </div>
+        <div class="admin-content" id="adminList">
+            </div>
+    </div>
+</div>
 
 <header>
     <div class="user-profile">
@@ -217,15 +195,6 @@
     <div class="header-title" ondblclick="toggleAdmin()">F1 <span style="color:var(--brand-red)">2026</span> BINGO</div>
     <button onclick="saveToServer()" style="background:var(--brand-red); color:white; border:none; padding:8px 20px; border-radius:20px; font-weight:bold; cursor:pointer;">CLOUD SAVE</button>
 </header>
-
-<div id="adminPanel">
-    <h3 style="margin:0; color:var(--brand-red); display:flex; justify-content:space-between;">
-        🏁 RACE DIRECTOR <span onclick="toggleAdmin()" style="cursor:pointer; color:white;">&times;</span>
-    </h3>
-    <p style="font-size:11px; margin:5px 0; color:#aaa;">Enter Race Results to calculate scores.</p>
-    <textarea id="adminResults" class="admin-input" rows="5" placeholder="Events (comma separated)"></textarea>
-    <button class="admin-btn" onclick="calculateScore()">CALCULATE POINTS</button>
-</div>
 
 <div class="race-bar" id="raceBar"></div>
 
@@ -248,13 +217,19 @@
         
         <div id="view-login" class="view-login">
             <h1 style="font-style:italic;">TEAM PRINCIPAL LOGIN</h1>
-            <input type="text" id="teamNameInput" class="login-input" placeholder="Team Name (e.g. McLaren Boys)">
+            <input type="text" id="teamNameInput" class="login-input" placeholder="Team Name">
             <button class="login-btn" onclick="login()">Enter Paddock</button>
-            <div id="loginStatus" style="margin-top:10px; font-size:10px; color:#999; min-height:15px;"></div>
         </div>
 
         <div id="view-strategy" class="view-strategy hidden">
-            <h2 id="stratRaceTitle">RACE STRATEGY</h2>
+            <div style="display:flex; align-items:center; justify-content:center; gap:15px; margin-top:10px;">
+                <img id="stratFlag" src="" style="width:60px; border-radius:4px; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
+                <div style="text-align:left;">
+                    <div style="font-weight:900; font-size:20px; font-style:italic;" id="stratRaceName">RACE</div>
+                    <div style="font-size:11px; color:#888;">SELECT STRATEGY CARD</div>
+                </div>
+            </div>
+            
             <div class="strat-grid">
                 <div class="strat-card" onclick="confirmStrategy('balanced')">
                     <div class="mini-grid">
@@ -262,7 +237,7 @@
                         <div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-team)"></div>
                         <div class="mg-c" style="background:var(--c-chaos)"></div>
                     </div>
-                    <strong>⚖️ Balanced</strong><br><span style="font-size:10px; color:#888;">Standard Mix</span>
+                    <strong>⚖️ Balanced</strong>
                 </div>
                 <div class="strat-card" onclick="confirmStrategy('tech')">
                     <div class="mini-grid">
@@ -270,7 +245,7 @@
                         <div class="mg-c" style="background:var(--c-team)"></div><div class="mg-c" style="background:var(--c-tech)"></div>
                         <div class="mg-c" style="background:var(--c-tech)"></div>
                     </div>
-                    <strong>🔧 Tech Heavy</strong><br><span style="font-size:10px; color:#888;">Regs Focused</span>
+                    <strong>🔧 Tech Heavy</strong>
                 </div>
                 <div class="strat-card" onclick="confirmStrategy('chaos')">
                     <div class="mini-grid">
@@ -278,7 +253,7 @@
                         <div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-chaos)"></div>
                         <div class="mg-c" style="background:var(--c-chaos)"></div>
                     </div>
-                    <strong>🚩 Chaos Agent</strong><br><span style="font-size:10px; color:#888;">Crash & SC</span>
+                    <strong>🚩 Chaos Agent</strong>
                 </div>
                 <div class="strat-card" onclick="confirmStrategy('driver')">
                     <div class="mini-grid">
@@ -286,7 +261,7 @@
                         <div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-driver)"></div>
                         <div class="mg-c" style="background:var(--c-driver)"></div>
                     </div>
-                    <strong>🏎️ Silly Season</strong><br><span style="font-size:10px; color:#888;">Driver Drama</span>
+                    <strong>🏎️ Silly Season</strong>
                 </div>
             </div>
         </div>
@@ -298,62 +273,23 @@
 
     <div class="panel">
         <div class="panel-header">🏆 Standings</div>
-        <div class="leaderboard" id="leaderboardList">
-            <div style="padding:20px; text-align:center; color:#999;">Waiting for Login...</div>
+        <div style="padding:10px; text-align:center; font-size:12px;" id="currentScoreDisplay">Race Score: 0</div>
+        <div class="leaderboard" id="leaderboardList" style="flex:1; overflow-y:auto; padding:10px;">
+            <div style="text-align:center; color:#999;">Waiting for Login...</div>
         </div>
     </div>
 </div>
 
 <script>
-    // --- APP LOGIC ---
-
-    const firebaseConfig = {
-        apiKey: "YOUR_API_KEY",
-        authDomain: "YOUR_PROJECT.firebaseapp.com",
-        projectId: "YOUR_PROJECT_ID",
-        storageBucket: "YOUR_PROJECT.appspot.com",
-        messagingSenderId: "SENDER_ID",
-        appId: "APP_ID"
-    };
-
-    let db, auth;
-    let isOffline = true;
-
-    function initFirebase() {
-        if (firebaseConfig.apiKey === "YOUR_API_KEY") {
-            console.warn("No API Key Detected. Forcing Offline Mode.");
-            isOffline = true;
-            return;
-        }
-        
-        if (window.firebase) {
-            try {
-                firebase.initializeApp(firebaseConfig);
-                db = firebase.firestore();
-                auth = firebase.auth();
-                isOffline = false;
-                console.log("Firebase Initialized");
-            } catch (e) {
-                console.warn("Firebase Init Failed. Running Offline.");
-            }
-        }
-    }
-
-    // --- DATA ---
-    const races = [
-        {id:'aus', c:'au', n:'Australia', d:'Mar 8'}, {id:'chn', c:'cn', n:'China', d:'Mar 15'},
-        {id:'jpn', c:'jp', n:'Japan', d:'Mar 29'}, {id:'bhr', c:'bh', n:'Bahrain', d:'Apr 12'},
-        {id:'sau', c:'sa', n:'Saudi Arabia', d:'Apr 19'}, {id:'mia', c:'us', n:'Miami', d:'May 3'},
-        {id:'can', c:'ca', n:'Canada', d:'May 24'}, {id:'mon', c:'mc', n:'Monaco', d:'Jun 7'},
-        {id:'bar', c:'es', n:'Spain', d:'Jun 14'}, {id:'aut', c:'at', n:'Austria', d:'Jun 28'},
-        {id:'gbr', c:'gb', n:'Britain', d:'Jul 5'}, {id:'bel', c:'be', n:'Belgium', d:'Jul 19'},
-        {id:'hun', c:'hu', n:'Hungary', d:'Jul 26'}, {id:'ned', c:'nl', n:'Dutch', d:'Aug 23'},
-        {id:'ita', c:'it', n:'Monza', d:'Sep 6'}, {id:'mad', c:'es', n:'Madrid', d:'Sep 13'},
-        {id:'aze', c:'az', n:'Baku', d:'Sep 27'}, {id:'sin', c:'sg', n:'Singapore', d:'Oct 11'},
-        {id:'usa', c:'us', n:'Austin', d:'Oct 25'}, {id:'mex', c:'mx', n:'Mexico', d:'Nov 1'},
-        {id:'bra', c:'br', n:'Brazil', d:'Nov 8'}, {id:'lvg', c:'us', n:'Vegas', d:'Nov 21'},
-        {id:'qat', c:'qa', n:'Qatar', d:'Nov 29'}, {id:'abu', c:'ae', n:'Abu Dhabi', d:'Dec 6'}
-    ];
+    // --- CONFIG ---
+    const firebaseConfig = { apiKey: "YOUR_API_KEY" }; 
+    let db, auth, isOffline = true;
+    
+    let currentUser = null;
+    let activeRace = 'aus';
+    let currentGrid = Array(25).fill(null);
+    let currentPoolCat = 'driver';
+    let verifiedResults = [];
 
     const templates = {
         balanced: ['driver','driver','team','tech','chaos','driver','team','tech','chaos','driver','team','tech','FREE','driver','team','tech','chaos','driver','team','tech','chaos','driver','team','tech','chaos'],
@@ -362,66 +298,57 @@
         driver: ['driver','driver','driver','team','driver','driver','team','chaos','driver','driver','team','driver','FREE','driver','team','driver','chaos','team','driver','driver','driver','driver','team','driver','chaos']
     };
 
-    let currentUser = null;
-    let poolData = {};
-    let activeRace = 'aus';
-    let currentGrid = Array(25).fill(null);
-    let currentPoolCat = 'driver';
-    let isAdminOpen = false;
-
-    // --- MAIN INIT ---
-    async function init() {
-        initFirebase();
-        
-        // Fetch JSON logic
-        try {
-            const res = await fetch('data.json');
-            poolData = await res.json();
-        } catch(e) {
-            console.error("Data.json Missing. Using Fallback.");
-            poolData = { driver: ["Check data.json"], team: [], tech: [], chaos: [] };
+    function init() {
+        // Check for Data
+        if (typeof BINGO_CONFIG === 'undefined') {
+            alert("Error: bingo_data.js not loaded!");
+            return;
         }
-        
+
+        // Setup Firebase or Offline
+        if (window.firebase && firebaseConfig.apiKey !== "YOUR_API_KEY") {
+            try {
+                firebase.initializeApp(firebaseConfig);
+                db = firebase.firestore();
+                auth = firebase.auth();
+                isOffline = false;
+            } catch(e) { console.log("Offline Mode"); }
+        }
+
         renderRaces();
         
         const saved = localStorage.getItem('f1_team_name');
-        if(saved) {
-            document.getElementById('teamNameInput').value = saved;
-        }
+        if(saved) document.getElementById('teamNameInput').value = saved;
         switchState('login');
     }
 
     function switchState(name) {
-        document.getElementById('view-login').classList.add('hidden');
-        document.getElementById('view-strategy').classList.add('hidden');
-        document.getElementById('view-game').classList.add('hidden');
+        document.querySelectorAll('.view-login, .view-strategy, .view-game').forEach(el => el.classList.add('hidden'));
         document.getElementById(`view-${name}`).classList.remove('hidden');
     }
 
-    // --- LOGIN ---
     function login() {
         const name = document.getElementById('teamNameInput').value;
-        if(!name) { alert("Enter Team Name"); return; }
+        if(!name) return alert("Enter Name");
         
         currentUser = { name, id: name.replace(/\s+/g, '_').toLowerCase() };
         localStorage.setItem('f1_team_name', name);
-        
         document.getElementById('displayTeamName').innerText = name.toUpperCase();
         
-        if(!isOffline && auth) {
-            auth.signInAnonymously().catch(e => console.log(e));
+        if(!isOffline) {
+            auth.signInAnonymously();
             document.getElementById('connectionDot').classList.add('online');
             loadCloud();
-            listenLeaderboard();
         } else {
-            // Offline Fallback
-            renderLeaderboard([{name: name, score: 0}, {name: "Max V.", score: 120}]);
             checkLocalGrid();
         }
     }
 
     function checkLocalGrid() {
         const local = localStorage.getItem(`grid_${activeRace}`);
+        const localRes = localStorage.getItem(`results_${activeRace}`);
+        verifiedResults = localRes ? JSON.parse(localRes) : [];
+
         if(local) {
             currentGrid = JSON.parse(local);
             switchState('game');
@@ -432,10 +359,10 @@
         }
     }
 
-    // --- STRATEGY ---
     function prepareStrategyView() {
-        const r = races.find(x => x.id === activeRace);
-        document.getElementById('stratRaceTitle').innerText = r.n.toUpperCase() + " STRATEGY";
+        const r = BINGO_CONFIG.races.find(x => x.id === activeRace);
+        document.getElementById('stratFlag').src = `https://flagcdn.com/w160/${r.c}.png`;
+        document.getElementById('stratRaceName').innerText = r.n.toUpperCase();
     }
 
     function confirmStrategy(type) {
@@ -444,23 +371,14 @@
         saveToServer();
     }
 
-    // --- RENDERERS ---
     function renderRaces() {
         const bar = document.getElementById('raceBar');
         bar.innerHTML = '';
-        races.forEach(r => {
+        BINGO_CONFIG.races.forEach(r => {
             const div = document.createElement('div');
             div.className = `race-card ${r.id === activeRace ? 'active' : ''}`;
-            div.onclick = () => { 
-                activeRace = r.id; 
-                renderRaces(); 
-                if(!isOffline) loadCloud(); else checkLocalGrid(); 
-            };
-            div.innerHTML = `
-                <img src="https://flagcdn.com/w40/${r.c}.png" class="race-flag-img">
-                <span class="race-name">${r.n}</span>
-                <span class="race-date">${r.d}</span>
-            `;
+            div.onclick = () => { activeRace = r.id; renderRaces(); checkLocalGrid(); };
+            div.innerHTML = `<img src="https://flagcdn.com/w40/${r.c}.png" class="race-flag-img"><span class="race-name">${r.n}</span><span class="race-date">${r.d}</span>`;
             bar.appendChild(div);
         });
     }
@@ -477,44 +395,39 @@
     function renderPool() {
         const container = document.getElementById('pool');
         container.innerHTML = '';
-        if(!poolData[currentPoolCat]) return;
-        poolData[currentPoolCat].forEach(text => {
+        BINGO_CONFIG.pool[currentPoolCat].forEach(text => {
             const chip = document.createElement('div');
             chip.className = `chip ${currentPoolCat}`;
             chip.innerText = text;
             chip.draggable = true;
-            chip.ondragstart = e => {
-                e.dataTransfer.setData('text', text);
-                e.dataTransfer.setData('type', currentPoolCat);
-            };
+            chip.ondragstart = e => { e.dataTransfer.setData('text', text); e.dataTransfer.setData('type', currentPoolCat); };
             container.appendChild(chip);
         });
     }
 
     function applyTemplate(t) {
         const pattern = templates[t];
+        currentGrid = pattern.map(type => type === 'FREE' ? { text:"LIGHTS OUT", type:"FREE" } : null);
+        renderGridStructure(pattern);
+    }
+
+    function renderGridStructure(pattern) {
         const grid = document.getElementById('grid');
         grid.innerHTML = '';
         pattern.forEach((type, i) => {
             const slot = document.createElement('div');
+            slot.dataset.index = i;
             if(type === 'FREE') {
                 slot.className = 'slot center'; slot.innerText = "LIGHTS OUT";
-                currentGrid[i] = { text:"LIGHTS OUT", type:"FREE" };
             } else {
-                slot.className = 'slot';
-                slot.dataset.req = type;
-                slot.dataset.index = i;
+                slot.className = 'slot'; slot.dataset.req = type;
                 slot.ondragover = e => e.preventDefault();
                 slot.ondrop = e => handleDrop(e, i, type);
                 slot.onclick = () => { currentGrid[i] = null; renderGrid(); };
-                if(currentGrid[i]) {
-                    slot.innerText = currentGrid[i].text;
-                    slot.classList.add('filled');
-                    slot.dataset.type = currentGrid[i].type;
-                }
             }
             grid.appendChild(slot);
         });
+        renderGrid();
     }
 
     function handleDrop(e, index, reqType) {
@@ -524,6 +437,7 @@
         if(type !== reqType) return;
         currentGrid[index] = { text, type };
         renderGrid();
+        saveToServer();
     }
 
     function renderGrid() {
@@ -531,93 +445,64 @@
         slots.forEach(s => {
             const idx = s.dataset.index;
             const data = currentGrid[idx];
+            s.classList.remove('matched');
             if(data) {
                 s.innerText = data.text; s.className = `slot filled`; s.dataset.type = data.type;
+                if(verifiedResults.includes(data.text)) s.classList.add('matched');
             } else {
                 s.innerText = ''; s.className = 'slot'; delete s.dataset.type;
             }
         });
+        const center = document.querySelector('.slot.center');
+        if(center) center.classList.add('matched');
+        updateScore();
     }
 
-    // --- ADMIN / SCORING ---
     function toggleAdmin() {
-        isAdminOpen = !isAdminOpen;
-        document.getElementById('adminPanel').style.display = isAdminOpen ? 'flex' : 'none';
-    }
-
-    function calculateScore() {
-        const raw = document.getElementById('adminResults').value;
-        const events = raw.split(',').map(s => s.trim().toLowerCase());
-        let score = 0;
-
-        const slots = document.querySelectorAll('.slot');
-        slots.forEach(s => s.classList.remove('matched'));
-
-        currentGrid.forEach((item, i) => {
-            if(!item) return;
-            const slot = document.querySelector(`.slot[data-index="${i}"]`) || document.querySelector('.slot.center');
-            if(item.type === 'FREE' || events.includes(item.text.toLowerCase())) {
-                slot.classList.add('matched');
-                score += 10;
-            }
-        });
+        const panel = document.getElementById('adminOverlay');
+        const list = document.getElementById('adminList');
+        if(panel.style.display === 'flex') { panel.style.display = 'none'; return; }
         
-        alert(`Points for Round: ${score}`);
-        if(!isOffline && db) {
-            db.collection('players').doc(currentUser.id).update({
-                score: firebase.firestore.FieldValue.increment(score)
-            });
-        }
-    }
-
-    // --- CLOUD ---
-    function saveToServer() {
-        if(isOffline) {
-            localStorage.setItem(`grid_${activeRace}`, JSON.stringify(currentGrid));
-            return;
-        }
-        db.collection('players').doc(currentUser.id).set({
-            name: currentUser.name,
-            [`grid_${activeRace}`]: currentGrid
-        }, { merge: true });
-    }
-
-    function loadCloud() {
-        if(isOffline) { checkLocalGrid(); return; }
-        db.collection('players').doc(currentUser.id).get().then(doc => {
-            if(doc.exists && doc.data()[`grid_${activeRace}`]) {
-                currentGrid = doc.data()[`grid_${activeRace}`];
-                switchState('game'); renderGrid();
-            } else {
-                currentGrid = Array(25).fill(null);
-                prepareStrategyView(); switchState('strategy');
-            }
-        });
-    }
-
-    function listenLeaderboard() {
-        if(isOffline) return;
-        db.collection('players').orderBy('score', 'desc').limit(15).onSnapshot(snap => {
-            const players = [];
-            snap.forEach(doc => players.push(doc.data()));
-            renderLeaderboard(players);
-        });
-    }
-
-    function renderLeaderboard(players) {
-        const list = document.getElementById('leaderboardList');
+        panel.style.display = 'flex';
+        document.getElementById('adminRaceName').innerText = activeRace.toUpperCase();
         list.innerHTML = '';
-        players.forEach((p, i) => {
+        
+        let allItems = [];
+        Object.values(BINGO_CONFIG.pool).forEach(arr => allItems.push(...arr));
+        
+        allItems.forEach(text => {
             const div = document.createElement('div');
-            div.className = `lb-row ${p.name === currentUser.name ? 'me' : ''}`;
-            div.innerHTML = `
-                <span class="lb-rank">${i+1}</span>
-                <span class="lb-name">${p.name}</span>
-                <span class="lb-score">${p.score || 0}</span>
-            `;
+            const isSelected = verifiedResults.includes(text);
+            div.className = `toggle-item ${isSelected ? 'selected' : ''}`;
+            div.innerHTML = `<span class="toggle-check"></span> ${text}`;
+            div.onclick = () => div.classList.toggle('selected');
             list.appendChild(div);
         });
     }
+
+    function publishResults() {
+        const selectedDivs = document.querySelectorAll('.toggle-item.selected');
+        verifiedResults = Array.from(selectedDivs).map(div => div.innerText.trim());
+        if(isOffline) localStorage.setItem(`results_${activeRace}`, JSON.stringify(verifiedResults));
+        renderGrid();
+        document.getElementById('adminOverlay').style.display = 'none';
+    }
+
+    function updateScore() {
+        let score = 0;
+        currentGrid.forEach((item, i) => {
+            if(i === 12) { score += 10; return; }
+            if(item && verifiedResults.includes(item.text)) score += 10;
+        });
+        document.getElementById('currentScoreDisplay').innerText = `Race Score: ${score} pts`;
+    }
+
+    function saveToServer() {
+        if(isOffline) { localStorage.setItem(`grid_${activeRace}`, JSON.stringify(currentGrid)); return; }
+        db.collection('players').doc(currentUser.id).set({ name: currentUser.name, [`grid_${activeRace}`]: currentGrid }, { merge: true });
+    }
+    
+    function loadCloud() { checkLocalGrid(); }
 
     window.onload = init;
 </script>
