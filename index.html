@@ -78,9 +78,18 @@
         .driver-header { padding: 10px 12px; display: flex; align-items: center; gap: 12px; cursor: pointer; background: linear-gradient(90deg, transparent 95%, #fafafa); }
         .driver-header:hover { background: #f5f5f5; }
         
+        /* Standard Driver Face */
         .driver-face { width: 36px; height: 36px; object-fit: cover; border-radius: 6px; background: #eee; border: 2px solid var(--team-color); padding: 2px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); flex-shrink: 0; }
         .driver-face[src=""] { display: none; } 
-        .driver-face.car-face { width: 70px; height: 36px; object-fit: contain; border-radius: 4px; background: white; }
+        
+        /* WIDE Car Image in Sidebar */
+        .driver-face.car-face { 
+            width: 100px; /* Wider */
+            height: 36px; 
+            object-fit: contain; 
+            border-radius: 4px; 
+            background: white; 
+        }
 
         .driver-name { font-weight: 800; font-size: 14px; color: #333; }
         .driver-team { font-size: 10px; color: #888; text-transform: uppercase; margin-top:2px; }
