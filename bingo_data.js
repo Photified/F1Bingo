@@ -79,7 +79,7 @@ const BINGO_CONFIG = {
         race: [
             { t: "Race Win", c: 3, tiers: [1] }, 
             { t: "Podium Finish", c: 4, tiers: [1] }, 
-            { t: "Points Finish", c: 5, tiers: [1, 2] }, 
+            { t: "Points Finish", c: 5, tiers: [2] }, 
             { t: "11th-20th Finish", c: 3, tiers: [2, 3] },
             { t: "Crash / DNF", c: 2, tiers: [1, 2, 3] } 
         ],
@@ -119,4 +119,5 @@ const BINGO_CONFIG = {
             { t: "Standing Start Restart", c: 0, tiers: [1,2,3] }
         ]
     }
+
 };
