@@ -1,7 +1,11 @@
-/* F1 2026 PICK 'EM DATA */
+/* F1 2026 PICK 'EM DATA
+   - 25 Races
+   - Budget Logic: PAY FOR SAFETY
+   - 3x3 Grid (NO FREE SPACE - CENTER IS PLAYABLE)
+   - Team Tiers Added for Realistic Logic
+*/
 
 const BINGO_CONFIG = {
-    // 25 RACES
     races: [
         {id:'aus', c:'au', n:'Australia', d:'Mar 8', lockTime:'2026-03-07T05:00:00'}, 
         {id:'chn', c:'cn', n:'China', d:'Mar 15', lockTime:'2026-03-14T07:00:00'},
@@ -30,84 +34,86 @@ const BINGO_CONFIG = {
         {id:'abu', c:'ae', n:'Abu Dhabi', d:'Dec 6'}
     ],
 
-    // DRIVER ROSTER
+    // DRIVER ROSTER (Tier 1=Top, 2=Mid, 3=Back)
     drivers: [
-        { name: "Max Verstappen", team: "Red Bull", color: "#3671C6", img: "images/max.png", price: 18 },
-        { name: "Isack Hadjar", team: "Red Bull", color: "#3671C6", img: "images/hadjar.png", price: 4 },
-        { name: "Lando Norris", team: "McLaren", color: "#FF8000", img: "images/lando.png", price: 16 },
-        { name: "Oscar Piastri", team: "McLaren", color: "#FF8000", img: "images/oscar.png", price: 14 },
-        { name: "Lewis Hamilton", team: "Ferrari", color: "#E80020", img: "images/lewis.png", price: 15 },
-        { name: "Charles Leclerc", team: "Ferrari", color: "#E80020", img: "images/charles.png", price: 15 },
-        { name: "George Russell", team: "Mercedes", color: "#27F4D2", img: "images/george.png", price: 13 },
-        { name: "Kimi Antonelli", team: "Mercedes", color: "#27F4D2", img: "images/kimi.png", price: 6 },
-        { name: "Fernando Alonso", team: "Aston Martin", color: "#229971", img: "images/alonso.png", price: 10 },
-        { name: "Lance Stroll", team: "Aston Martin", color: "#229971", img: "images/lance.png", price: 5 },
-        { name: "Pierre Gasly", team: "Alpine", color: "#FF87BC", img: "images/gasly.png", price: 6 },
-        { name: "Franco Colapinto", team: "Alpine", color: "#FF87BC", img: "images/franco.png", price: 5 },
-        { name: "Alex Albon", team: "Williams", color: "#64C4FF", img: "images/albon.png", price: 7 },
-        { name: "Carlos Sainz", team: "Williams", color: "#64C4FF", img: "images/sainz.png", price: 8 },
-        { name: "Liam Lawson", team: "VCARB", color: "#6692FF", img: "images/lawson.png", price: 5 },
-        { name: "Arvid Lindblad", team: "VCARB", color: "#6692FF", img: "images/lindblad.png", price: 3 },
-        { name: "Esteban Ocon", team: "Haas", color: "#B6BABD", img: "images/ocon.png", price: 5 },
-        { name: "Ollie Bearman", team: "Haas", color: "#B6BABD", img: "images/bearman.png", price: 4 },
-        { name: "Nico Hulkenberg", team: "Audi", color: "#F2F2F2", img: "images/hulk.png", price: 4 },
-        { name: "Gabriel Bortoleto", team: "Audi", color: "#F2F2F2", img: "images/gabriel.png", price: 3 },
-        { name: "Valtteri Bottas", team: "Cadillac", color: "#FFD700", img: "images/bottas.png", price: 4 },
-        { name: "Sergio Perez", team: "Cadillac", color: "#FFD700", img: "images/checo.png", price: 5 }
+        { name: "Max Verstappen", team: "Red Bull", tier: 1, color: "#3671C6", img: "images/max.png", price: 18 },
+        { name: "Lando Norris", team: "McLaren", tier: 1, color: "#FF8000", img: "images/lando.png", price: 16 },
+        { name: "Charles Leclerc", team: "Ferrari", tier: 1, color: "#E80020", img: "images/charles.png", price: 15 },
+        { name: "Lewis Hamilton", team: "Ferrari", tier: 1, color: "#E80020", img: "images/lewis.png", price: 15 },
+        { name: "Oscar Piastri", team: "McLaren", tier: 1, color: "#FF8000", img: "images/oscar.png", price: 14 },
+        { name: "George Russell", team: "Mercedes", tier: 1, color: "#27F4D2", img: "images/george.png", price: 13 },
+        { name: "Fernando Alonso", team: "Aston Martin", tier: 2, color: "#229971", img: "images/alonso.png", price: 10 },
+        { name: "Carlos Sainz", team: "Williams", tier: 2, color: "#64C4FF", img: "images/sainz.png", price: 8 },
+        { name: "Alex Albon", team: "Williams", tier: 2, color: "#64C4FF", img: "images/albon.png", price: 7 },
+        { name: "Pierre Gasly", team: "Alpine", tier: 2, color: "#FF87BC", img: "images/gasly.png", price: 6 },
+        { name: "Kimi Antonelli", team: "Mercedes", tier: 1, color: "#27F4D2", img: "images/kimi.png", price: 6 },
+        { name: "Lance Stroll", team: "Aston Martin", tier: 2, color: "#229971", img: "images/lance.png", price: 5 },
+        { name: "Liam Lawson", team: "VCARB", tier: 2, color: "#6692FF", img: "images/lawson.png", price: 5 },
+        { name: "Esteban Ocon", team: "Haas", tier: 3, color: "#B6BABD", img: "images/ocon.png", price: 5 },
+        { name: "Franco Colapinto", team: "Alpine", tier: 2, color: "#FF87BC", img: "images/franco.png", price: 5 },
+        { name: "Sergio Perez", team: "Cadillac", tier: 3, color: "#FFD700", img: "images/checo.png", price: 5 },
+        { name: "Isack Hadjar", team: "Red Bull", tier: 1, color: "#3671C6", img: "images/hadjar.png", price: 4 },
+        { name: "Valtteri Bottas", team: "Cadillac", tier: 3, color: "#FFD700", img: "images/bottas.png", price: 4 },
+        { name: "Nico Hulkenberg", team: "Audi", tier: 3, color: "#F2F2F2", img: "images/hulk.png", price: 4 },
+        { name: "Ollie Bearman", team: "Haas", tier: 3, color: "#B6BABD", img: "images/bearman.png", price: 4 },
+        { name: "Arvid Lindblad", team: "VCARB", tier: 2, color: "#6692FF", img: "images/lindblad.png", price: 3 },
+        { name: "Gabriel Bortoleto", team: "Audi", tier: 3, color: "#F2F2F2", img: "images/gabriel.png", price: 3 }
     ],
 
-    // CONSTRUCTORS (Using CAR PNGs now)
+    // CONSTRUCTORS (Tiered)
     constructors: [
-        { name: "Red Bull", type: "Team", color: "#3671C6", img: "images/car_rb.png", price: 10 },
-        { name: "McLaren", type: "Team", color: "#FF8000", img: "images/car_mclaren.png", price: 9 },
-        { name: "Ferrari", type: "Team", color: "#E80020", img: "images/car_ferrari.png", price: 9 },
-        { name: "Mercedes", type: "Team", color: "#27F4D2", img: "images/car_merc.png", price: 8 },
-        { name: "Aston Martin", type: "Team", color: "#229971", img: "images/car_aston.png", price: 6 },
-        { name: "Alpine", type: "Team", color: "#FF87BC", img: "images/car_alpine.png", price: 5 },
-        { name: "Williams", type: "Team", color: "#64C4FF", img: "images/car_williams.png", price: 5 },
-        { name: "VCARB", type: "Team", color: "#6692FF", img: "images/car_vcarb.png", price: 4 },
-        { name: "Haas", type: "Team", color: "#B6BABD", img: "images/car_haas.png", price: 4 },
-        { name: "Audi", type: "Team", color: "#F2F2F2", img: "images/car_audi.png", price: 3 },
-        { name: "Cadillac", type: "Team", color: "#FFD700", img: "images/car_cadillac.png", price: 3 }
+        { name: "Red Bull", type: "Team", tier: 1, color: "#3671C6", img: "images/car_rb.png", price: 10 },
+        { name: "McLaren", type: "Team", tier: 1, color: "#FF8000", img: "images/car_mclaren.png", price: 9 },
+        { name: "Ferrari", type: "Team", tier: 1, color: "#E80020", img: "images/car_ferrari.png", price: 9 },
+        { name: "Mercedes", type: "Team", tier: 1, color: "#27F4D2", img: "images/car_merc.png", price: 8 },
+        { name: "Aston Martin", type: "Team", tier: 2, color: "#229971", img: "images/car_aston.png", price: 6 },
+        { name: "Williams", type: "Team", tier: 2, color: "#64C4FF", img: "images/car_williams.png", price: 5 },
+        { name: "Alpine", type: "Team", tier: 2, color: "#FF87BC", img: "images/car_alpine.png", price: 5 },
+        { name: "VCARB", type: "Team", tier: 2, color: "#6692FF", img: "images/car_vcarb.png", price: 4 },
+        { name: "Haas", type: "Team", tier: 3, color: "#B6BABD", img: "images/car_haas.png", price: 4 },
+        { name: "Audi", type: "Team", tier: 3, color: "#F2F2F2", img: "images/car_audi.png", price: 3 },
+        { name: "Cadillac", type: "Team", tier: 3, color: "#FFD700", img: "images/car_cadillac.png", price: 3 }
     ],
 
     // EVENT COSTS
+    // NOTE: 'tier' property here matches Driver Tier (1=High Perf, 3=Low Perf)
+    // T1 drivers want T1 events (Win). T3 drivers want T3 events (Finish).
     templates: {
         quali: [
-            { t: "Pole Position", c: 3 }, 
-            { t: "Front Row Start", c: 5 }, 
-            { t: "Q3 Appearance", c: 9 }, 
-            { t: "Q2 Exit", c: 4 }, 
-            { t: "Q1 Exit", c: 3 }, 
-            { t: "Beats Teammate (Quali)", c: 6 }
+            { t: "Pole Position", c: 3, tier: 1 }, 
+            { t: "Front Row Start", c: 5, tier: 1 }, 
+            { t: "Q3 Appearance", c: 9, tier: 2 }, 
+            { t: "Q2 Exit", c: 4, tier: 3 }, 
+            { t: "Q1 Exit", c: 3, tier: 3 }, 
+            { t: "Beats Teammate (Quali)", c: 6, tier: 2 }
         ],
         race: [
-            { t: "Race Win", c: 3 }, 
-            { t: "Podium Finish", c: 6 }, 
-            { t: "Top 5 Finish", c: 8 }, 
-            { t: "Top 10 Finish", c: 10 }, 
-            { t: "Points Finish", c: 10 }, 
-            { t: "Crash / DNF", c: 2 }, 
-            { t: "11th-20th Finish", c: 5 }
+            { t: "Race Win", c: 3, tier: 1 }, 
+            { t: "Podium Finish", c: 6, tier: 1 }, 
+            { t: "Top 5 Finish", c: 8, tier: 1 }, 
+            { t: "Top 10 Finish", c: 10, tier: 2 }, 
+            { t: "Points Finish", c: 10, tier: 2 }, 
+            { t: "Crash / DNF", c: 2, tier: 3 }, // Risk
+            { t: "11th-20th Finish", c: 5, tier: 3 } // Safe for backmarkers
         ],
         bonus: [
-            { t: "Fastest Lap", c: 2 }, 
-            { t: "Driver of the Day", c: 3 }, 
-            { t: "Beats Teammate (Race)", c: 7 }, 
-            { t: "5s Penalty", c: 3 }, 
-            { t: "Leads a Lap", c: 4 }, 
-            { t: "Stalls at Start", c: 1 } 
+            { t: "Fastest Lap", c: 2, tier: 1 }, 
+            { t: "Driver of the Day", c: 3, tier: 1 }, 
+            { t: "Beats Teammate (Race)", c: 7, tier: 2 }, 
+            { t: "5s Penalty", c: 3, tier: 3 }, 
+            { t: "Leads a Lap", c: 4, tier: 1 }, 
+            { t: "Stalls at Start", c: 1, tier: 3 } 
         ],
         team: [
-            { t: "Double Podium", c: 4 }, 
-            { t: "1-2 Finish", c: 2 }, 
-            { t: "Double Points", c: 8 }, 
-            { t: "Double DNF", c: 1 }, 
-            { t: "Pit Stop Error (>4s)", c: 5 }, 
-            { t: "Strategy Error", c: 5 }, 
-            { t: "Engine Failure", c: 3 },
-            { t: "One Driver in Points", c: 7 },
-            { t: "Team Orders Used", c: 3 }
+            { t: "Double Podium", c: 4, tier: 1 }, 
+            { t: "1-2 Finish", c: 2, tier: 1 }, 
+            { t: "Double Points", c: 8, tier: 2 }, 
+            { t: "Double DNF", c: 1, tier: 3 }, 
+            { t: "Pit Stop Error (>4s)", c: 5, tier: 2 }, 
+            { t: "Strategy Error", c: 5, tier: 2 }, 
+            { t: "Engine Failure", c: 3, tier: 3 },
+            { t: "One Driver in Points", c: 7, tier: 2 },
+            { t: "Team Orders Used", c: 3, tier: 1 }
         ],
         fia: [
             { t: "Safety Car Deployed", c: 8 }, 
