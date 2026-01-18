@@ -55,14 +55,12 @@
         .driver-header { padding: 12px 15px; display: flex; align-items: center; gap: 15px; cursor: pointer; background: linear-gradient(90deg, transparent 95%, #fafafa); }
         .driver-header:hover { background: #f5f5f5; }
         
-        /* NEW IMAGE STYLING */
         .driver-face { 
             width: 40px; height: 40px; object-fit: contain; 
             border-radius: 50%; background: #eee; 
             border: 2px solid var(--team-color);
             padding: 2px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        /* Fallback if image breaks */
         .driver-face[src=""] { display: none; } 
 
         .driver-name { font-weight: 800; font-size: 14px; color: #333; }
@@ -86,7 +84,6 @@
 
         .chip { padding: 8px 10px; background: white; border: 1px solid #ddd; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: grab; text-align: left; border-left-width: 5px; border-left-style: solid; transition: 0.1s; }
         .chip:hover { transform: translateX(3px); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        
         .chip.driver { border-left-color: var(--c-driver); }
         .chip.team { border-left-color: var(--c-team); }
         .chip.fia { border-left-color: var(--c-fia); }
@@ -96,15 +93,31 @@
         .bingo-grid { display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(5, 1fr); gap: 10px; width: 100%; aspect-ratio: 1/1; max-height: 600px; }
         
         .slot { background: #fafafa; border: 2px dashed #ddd; border-radius: 8px; display: flex; align-items: center; justify-content: center; text-align: center; padding: 5px; font-size: 11px; font-weight: 700; position: relative; user-select: none; transition: 0.2s; width: 100%; height: 100%; box-sizing: border-box; }
-        
         .slot[data-req="driver"] { background: #fff8e6; border-color: var(--c-driver); color: var(--c-driver); opacity: 0.8; }
         .slot[data-req="team"] { background: #e0fbf8; border-color: var(--c-team); color: var(--c-team); opacity: 0.8; }
         .slot[data-req="fia"] { background: #fff2f2; border-color: var(--c-fia); color: var(--c-fia); opacity: 0.8; }
 
-        .slot.filled { border: none !important; color: white !important; box-shadow: 0 4px 10px rgba(0,0,0,0.2); opacity: 1; font-size: 13px; line-height: 1.2; padding: 5px; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
-        .slot.filled[data-type="driver"] { background: var(--c-driver) !important; }
-        .slot.filled[data-type="team"] { background: var(--c-team) !important; }
-        .slot.filled[data-type="fia"] { background: var(--c-fia) !important; }
+        /* COOL FILLED SLOT STYLING */
+        .slot.filled { 
+            border: none !important; color: white !important; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); 
+            opacity: 1; font-size: 11px; line-height: 1.2; padding: 5px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            display: flex; flex-direction: column; gap: 4px;
+        }
+        
+        /* Gradients for depth */
+        .slot.filled[data-type="driver"] { background: linear-gradient(135deg, #ff9500, #d17a00) !important; }
+        .slot.filled[data-type="team"] { background: linear-gradient(135deg, #00d2be, #009e8e) !important; }
+        .slot.filled[data-type="fia"] { background: linear-gradient(135deg, #e10600, #a30000) !important; }
+
+        /* Image inside slot */
+        .slot-img {
+            width: 45px; height: 45px; object-fit: contain;
+            border-radius: 50%; border: 2px solid rgba(255,255,255,0.8);
+            background: rgba(255,255,255,0.2); margin-bottom: 2px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
 
         .slot.center { background: #222 !important; color: white !important; border: none !important; font-size: 16px; text-transform: uppercase; }
         .slot.matched { opacity: 1; box-shadow: inset 0 0 0 5px var(--score-win); transform: scale(1.02); z-index: 5; }
@@ -292,7 +305,7 @@
     const templates = {
         balanced: ['driver','driver','team','driver','fia','driver','team','fia','driver','team','team','driver','FREE','driver','team','team','fia','driver','team','fia','driver','team','team','driver','fia'],
         team: ['team','team','driver','team','team','team','driver','team','fia','team','driver','team','FREE','team','team','driver','team','fia','team','driver','team','team','team','driver','fia'],
-        fia: ['fia','fia','driver','team','fia','fia','driver','team','fia','driver','driver','team','FREE','fia','fia','team','fia','driver','fia','driver','fia','driver','fia','team','fia'],
+        chaos: ['fia','fia','driver','team','fia','fia','driver','team','fia','driver','driver','team','FREE','fia','fia','team','fia','driver','fia','driver','fia','driver','fia','team','fia'],
         driver: ['driver','driver','driver','team','driver','driver','team','fia','driver','driver','team','driver','FREE','driver','team','driver','fia','team','driver','driver','driver','driver','team','driver','fia']
     };
 
@@ -389,7 +402,7 @@
                 content.appendChild(btn);
                 const grid = document.createElement('div'); grid.className = 'sub-content';
                 content.appendChild(grid);
-                BINGO_CONFIG.templates.fia.forEach(t => createChip(grid, t, 'fia', false)); 
+                BINGO_CONFIG.templates.fia.forEach(t => createChip(grid, t, 'fia', false, 'Race Control')); 
             } else {
                 createSubSection(content, "QUALIFYING", BINGO_CONFIG.templates.quali, `${d.name} `, 'driver', 'quali', d.name, 'driver');
                 createSubSection(content, "RACE RESULT", BINGO_CONFIG.templates.race, `${d.name} `, 'driver', 'race', d.name, 'driver');
@@ -530,14 +543,20 @@
             const idx = parseInt(s.dataset.index);
             const data = currentGrid[idx];
             if(data) {
-                s.innerText = data.text;
+                const drv = BINGO_CONFIG.drivers.find(d => d.name === data.driver);
+                const imgSrc = drv ? drv.img : '';
+                
+                s.innerHTML = `
+                    <img src="${imgSrc}" class="slot-img" onerror="this.style.display='none'">
+                    <div>${data.text}</div>
+                `;
                 s.className = `slot filled`;
                 s.dataset.type = data.type; 
                 if(verifiedResults.includes(data.text)) s.classList.add('matched');
                 else s.classList.remove('matched');
             } else {
                 const req = s.dataset.req;
-                s.innerText = req === 'fia' ? "FIA" : req.toUpperCase();
+                s.innerHTML = req === 'fia' ? "FIA" : req.toUpperCase();
                 s.className = 'slot';
                 delete s.dataset.type;
                 s.classList.remove('matched');
