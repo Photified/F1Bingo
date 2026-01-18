@@ -1,6 +1,8 @@
 /* F1 2026 PICK 'EM DATA
    - 25 Races
-   - Budget Logic Added (Driver Price + Event Cost)
+   - Budget Logic: PAY FOR SAFETY
+   - High Probability = High Cost
+   - Low Probability = Low Cost
 */
 
 const BINGO_CONFIG = {
@@ -33,17 +35,17 @@ const BINGO_CONFIG = {
         {id:'abu', c:'ae', n:'Abu Dhabi', d:'Dec 6'}
     ],
 
-    // DRIVER ROSTER (Added 'price' in Millions)
+    // DRIVER ROSTER
     drivers: [
         { name: "Race Control", team: "FIA", color: "#333333", img: "images/fia.png", price: 0 }, 
         { name: "Max Verstappen", team: "Red Bull", color: "#3671C6", img: "images/max.png", price: 15 },
-        { name: "Isack Hadjar", team: "Red Bull", color: "#3671C6", img: "images/hadjar.png", price: 6 },
+        { name: "Isack Hadjar", team: "Red Bull", color: "#3671C6", img: "images/hadjar.png", price: 5 },
         { name: "Lando Norris", team: "McLaren", color: "#FF8000", img: "images/lando.png", price: 14 },
         { name: "Oscar Piastri", team: "McLaren", color: "#FF8000", img: "images/oscar.png", price: 12 },
         { name: "Lewis Hamilton", team: "Ferrari", color: "#E80020", img: "images/lewis.png", price: 12 },
         { name: "Charles Leclerc", team: "Ferrari", color: "#E80020", img: "images/charles.png", price: 13 },
         { name: "George Russell", team: "Mercedes", color: "#27F4D2", img: "images/george.png", price: 11 },
-        { name: "Kimi Antonelli", team: "Mercedes", color: "#27F4D2", img: "images/kimi.png", price: 7 },
+        { name: "Kimi Antonelli", team: "Mercedes", color: "#27F4D2", img: "images/kimi.png", price: 6 },
         { name: "Fernando Alonso", team: "Aston Martin", color: "#229971", img: "images/alonso.png", price: 9 },
         { name: "Lance Stroll", team: "Aston Martin", color: "#229971", img: "images/lance.png", price: 5 },
         { name: "Pierre Gasly", team: "Alpine", color: "#FF87BC", img: "images/gasly.png", price: 6 },
@@ -60,70 +62,69 @@ const BINGO_CONFIG = {
         { name: "Sergio Perez", team: "Cadillac", color: "#FFD700", img: "images/checo.png", price: 6 }
     ],
 
-    // EVENT COSTS (Added base cost for each type)
-    // Structure: { text: "...", cost: M }
+    // EVENT COSTS (INVERTED: Safe = Expensive, Risky = Cheap)
     templates: {
         quali: [
-            { t: "Pole Position", c: 8 }, 
+            { t: "Pole Position", c: 4 }, // Hard
             { t: "Front Row Start", c: 6 }, 
-            { t: "Q3 Appearance", c: 4 }, 
-            { t: "Q2 Exit", c: 2 }, 
-            { t: "Q1 Exit", c: 1 }, 
-            { t: "Beats Teammate (Quali)", c: 3 }
+            { t: "Q3 Appearance", c: 10 }, // Safe
+            { t: "Q2 Exit", c: 5 }, 
+            { t: "Q1 Exit", c: 4 }, 
+            { t: "Beats Teammate (Quali)", c: 7 }
         ],
         race: [
-            { t: "Race Win", c: 10 }, 
-            { t: "Podium Finish", c: 7 }, 
-            { t: "Top 5 Finish", c: 5 }, 
-            { t: "Top 10 Finish", c: 3 }, 
-            { t: "Points Finish", c: 2 }, 
-            { t: "Crash / DNF", c: 1 }, 
-            { t: "11th-20th Finish", c: 1 }
+            { t: "Race Win", c: 5 }, // Hard (Cheap)
+            { t: "Podium Finish", c: 8 }, 
+            { t: "Top 5 Finish", c: 10 }, 
+            { t: "Top 10 Finish", c: 12 }, // Safest (Expensive)
+            { t: "Points Finish", c: 12 }, 
+            { t: "Crash / DNF", c: 3 }, // Risky
+            { t: "11th-20th Finish", c: 6 }
         ],
         bonus: [
-            { t: "Fastest Lap", c: 5 }, 
-            { t: "Driver of the Day", c: 4 }, 
-            { t: "Beats Teammate (Race)", c: 3 }, 
-            { t: "5s Penalty", c: 2 }, 
-            { t: "Leads a Lap", c: 4 }, 
-            { t: "Stalls at Start", c: 1 }
+            { t: "Fastest Lap", c: 4 }, // Risky
+            { t: "Driver of the Day", c: 5 }, 
+            { t: "Beats Teammate (Race)", c: 9 }, // Safe-ish
+            { t: "5s Penalty", c: 4 }, 
+            { t: "Leads a Lap", c: 5 }, 
+            { t: "Stalls at Start", c: 2 } // Very Rare
         ],
         team: [
-            { t: "Double Podium", c: 8 }, 
-            { t: "1-2 Finish", c: 12 }, 
-            { t: "Double Points", c: 5 }, 
+            { t: "Double Podium", c: 5 }, // Hard
+            { t: "1-2 Finish", c: 3 }, // Very Hard
+            { t: "Double Points", c: 10 }, // Safe
             { t: "Double DNF", c: 2 }, 
-            { t: "Pit Stop Error (>4s)", c: 2 }, 
-            { t: "Strategy Error", c: 2 }, 
-            { t: "Engine Failure", c: 2 },
-            { t: "One Driver in Points", c: 3 },
-            { t: "Team Orders Used", c: 3 }
+            { t: "Pit Stop Error (>4s)", c: 6 }, 
+            { t: "Strategy Error", c: 6 }, 
+            { t: "Engine Failure", c: 4 },
+            { t: "One Driver in Points", c: 8 },
+            { t: "Team Orders Used", c: 4 }
         ],
         fia: [
-            { t: "Safety Car Deployed", c: 5 }, 
-            { t: "Green Flag Race (No SC)", c: 5 }, 
-            { t: "Virtual Safety Car", c: 4 }, 
-            { t: "Red Flag Suspends Race", c: 8 }, 
-            { t: "Rain / Wet Track", c: 6 }, 
-            { t: "All Cars Finish (No DNF)", c: 8 },
-            { t: "Blue Flags Shown", c: 1 }, 
-            { t: "Black & White Flag", c: 2 }, 
-            { t: "Turn 1 Incident", c: 4 }, 
-            { t: "Unsafe Release Investigation", c: 3 }, 
-            { t: "Track Limits Penalty", c: 3 }, 
-            { t: "Yellow Flag Sector 1", c: 2 }, 
-            { t: "Yellow Flag Sector 2", c: 2 }, 
-            { t: "Yellow Flag Sector 3", c: 2 },
-            { t: "Debris on Track", c: 3 }, 
-            { t: "DRS Disabled", c: 3 }, 
-            { t: "Medical Car Deployed", c: 5 },
-            { t: "5s Penalty Issued", c: 2 }, 
-            { t: "10s Penalty Issued", c: 3 }, 
-            { t: "Grid Drop Penalty", c: 4 },
-            { t: "Race Control: No Investigation", c: 3 }, 
-            { t: "Formation Lap Issue", c: 4 }, 
-            { t: "Standing Start Restart", c: 5 }, 
-            { t: "Rolling Start Restart", c: 4 }
+            { t: "Safety Car Deployed", c: 10 }, // High Prob (Expensive)
+            { t: "Green Flag Race (No SC)", c: 4 }, // Low Prob
+            { t: "Virtual Safety Car", c: 8 }, 
+            { t: "Red Flag Suspends Race", c: 3 }, // Rare
+            { t: "Rain / Wet Track", c: 5 }, 
+            { t: "All Cars Finish (No DNF)", c: 4 },
+            { t: "Blue Flags Shown", c: 10 }, // Guaranteed
+            { t: "Black & White Flag", c: 7 }, 
+            { t: "Turn 1 Incident", c: 6 }, 
+            { t: "Unsafe Release Investigation", c: 5 }, 
+            { t: "Track Limits Penalty", c: 8 }, 
+            { t: "Yellow Flag Sector 1", c: 9 }, 
+            { t: "Yellow Flag Sector 2", c: 9 }, 
+            { t: "Yellow Flag Sector 3", c: 9 },
+            { t: "Debris on Track", c: 7 }, 
+            { t: "DRS Disabled", c: 5 }, 
+            { t: "Medical Car Deployed", c: 3 },
+            { t: "5s Penalty Issued", c: 9 }, 
+            { t: "10s Penalty Issued", c: 7 }, 
+            { t: "Grid Drop Penalty", c: 5 },
+            { t: "Race Control: No Investigation", c: 6 }, 
+            { t: "Formation Lap Issue", c: 3 }, 
+            { t: "Standing Start Restart", c: 4 }, 
+            { t: "Rolling Start Restart", c: 5 }
         ]
     }
 };
