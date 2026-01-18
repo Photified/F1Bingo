@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google" content="notranslate">
-    <title>F1 2026: PICK 'EM (3x3)</title>
+    <title>F1 2026: PICK 'EM</title>
     <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
     <script src="bingo_data.js"></script>
 
@@ -12,11 +12,7 @@
         :root {
             --brand-red: #e10600; --brand-dark: #15151e; --bg-body: #f4f4f8;
             --card-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            /* Colors */
-            --c-driver: #ff9500; 
-            --c-team: #00d2be; 
-            --c-fia: #e10600; 
-            --score-win: #39ff14; 
+            --c-driver: #ff9500; --c-team: #00d2be; --c-fia: #e10600; --score-win: #39ff14; 
         }
         body { font-family: 'Titillium Web', sans-serif; background: var(--bg-body); color: var(--brand-dark); margin: 0; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
         .hidden { display: none !important; }
@@ -26,6 +22,15 @@
         .header-title { display: flex; align-items: center; justify-content: center; cursor: pointer; height: 100%; }
         .header-logo { max-height: 50px; width: auto; display: block; object-fit: contain; } 
         .user-profile { font-weight: 700; display: flex; align-items: center; gap: 10px; font-size: 14px; }
+
+        /* BUDGET BAR */
+        .budget-container {
+            display: flex; flex-direction: column; align-items: flex-end; justify-content: center; width: 150px;
+        }
+        .budget-text { font-size: 12px; font-weight: 900; margin-bottom: 3px; }
+        .budget-track { width: 100%; height: 8px; background: #eee; border-radius: 4px; overflow: hidden; border: 1px solid #ddd; }
+        .budget-fill { height: 100%; background: #22c55e; width: 0%; transition: 0.3s; }
+        .budget-fill.warning { background: #e10600; }
 
         /* RACE BAR */
         .race-bar { background: #fff; padding: 0; display: flex; overflow-x: auto; border-bottom: 1px solid #ddd; scrollbar-width: thin; height: 90px; flex-shrink: 0; }
@@ -39,16 +44,10 @@
         .main-stage { flex: 1; display: grid; grid-template-columns: 360px 1fr 300px; padding: 20px; gap: 20px; overflow: hidden; height: 100%; }
         .panel { background: white; border-radius: 12px; box-shadow: var(--card-shadow); overflow: hidden; display: flex; flex-direction: column; border: 1px solid #e0e0e0; height: 100%; }
         
-        /* UNIFIED TAB HEADER */
         .tab-header { display: flex; border-bottom: 1px solid #eee; background: #f9f9f9; flex-shrink: 0; height: 42px; }
-        .tab-btn { 
-            flex: 1; display: flex; align-items: center; justify-content: center;
-            font-weight: 800; font-size: 12px; cursor: pointer; color: #888; 
-            border-bottom: 3px solid transparent; transition: 0.2s; letter-spacing: 0.5px;
-        }
+        .tab-btn { flex: 1; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px; cursor: pointer; color: #888; border-bottom: 3px solid transparent; transition: 0.2s; letter-spacing: 0.5px; }
         .tab-btn:hover { background: #f0f0f0; }
         .tab-btn.active { color: #000; border-bottom-color: var(--brand-red); background: white; }
-        
         .static-tab { flex: 1; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 13px; color: #333; background: #f9f9f9; border-bottom: 1px solid #eee; letter-spacing: 1px; }
 
         /* DRIVER MARKET */
@@ -56,39 +55,22 @@
         .driver-row { background: white; border-radius: 8px; margin-bottom: 8px; border: 1px solid #eee; overflow: hidden; transition: 0.2s; }
         .driver-header { padding: 10px 12px; display: flex; align-items: center; gap: 12px; cursor: pointer; background: linear-gradient(90deg, transparent 95%, #fafafa); }
         .driver-header:hover { background: #f5f5f5; }
-        
         .driver-face { width: 36px; height: 36px; object-fit: cover; border-radius: 6px; background: #eee; border: 2px solid var(--team-color); padding: 2px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .driver-face[src=""] { display: none; } 
-
-        .helmet-icon { width: 36px; height: 36px; background: var(--team-color); border-radius: 6px; border: 2px solid #333; position: relative; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        .helmet-icon::after { content: ''; position: absolute; top: 8px; left: 2px; right: 2px; height: 8px; background: rgba(0,0,0,0.6); border-radius: 2px; }
-        .driver-header[data-team="FIA"] .helmet-icon { border-radius: 4px; background: #333; }
-        .driver-header[data-team="FIA"] .helmet-icon::after { display: none; }
-        .driver-header[data-team="FIA"] .helmet-icon::before { content: '🏁'; position: absolute; top: 5px; left: 8px; font-size: 18px; }
-
         .driver-name { font-weight: 800; font-size: 14px; color: #333; }
         .driver-team { font-size: 10px; color: #888; text-transform: uppercase; margin-top:2px; }
 
-        /* QUICK PICK BUTTONS */
-        .qp-row { display: flex; gap: 6px; padding: 8px 10px 4px 10px; background: #fff; }
-        .qp-btn {
-            flex: 1; padding: 8px 4px; border-radius: 4px; 
-            font-size: 10px; font-weight: 900; text-align: center; text-transform: uppercase;
-            cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: 0.2s;
-            border: 1px solid rgba(0,0,0,0.1); color: white; text-shadow: 0 1px 1px rgba(0,0,0,0.2);
-        }
-        .qp-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
-        .qp-victory { background: linear-gradient(135deg, #FFD700, #ffaa00); color: black; text-shadow: none; border-color: #eebb00; }
-        .qp-podium { background: linear-gradient(135deg, #C0C0C0, #9aa); color: black; text-shadow: none; border-color: #999; }
-        .qp-points { background: linear-gradient(135deg, #00d2be, #009e8e); border-color: #00887a; }
-        .qp-clean { background: linear-gradient(135deg, #22c55e, #16a34a); border-color: #15803d; }
-        .qp-caution { background: linear-gradient(135deg, #e10600, #b91c1c); border-color: #991b1b; }
+        /* CHIPS WITH PRICE TAGS */
+        .chip { padding: 8px 10px; background: white; border: 1px solid #ddd; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: grab; text-align: left; border-left-width: 5px; border-left-style: solid; transition: 0.1s; display: flex; justify-content: space-between; align-items: center; }
+        .chip:hover { transform: translateX(3px); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .chip.driver { border-left-color: var(--c-driver); }
+        .chip.team { border-left-color: var(--c-team); }
+        .chip.fia { border-left-color: var(--c-fia); }
+        .chip-cost { background: #eee; padding: 2px 6px; border-radius: 10px; font-size: 10px; font-weight: 900; color: #555; }
 
-        /* NESTED ACCORDION */
         .driver-content { display: none; padding: 5px 10px 10px 10px; background: #fff; border-top: 1px solid #eee; flex-direction: column; gap: 5px;}
         .driver-row.open .driver-content { display: flex; }
         .driver-row.open .driver-header { background: #eee; border-bottom: 1px solid #ddd; }
-
         .sub-btn { background: #f8f9fa; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 11px; font-weight: 800; text-transform: uppercase; cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: #555; transition: 0.1s; border-left-width: 6px; border-left-style: solid; }
         .sub-btn:hover { background: #f0f0f0; color: #000; }
         .sub-btn.active { background: #f4f4f4; color: #000; box-shadow: inset 0 0 5px rgba(0,0,0,0.05); }
@@ -98,15 +80,16 @@
         .sub-content { display: none; grid-template-columns: 1fr; gap: 6px; padding: 8px 5px; animation: fadeIn 0.2s; }
         .sub-btn.active + .sub-content { display: grid; }
 
-        .chip { padding: 8px 10px; background: white; border: 1px solid #ddd; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: grab; text-align: left; border-left-width: 5px; border-left-style: solid; transition: 0.1s; }
-        .chip:hover { transform: translateX(3px); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .chip.driver { border-left-color: var(--c-driver); }
-        .chip.team { border-left-color: var(--c-team); }
-        .chip.fia { border-left-color: var(--c-fia); }
+        .qp-row { display: flex; gap: 6px; padding: 8px 10px 4px 10px; background: #fff; }
+        .qp-btn { flex: 1; padding: 8px 4px; border-radius: 4px; font-size: 10px; font-weight: 900; text-align: center; text-transform: uppercase; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: 0.2s; border: 1px solid rgba(0,0,0,0.1); color: white; text-shadow: 0 1px 1px rgba(0,0,0,0.2); }
+        .qp-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+        .qp-victory { background: linear-gradient(135deg, #FFD700, #ffaa00); color: black; text-shadow: none; border-color: #eebb00; }
+        .qp-podium { background: linear-gradient(135deg, #C0C0C0, #9aa); color: black; text-shadow: none; border-color: #999; }
+        .qp-points { background: linear-gradient(135deg, #00d2be, #009e8e); border-color: #00887a; }
+        .qp-clean { background: linear-gradient(135deg, #22c55e, #16a34a); border-color: #15803d; }
+        .qp-caution { background: linear-gradient(135deg, #e10600, #b91c1c); border-color: #991b1b; }
 
-        /* CENTER GRID - UPDATED FOR 3x3 */
         .active-panel { background: white; border-radius: 12px; border: 1px solid #e0e0e0; padding: 0; display: flex; flex-direction: column; overflow: hidden; height: 100%; position: relative; }
-        
         #raceHeader { padding: 15px 20px; background: #fff; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; height: 80px; box-sizing: border-box; }
         .rh-left { display: flex; align-items: center; gap: 15px; }
         .rh-flag { width: 60px; height: auto; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
@@ -120,17 +103,7 @@
         .lock-timer { font-size: 12px; font-weight: 700; color: #555; margin-top: 4px; }
 
         .grid-container { padding: 20px; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow-y: auto; }
-        /* 3x3 GRID UPDATE */
-        .bingo-grid { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            grid-template-rows: repeat(3, 1fr); 
-            gap: 15px; 
-            width: 100%; 
-            aspect-ratio: 1/1; 
-            max-height: 600px; /* Kept height but fewer items = bigger cards */
-        }
-        
+        .bingo-grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); gap: 15px; width: 100%; aspect-ratio: 1/1; max-height: 600px; }
         .grid-locked .slot { opacity: 0.7; pointer-events: none; filter: grayscale(0.5); }
         .grid-locked .slot.filled { filter: grayscale(0); opacity: 1; }
 
@@ -139,88 +112,27 @@
         .slot[data-req="team"] { background: #e0fbf8; border-color: var(--c-team); color: var(--c-team); opacity: 0.8; }
         .slot[data-req="fia"] { background: #fff2f2; border-color: var(--c-fia); color: var(--c-fia); opacity: 0.8; }
 
-        .slot.filled { 
-            background: #2B2B33 !important; 
-            border: 1px solid #444 !important; 
-            color: white !important; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3); 
-            opacity: 1; padding: 0; overflow: hidden; 
-            display: flex; flex-direction: row; align-items: stretch; text-align: left;
-            position: relative;
-        }
-
-        .slot.filled::before {
-            content: ''; position: absolute; top: 0; left: 0;
-            width: 0; height: 0;
-            border-style: solid;
-            border-width: 16px 16px 0 0;
-            z-index: 5;
-        }
+        .slot.filled { background: #2B2B33 !important; border: 1px solid #444 !important; color: white !important; box-shadow: 0 4px 10px rgba(0,0,0,0.3); opacity: 1; padding: 0; overflow: hidden; display: flex; flex-direction: row; align-items: stretch; text-align: left; position: relative; }
+        .slot.filled::before { content: ''; position: absolute; top: 0; left: 0; width: 0; height: 0; border-style: solid; border-width: 16px 16px 0 0; z-index: 5; }
         .slot.filled[data-type="driver"]::before { border-color: var(--c-driver) transparent transparent transparent; }
         .slot.filled[data-type="team"]::before { border-color: var(--c-team) transparent transparent transparent; }
         .slot.filled[data-type="fia"]::before { border-color: var(--c-fia) transparent transparent transparent; }
 
-        .remove-pick-btn {
-            position: absolute; top: 0; right: 0;
-            width: 24px; height: 24px; /* Slightly larger for touch */
-            background: #000; 
-            color: #fff;
-            font-weight: 900; font-size: 14px; line-height: 18px;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; z-index: 10;
-            border-bottom-left-radius: 4px;
-            opacity: 0.8;
-            transition: 0.2s;
-        }
+        .remove-pick-btn { position: absolute; top: 0; right: 0; width: 24px; height: 24px; background: #000; color: #fff; font-weight: 900; font-size: 14px; line-height: 18px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; border-bottom-left-radius: 4px; opacity: 0.8; transition: 0.2s; }
         .remove-pick-btn:hover { background: #333; opacity: 1; }
 
-        /* Left Side (Team Color) */
-        .slot-img-container { 
-            width: 35%; flex-shrink: 0; 
-            display: flex; align-items: center; justify-content: center; 
-            border-right: 1px solid rgba(255,255,255,0.1);
-            background-color: var(--team-color-hex); 
-        }
-        .slot-img { 
-            width: 80%; height: 80%; object-fit: contain; 
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-        }
+        .slot-img-container { width: 35%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-right: 1px solid rgba(255,255,255,0.1); background-color: var(--team-color-hex); }
+        .slot-img { width: 80%; height: 80%; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
         .slot.filled[data-type="fia"] .slot-img { filter: brightness(0) invert(1); }
 
-        /* Right Side (Text) */
-        .slot-text-container { 
-            flex: 1; display: flex; flex-direction: column; justify-content: center; 
-            padding: 4px 15px; min-width: 0;
-            background-color: #2B2B33;
-            background-image:
-                linear-gradient(45deg, rgba(0,0,0,0.2) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.2) 75%, rgba(0,0,0,0.2)),
-                linear-gradient(45deg, rgba(0,0,0,0.2) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.2) 75%, rgba(0,0,0,0.2));
-            background-position: 0 0, 10px 10px;
-            background-size: 20px 20px;
-        }
-        
-        .slot-sub { 
-            font-size: 11px; text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 4px;
-            color: var(--cat-text-color); 
-        }
+        .slot-text-container { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 4px 15px; min-width: 0; background-color: #2B2B33; background-image: linear-gradient(45deg, rgba(0,0,0,0.2) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.2) 75%, rgba(0,0,0,0.2)), linear-gradient(45deg, rgba(0,0,0,0.2) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.2) 75%, rgba(0,0,0,0.2)); background-position: 0 0, 10px 10px; background-size: 20px 20px; }
+        .slot-sub { font-size: 11px; text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 4px; color: var(--cat-text-color); }
         .slot-main { font-size: 14px; font-weight: 700; line-height: 1.2; word-wrap: break-word; overflow: hidden; }
 
-        /* FREE SPACE */
-        .slot.center { 
-            background-color: #222 !important; 
-            border: 2px solid #333 !important; 
-            color: white !important; font-size: 24px; text-transform: uppercase; 
-            background-image:
-                linear-gradient(45deg, #1a1a1a 25%, transparent 25%, transparent 75%, #1a1a1a 75%, #1a1a1a),
-                linear-gradient(45deg, #1a1a1a 25%, transparent 25%, transparent 75%, #1a1a1a 75%, #1a1a1a) !important;
-            background-position: 0 0, 10px 10px !important;
-            background-size: 20px 20px !important;
-            box-shadow: inset 0 0 30px #000 !important; 
-        }
+        .slot.center { background-color: #222 !important; border: 2px solid #333 !important; color: white !important; font-size: 24px; text-transform: uppercase; background-image: linear-gradient(45deg, #1a1a1a 25%, transparent 25%, transparent 75%, #1a1a1a 75%, #1a1a1a), linear-gradient(45deg, #1a1a1a 25%, transparent 25%, transparent 75%, #1a1a1a 75%, #1a1a1a) !important; background-position: 0 0, 10px 10px !important; background-size: 20px 20px !important; box-shadow: inset 0 0 30px #000 !important; }
         .slot.matched { opacity: 1; box-shadow: inset 0 0 0 5px var(--score-win); transform: scale(1.02); z-index: 5; }
         .slot.matched::after { content: '✓'; position: absolute; bottom: 5px; right: 5px; background: var(--score-win); color: black; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 18px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
 
-        /* ACTIONS FOOTER */
         .actions-footer { padding: 15px; width: 100%; box-sizing: border-box; display: flex; gap: 10px; }
         .btn-action { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-weight: 900; font-size: 12px; text-transform: uppercase; cursor: pointer; transition: 0.2s; }
         .btn-reset { background: #fff; color: #e10600; }
@@ -229,7 +141,6 @@
         .btn-lock:hover { background: #16a34a; }
         .btn-unlock { background: #e10600; color: white; border-color: #b91c1c; display: none; }
 
-        /* RIGHT PANEL */
         .right-content { flex: 1; overflow-y: auto; padding: 15px; display: none; }
         .right-content.active { display: block; }
         .score-box { text-align: center; margin-bottom: 20px; padding: 20px; background: #fafafa; border-radius: 8px; border: 1px solid #eee; }
@@ -242,7 +153,6 @@
         .rules-list { padding-left: 20px; margin: 5px 0; font-size: 12px; color: #555; }
         .rules-list li { margin-bottom: 6px; }
 
-        /* VIEWS & STRATEGY */
         .view-login, .view-strategy { text-align: center; width: 100%; display: flex; flex-direction: column; align-items: center; height: 100%; }
         .login-input { padding: 15px; width: 100%; margin-top: 15px; text-align: center; border: 2px solid #eee; border-radius: 8px; font-weight: bold; font-size: 16px; max-width: 400px; }
         .login-btn { padding: 15px; width: 100%; margin-top: 15px; background: var(--brand-red); color: white; border: none; font-weight: 900; cursor: pointer; border-radius: 8px; font-size: 16px; max-width: 400px; }
@@ -251,15 +161,12 @@
         .big-flag { width: 100px; height: auto; border-radius: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         .strategy-title { font-size: 32px; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 1; }
 
-        /* STRATEGY GRID 3x3 ADAPTATION? No, strategy selection is 2x2 cards */
         .strat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-width: 600px; width: 100%; }
         .strat-card { background: #f9f9f9; border: 2px solid #eee; border-radius: 12px; padding: 20px; cursor: pointer; display: flex; flex-direction: column; align-items: center; transition: 0.2s; }
         .strat-card:hover { border-color: var(--brand-red); background: white; transform: translateY(-3px); }
-        /* MINI GRID 3x3 for preview */
         .mini-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; width: 60px; height: 60px; margin-bottom: 10px; opacity: 0.6; }
         .mg-c { background: #ddd; border-radius: 1px; }
 
-        /* CUSTOM MODAL */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 5000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
         .modal-box { background: white; padding: 30px; border-radius: 12px; width: 400px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.5); border: 2px solid #eee; }
         .modal-title { font-size: 20px; font-weight: 900; color: var(--brand-red); text-transform: uppercase; margin-bottom: 10px; font-style: italic; }
@@ -271,7 +178,6 @@
         .btn-confirm { background: var(--brand-red); color: white; }
         .btn-confirm:hover { background: #b00; }
 
-        /* ADMIN */
         #adminPanel { position: fixed; top: 60px; left: 50%; transform: translateX(-50%); background: #222; color: white; padding: 20px; border-radius: 12px; z-index: 3000; display: none; flex-direction: column; width: 500px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
         .admin-toggle-list { max-height: 400px; overflow-y: auto; display: flex; flex-direction: column; gap: 5px; margin-top: 10px; }
         .admin-item { padding: 10px; background: #333; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 10px; border-radius: 4px; }
@@ -297,7 +203,12 @@
     <div class="header-title" ondblclick="toggleAdmin()">
         <img src="images/logotop.png" class="header-logo" alt="F1 Pick Em">
     </div>
-    <button onclick="saveLocal()" style="background:var(--brand-red); color:white; border:none; padding:8px 20px; border-radius:20px; font-weight:bold; cursor:pointer;">SAVE</button>
+    <div class="budget-container">
+        <div class="budget-text" id="budgetText">$100M / $100M</div>
+        <div class="budget-track">
+            <div class="budget-fill" id="budgetFill" style="width:0%"></div>
+        </div>
+    </div>
 </header>
 
 <div id="adminPanel">
@@ -399,18 +310,19 @@
                 <div class="rules-text">
                     1. Select a <strong>Race Strategy</strong> to generate your 3x3 grid.<br><br>
                     2. Drag chips from the <strong>My Picks</strong> menu onto matching colored slots.<br><br>
-                    3. <strong>Limit:</strong> You may only select 1 chip per category per driver.<br><br>
-                    4. <strong>LOCK:</strong> You must manually Lock your card when full.
+                    3. <strong>Budget Cap:</strong> You have <strong>$100M</strong>. Manage it wisely!<br><br>
+                    4. <strong>Limit:</strong> 1 pick per category per driver.<br><br>
+                    5. <strong>Lock:</strong> Lock your card before the deadline.
                 </div>
             </div>
             <div class="rules-block">
                 <div class="rules-title">SCORING</div>
                 <ul class="rules-list">
                     <li><strong>10 PTS</strong> - Each Correct Tile</li>
-                    <li><strong>+30 PTS</strong> - 3-in-a-Row (Line)</li>
+                    <li><strong>+30 PTS</strong> - Straight Line Bonus</li>
                     <li><strong>+50 PTS</strong> - 4 Corners Bonus</li>
                     <li><strong>+150 PTS</strong> - The X Bonus</li>
-                    <li><strong>+1000 PTS</strong> - Full Card (9/9)</li>
+                    <li><strong>+1000 PTS</strong> - Full Card Bonus</li>
                 </ul>
             </div>
             <div class="rules-block">
@@ -427,18 +339,18 @@
 
 <script>
     let activeRace = 'aus';
-    let currentGrid = Array(9).fill(null); // 3x3 GRID
+    let currentGrid = Array(9).fill(null); // 3x3
     let verifiedResults = [];
     let modalCallback = null;
     let isGridLocked = false;
     let isUserLocked = false;
+    const BUDGET_CAP = 100;
 
-    // UPDATED 3x3 TEMPLATES (9 items, index 4 is FREE)
     const templates = {
-        balanced: ['driver','team','driver', 'team','FREE','fia', 'driver','fia','team'],
-        team:     ['team','team','driver', 'team','FREE','team', 'driver','team','fia'],
-        chaos:    ['fia','fia','driver',   'fia','FREE','fia',    'team','fia','driver'],
-        driver:   ['driver','driver','team', 'driver','FREE','driver', 'fia','driver','team']
+        balanced: ['driver','driver','team','driver','FREE','fia','driver','fia','team'],
+        team:     ['team','team','driver','team','FREE','team','driver','team','fia'],
+        chaos:    ['fia','fia','driver','fia','FREE','fia','team','fia','driver'],
+        driver:   ['driver','driver','team','driver','FREE','driver','fia','driver','team']
     };
 
     window.onload = () => {
@@ -461,6 +373,7 @@
         if(savedName && savedGrid) login();
         
         setInterval(checkLockStatus, 1000);
+        updateBudgetUI();
     };
 
     function checkLockStatus() {
@@ -502,7 +415,6 @@
         const unlockBtn = document.getElementById('unlockBtn');
         const grid = document.getElementById('grid');
 
-        // Check 3x3 full (index 4 is free)
         const isFull = currentGrid.every((slot, i) => i === 4 || slot !== null);
 
         if(isGridLocked) {
@@ -540,6 +452,51 @@
         checkLockStatus(); 
     }
 
+    // BUDGET LOGIC
+    function calculateTotalCost() {
+        let total = 0;
+        currentGrid.forEach(item => {
+            if(item && item.cost) total += item.cost;
+        });
+        return total;
+    }
+
+    function updateBudgetUI() {
+        const spent = calculateTotalCost();
+        const remaining = BUDGET_CAP - spent;
+        const pct = (spent / BUDGET_CAP) * 100;
+        
+        const txt = document.getElementById('budgetText');
+        const fill = document.getElementById('budgetFill');
+        
+        if(txt) txt.innerText = `$${remaining}M / $100M`;
+        if(fill) {
+            fill.style.width = `${pct}%`;
+            if(pct > 90) fill.classList.add('warning');
+            else fill.classList.remove('warning');
+        }
+    }
+
+    function getChipCost(driverName, type, templateText) {
+        // 1. Get Driver Base Price
+        const drv = BINGO_CONFIG.drivers.find(d => d.name === driverName);
+        const basePrice = drv ? (drv.price || 0) : 0;
+
+        // 2. Get Event Cost
+        let eventCost = 0;
+        // Search all template categories for matching text
+        for (const cat in BINGO_CONFIG.templates) {
+            const match = BINGO_CONFIG.templates[cat].find(t => t.t === templateText);
+            if (match) {
+                eventCost = match.c;
+                break;
+            }
+        }
+        
+        return basePrice + eventCost;
+    }
+
+    // --- GENERIC MODAL SYSTEM ---
     function showModal(title, text, isConfirm, callback) {
         document.getElementById('modalTitle').innerText = title;
         document.getElementById('modalText').innerText = text;
@@ -576,8 +533,9 @@
     function performReset() {
         localStorage.removeItem(`grid_${activeRace}`);
         localStorage.removeItem(`userLock_${activeRace}`);
-        currentGrid = Array(9).fill(null); // 3x3 Reset
+        currentGrid = Array(9).fill(null);
         isUserLocked = false;
+        updateBudgetUI();
         
         const r = BINGO_CONFIG.races.find(r=>r.id===activeRace);
         if(r) {
@@ -629,7 +587,7 @@
                 content.appendChild(btn);
                 const grid = document.createElement('div'); grid.className = 'sub-content';
                 content.appendChild(grid);
-                BINGO_CONFIG.templates.fia.forEach(t => createChip(grid, t, 'fia', false, 'Race Control', 'fia')); 
+                BINGO_CONFIG.templates.fia.forEach(t => createChip(grid, t.t, 'fia', false, 'Race Control', 'fia', t.c)); 
             } else {
                 const qpContainer = document.createElement('div');
                 qpContainer.className = 'qp-row';
@@ -657,79 +615,6 @@
         });
     }
 
-    function applyQuickPicks(driverName, teamName, tier) {
-        if(isGridLocked || isUserLocked) { showModal("Card Locked", "Unlock your card to make changes.", false); return; }
-
-        let picks = [];
-
-        if (tier === 'victory') {
-            picks = [
-                { text: `${driverName} Pole Position`, type: 'driver', subtype: 'quali' },
-                { text: `${driverName} Race Win`, type: 'driver', subtype: 'race' },
-                { text: `${driverName} Fastest Lap`, type: 'driver', subtype: 'bonus' },
-                { text: `${teamName} 1-2 Finish`, type: 'team', subtype: 'team' }
-            ];
-        } else if (tier === 'podium') {
-            picks = [
-                { text: `${driverName} Front Row Start`, type: 'driver', subtype: 'quali' },
-                { text: `${driverName} Podium Finish`, type: 'driver', subtype: 'race' },
-                { text: `${driverName} Driver of the Day`, type: 'driver', subtype: 'bonus' },
-                { text: `${teamName} Double Podium`, type: 'team', subtype: 'team' }
-            ];
-        } else if (tier === 'points') {
-            picks = [
-                { text: `${driverName} Q3 Appearance`, type: 'driver', subtype: 'quali' },
-                { text: `${driverName} Points Finish`, type: 'driver', subtype: 'race' },
-                { text: `${driverName} Beats Teammate (Race)`, type: 'driver', subtype: 'bonus' },
-                { text: `${teamName} Double Points`, type: 'team', subtype: 'team' }
-            ];
-        } else if (tier === 'clean') {
-            picks = [
-                { text: 'Green Flag Race (No SC)', type: 'fia', subtype: 'fia' },
-                { text: 'All Cars Finish (No DNF)', type: 'fia', subtype: 'fia' },
-                { text: 'Race Control: No Investigation', type: 'fia', subtype: 'fia' },
-                { text: 'Rolling Start Restart', type: 'fia', subtype: 'fia' }
-            ];
-        } else if (tier === 'caution') {
-            picks = [
-                { text: 'Safety Car Deployed', type: 'fia', subtype: 'fia' },
-                { text: 'Red Flag Suspends Race', type: 'fia', subtype: 'fia' },
-                { text: 'Turn 1 Incident', type: 'fia', subtype: 'fia' },
-                { text: 'Debris on Track', type: 'fia', subtype: 'fia' }
-            ];
-        }
-
-        let placedCount = 0;
-
-        picks.forEach(p => {
-            const slotIndex = currentGrid.findIndex((slot, i) => {
-                if(slot !== null) return false;
-                const slotEl = document.querySelector(`.slot[data-index="${i}"]`);
-                return slotEl && slotEl.dataset.req === p.type;
-            });
-
-            if(slotIndex !== -1) {
-                let conflict = false;
-                if(p.type === 'driver') {
-                    conflict = currentGrid.some(x => x && x.driver === driverName && x.subtype === p.subtype);
-                }
-                
-                if(!conflict) {
-                    currentGrid[slotIndex] = { text: p.text, type: p.type, driver: driverName, subtype: p.subtype };
-                    placedCount++;
-                }
-            }
-        });
-
-        if(placedCount > 0) {
-            renderGrid();
-            saveLocal();
-            checkLockStatus();
-        } else {
-            showModal("Grid Full / Conflicts", "Could not place all picks.", false);
-        }
-    }
-
     function createSubSection(parent, title, items, prefix, type, subtype, driverName = null, colorClass = '') {
         const btn = document.createElement('div');
         btn.className = `sub-btn ${colorClass}`;
@@ -739,7 +624,8 @@
 
         const grid = document.createElement('div');
         grid.className = 'sub-content';
-        items.forEach(t => createChip(grid, prefix + t, type, subtype, driverName));
+        // Now passing raw template object {t, c} to handle cost
+        items.forEach(t => createChip(grid, prefix + t.t, type, subtype, driverName, '', t.c, t.t));
         parent.appendChild(grid);
     }
 
@@ -749,11 +635,17 @@
         header.parentElement.classList.toggle('open');
     }
 
-    function createChip(container, text, type, subType = '', driverName = null) {
+    function createChip(container, text, type, subType = '', driverName = null, forceCost = '', eventCost = 0, rawTemplateText = '') {
         const chip = document.createElement('div');
         chip.className = `chip ${type}`; 
-        chip.innerText = text;
+        
+        // Calculate Cost
+        const dName = driverName || 'Race Control';
+        const cost = getChipCost(dName, type, rawTemplateText || text.replace(dName + ' ', ''));
+
+        chip.innerHTML = `<span>${text}</span> <span class="chip-cost">$${cost}M</span>`;
         chip.draggable = true;
+        
         chip.ondragstart = e => {
             if(isGridLocked || isUserLocked) {
                 e.preventDefault();
@@ -761,6 +653,7 @@
             }
             e.dataTransfer.setData('text', text);
             e.dataTransfer.setData('type', type);
+            e.dataTransfer.setData('cost', cost);
             if(driverName) e.dataTransfer.setData('exclusive_driver', driverName);
             if(subType) e.dataTransfer.setData('subtype', subType);
         };
@@ -777,14 +670,26 @@
 
         const text = e.dataTransfer.getData('text');
         const type = e.dataTransfer.getData('type');
+        const cost = parseInt(e.dataTransfer.getData('cost'));
         const driverName = e.dataTransfer.getData('exclusive_driver');
         const subType = e.dataTransfer.getData('subtype'); 
 
         if(type !== reqType) return; 
 
+        // Budget Check
+        const currentSpent = calculateTotalCost();
+        // If replacing a slot, subtract its cost first
+        const oldItem = currentGrid[index];
+        const oldCost = oldItem ? oldItem.cost : 0;
+        
+        if ((currentSpent - oldCost + cost) > BUDGET_CAP) {
+            showModal("Budget Cap Exceeded", "You cannot afford this pick.", false);
+            return;
+        }
+
         if (driverName && subType && subType !== 'fia') {
-            const hasConflict = currentGrid.some(item => 
-                item && item.driver === driverName && item.subtype === subType
+            const hasConflict = currentGrid.some((item, i) => 
+                i !== index && item && item.driver === driverName && item.subtype === subType
             );
             if (hasConflict) {
                 showModal("Rule Violation", `Cannot add: ${driverName} already has a ${subType.toUpperCase()} prediction.`, false);
@@ -792,10 +697,104 @@
             }
         }
         
-        currentGrid[index] = { text, type, driver: driverName, subtype: subType };
+        currentGrid[index] = { text, type, driver: driverName, subtype: subType, cost: cost };
         renderGrid();
         saveLocal();
         checkLockStatus();
+        updateBudgetUI();
+    }
+
+    // UPDATED QUICK PICK TO CHECK BUDGET
+    function applyQuickPicks(driverName, teamName, tier) {
+        if(isGridLocked || isUserLocked) { showModal("Card Locked", "Unlock your card to make changes.", false); return; }
+
+        // Define base picks (we need cost lookups)
+        let rawPicks = [];
+        if (tier === 'victory') {
+            rawPicks = [
+                { t: "Pole Position", type: 'driver', st: 'quali' },
+                { t: "Race Win", type: 'driver', st: 'race' },
+                { t: "Fastest Lap", type: 'driver', st: 'bonus' },
+                { t: "1-2 Finish", type: 'team', st: 'team' }
+            ];
+        } else if (tier === 'podium') {
+            rawPicks = [
+                { t: "Front Row Start", type: 'driver', st: 'quali' },
+                { t: "Podium Finish", type: 'driver', st: 'race' },
+                { t: "Driver of the Day", type: 'driver', st: 'bonus' },
+                { t: "Double Podium", type: 'team', st: 'team' }
+            ];
+        } else if (tier === 'points') {
+            rawPicks = [
+                { t: "Q3 Appearance", type: 'driver', st: 'quali' },
+                { t: "Points Finish", type: 'driver', st: 'race' },
+                { t: "Beats Teammate (Race)", type: 'driver', st: 'bonus' },
+                { t: "Double Points", type: 'team', st: 'team' }
+            ];
+        } else if (tier === 'clean') {
+            rawPicks = [
+                { t: 'Green Flag Race (No SC)', type: 'fia', st: 'fia' },
+                { t: 'All Cars Finish (No DNF)', type: 'fia', st: 'fia' },
+                { t: 'Race Control: No Investigation', type: 'fia', st: 'fia' },
+                { t: 'Rolling Start Restart', type: 'fia', st: 'fia' }
+            ];
+        } else if (tier === 'caution') {
+            rawPicks = [
+                { t: 'Safety Car Deployed', type: 'fia', st: 'fia' },
+                { t: 'Red Flag Suspends Race', type: 'fia', st: 'fia' },
+                { t: 'Turn 1 Incident', type: 'fia', st: 'fia' },
+                { t: 'Debris on Track', type: 'fia', st: 'fia' }
+            ];
+        }
+
+        let placedCount = 0;
+        let tempGrid = [...currentGrid]; // Simulator
+        let tempCost = calculateTotalCost();
+
+        rawPicks.forEach(p => {
+            // Calculate Cost
+            let fullText = p.t;
+            let dName = 'Race Control';
+            
+            if(p.type === 'driver') { fullText = `${driverName} ${p.t}`; dName = driverName; }
+            if(p.type === 'team') { fullText = `${teamName} ${p.t}`; dName = driverName; } // Team uses driver name for image lookup
+            
+            const cost = getChipCost(dName, p.type, p.t);
+
+            // Find Slot
+            const slotIndex = tempGrid.findIndex((slot, i) => {
+                if(slot !== null && slot.text === fullText) return true; // Already there
+                if(slot !== null) return false;
+                const slotEl = document.querySelector(`.slot[data-index="${i}"]`);
+                return slotEl && slotEl.dataset.req === p.type;
+            });
+
+            if(slotIndex !== -1 && tempGrid[slotIndex]?.text !== fullText) {
+                // Check Budget
+                if (tempCost + cost <= BUDGET_CAP) {
+                    // Check Conflict
+                    let conflict = false;
+                    if(p.type === 'driver') {
+                        conflict = tempGrid.some(x => x && x.driver === driverName && x.subtype === p.st);
+                    }
+                    if(!conflict) {
+                        tempGrid[slotIndex] = { text: fullText, type: p.type, driver: dName, subtype: p.st, cost: cost };
+                        tempCost += cost;
+                        placedCount++;
+                    }
+                }
+            }
+        });
+
+        if(placedCount > 0) {
+            currentGrid = tempGrid;
+            renderGrid();
+            saveLocal();
+            checkLockStatus();
+            updateBudgetUI();
+        } else {
+            showModal("Not Applied", "Could not place picks (Budget full or Grid full).", false);
+        }
     }
 
     function removePick(index) {
@@ -804,6 +803,7 @@
         renderGrid();
         saveLocal();
         checkLockStatus();
+        updateBudgetUI();
     }
 
     function login() {
@@ -849,7 +849,7 @@
     function resetGrid() {
         if(!confirm("Are you sure? This will clear your current card.")) return;
         localStorage.removeItem(`grid_${activeRace}`);
-        currentGrid = Array(9).fill(null); // 3x3
+        currentGrid = Array(9).fill(null); 
         const r = BINGO_CONFIG.races.find(r=>r.id===activeRace);
         if(r) document.getElementById('stratRaceTitle').innerText = r.n.toUpperCase();
         switchState('strategy');

@@ -1,4 +1,7 @@
-/* F1 2026 PICK 'EM DATA */
+/* F1 2026 PICK 'EM DATA
+   - 25 Races
+   - Budget Logic Added (Driver Price + Event Cost)
+*/
 
 const BINGO_CONFIG = {
     // 25 RACES
@@ -30,62 +33,97 @@ const BINGO_CONFIG = {
         {id:'abu', c:'ae', n:'Abu Dhabi', d:'Dec 6'}
     ],
 
-    // DRIVER ROSTER (Colapinto Fixed to Alpine Pink)
+    // DRIVER ROSTER (Added 'price' in Millions)
     drivers: [
-        { name: "Race Control", team: "FIA", color: "#333333", img: "images/fia.png" }, 
-        { name: "Max Verstappen", team: "Red Bull", color: "#3671C6", img: "images/max.png" },
-        { name: "Isack Hadjar", team: "Red Bull", color: "#3671C6", img: "images/hadjar.png" },
-        { name: "Lando Norris", team: "McLaren", color: "#FF8000", img: "images/lando.png" },
-        { name: "Oscar Piastri", team: "McLaren", color: "#FF8000", img: "images/oscar.png" },
-        { name: "Lewis Hamilton", team: "Ferrari", color: "#E80020", img: "images/lewis.png" },
-        { name: "Charles Leclerc", team: "Ferrari", color: "#E80020", img: "images/charles.png" },
-        { name: "George Russell", team: "Mercedes", color: "#27F4D2", img: "images/george.png" },
-        { name: "Kimi Antonelli", team: "Mercedes", color: "#27F4D2", img: "images/kimi.png" },
-        { name: "Fernando Alonso", team: "Aston Martin", color: "#229971", img: "images/alonso.png" },
-        { name: "Lance Stroll", team: "Aston Martin", color: "#229971", img: "images/lance.png" },
-        { name: "Pierre Gasly", team: "Alpine", color: "#FF87BC", img: "images/gasly.png" },
-        { name: "Franco Colapinto", team: "Alpine", color: "#FF87BC", img: "images/franco.png" }, // FIXED PINK
-        { name: "Alex Albon", team: "Williams", color: "#64C4FF", img: "images/albon.png" },
-        { name: "Carlos Sainz", team: "Williams", color: "#64C4FF", img: "images/sainz.png" },
-        { name: "Liam Lawson", team: "VCARB", color: "#6692FF", img: "images/lawson.png" },
-        { name: "Arvid Lindblad", team: "VCARB", color: "#6692FF", img: "images/lindblad.png" },
-        { name: "Esteban Ocon", team: "Haas", color: "#B6BABD", img: "images/ocon.png" },
-        { name: "Ollie Bearman", team: "Haas", color: "#B6BABD", img: "images/bearman.png" },
-        { name: "Nico Hulkenberg", team: "Audi", color: "#F2F2F2", img: "images/hulk.png" },
-        { name: "Gabriel Bortoleto", team: "Audi", color: "#F2F2F2", img: "images/gabriel.png" },
-        { name: "Valtteri Bottas", team: "Cadillac", color: "#FFD700", img: "images/bottas.png" },
-        { name: "Sergio Perez", team: "Cadillac", color: "#FFD700", img: "images/checo.png" }
+        { name: "Race Control", team: "FIA", color: "#333333", img: "images/fia.png", price: 0 }, 
+        { name: "Max Verstappen", team: "Red Bull", color: "#3671C6", img: "images/max.png", price: 15 },
+        { name: "Isack Hadjar", team: "Red Bull", color: "#3671C6", img: "images/hadjar.png", price: 6 },
+        { name: "Lando Norris", team: "McLaren", color: "#FF8000", img: "images/lando.png", price: 14 },
+        { name: "Oscar Piastri", team: "McLaren", color: "#FF8000", img: "images/oscar.png", price: 12 },
+        { name: "Lewis Hamilton", team: "Ferrari", color: "#E80020", img: "images/lewis.png", price: 12 },
+        { name: "Charles Leclerc", team: "Ferrari", color: "#E80020", img: "images/charles.png", price: 13 },
+        { name: "George Russell", team: "Mercedes", color: "#27F4D2", img: "images/george.png", price: 11 },
+        { name: "Kimi Antonelli", team: "Mercedes", color: "#27F4D2", img: "images/kimi.png", price: 7 },
+        { name: "Fernando Alonso", team: "Aston Martin", color: "#229971", img: "images/alonso.png", price: 9 },
+        { name: "Lance Stroll", team: "Aston Martin", color: "#229971", img: "images/lance.png", price: 5 },
+        { name: "Pierre Gasly", team: "Alpine", color: "#FF87BC", img: "images/gasly.png", price: 6 },
+        { name: "Franco Colapinto", team: "Alpine", color: "#FF87BC", img: "images/franco.png", price: 5 },
+        { name: "Alex Albon", team: "Williams", color: "#64C4FF", img: "images/albon.png", price: 7 },
+        { name: "Carlos Sainz", team: "Williams", color: "#64C4FF", img: "images/sainz.png", price: 8 },
+        { name: "Liam Lawson", team: "VCARB", color: "#6692FF", img: "images/lawson.png", price: 5 },
+        { name: "Arvid Lindblad", team: "VCARB", color: "#6692FF", img: "images/lindblad.png", price: 4 },
+        { name: "Esteban Ocon", team: "Haas", color: "#B6BABD", img: "images/ocon.png", price: 5 },
+        { name: "Ollie Bearman", team: "Haas", color: "#B6BABD", img: "images/bearman.png", price: 4 },
+        { name: "Nico Hulkenberg", team: "Audi", color: "#F2F2F2", img: "images/hulk.png", price: 5 },
+        { name: "Gabriel Bortoleto", team: "Audi", color: "#F2F2F2", img: "images/gabriel.png", price: 4 },
+        { name: "Valtteri Bottas", team: "Cadillac", color: "#FFD700", img: "images/bottas.png", price: 5 },
+        { name: "Sergio Perez", team: "Cadillac", color: "#FFD700", img: "images/checo.png", price: 6 }
     ],
 
-    // TEMPLATES
+    // EVENT COSTS (Added base cost for each type)
+    // Structure: { text: "...", cost: M }
     templates: {
         quali: [
-            "Pole Position", "Front Row Start", "Q3 Appearance", 
-            "Q2 Exit", "Q1 Exit", "Beats Teammate (Quali)"
+            { t: "Pole Position", c: 8 }, 
+            { t: "Front Row Start", c: 6 }, 
+            { t: "Q3 Appearance", c: 4 }, 
+            { t: "Q2 Exit", c: 2 }, 
+            { t: "Q1 Exit", c: 1 }, 
+            { t: "Beats Teammate (Quali)", c: 3 }
         ],
         race: [
-            "Race Win", "Podium Finish", "Top 5 Finish", "Top 10 Finish", 
-            "Points Finish", "Crash / DNF", "11th-20th Finish"
+            { t: "Race Win", c: 10 }, 
+            { t: "Podium Finish", c: 7 }, 
+            { t: "Top 5 Finish", c: 5 }, 
+            { t: "Top 10 Finish", c: 3 }, 
+            { t: "Points Finish", c: 2 }, 
+            { t: "Crash / DNF", c: 1 }, 
+            { t: "11th-20th Finish", c: 1 }
         ],
         bonus: [
-            "Fastest Lap", "Driver of the Day", "Beats Teammate (Race)", 
-            "5s Penalty", "Leads a Lap", "Stalls at Start"
+            { t: "Fastest Lap", c: 5 }, 
+            { t: "Driver of the Day", c: 4 }, 
+            { t: "Beats Teammate (Race)", c: 3 }, 
+            { t: "5s Penalty", c: 2 }, 
+            { t: "Leads a Lap", c: 4 }, 
+            { t: "Stalls at Start", c: 1 }
         ],
         team: [
-            "Double Podium", "1-2 Finish", "Double Points", "Double DNF", 
-            "Pit Stop Error (>4s)", "Strategy Error", "Engine Failure",
-            "One Driver in Points", "Team Orders Used"
+            { t: "Double Podium", c: 8 }, 
+            { t: "1-2 Finish", c: 12 }, 
+            { t: "Double Points", c: 5 }, 
+            { t: "Double DNF", c: 2 }, 
+            { t: "Pit Stop Error (>4s)", c: 2 }, 
+            { t: "Strategy Error", c: 2 }, 
+            { t: "Engine Failure", c: 2 },
+            { t: "One Driver in Points", c: 3 },
+            { t: "Team Orders Used", c: 3 }
         ],
         fia: [
-            "Safety Car Deployed", "Green Flag Race (No SC)", "Virtual Safety Car", 
-            "Red Flag Suspends Race", "Rain / Wet Track", "All Cars Finish (No DNF)",
-            "Blue Flags Shown", "Black & White Flag", "Turn 1 Incident", 
-            "Unsafe Release Investigation", "Track Limits Penalty", 
-            "Yellow Flag Sector 1", "Yellow Flag Sector 2", "Yellow Flag Sector 3",
-            "Debris on Track", "DRS Disabled", "Medical Car Deployed",
-            "5s Penalty Issued", "10s Penalty Issued", "Grid Drop Penalty",
-            "Race Control: No Investigation", "Formation Lap Issue", 
-            "Standing Start Restart", "Rolling Start Restart"
+            { t: "Safety Car Deployed", c: 5 }, 
+            { t: "Green Flag Race (No SC)", c: 5 }, 
+            { t: "Virtual Safety Car", c: 4 }, 
+            { t: "Red Flag Suspends Race", c: 8 }, 
+            { t: "Rain / Wet Track", c: 6 }, 
+            { t: "All Cars Finish (No DNF)", c: 8 },
+            { t: "Blue Flags Shown", c: 1 }, 
+            { t: "Black & White Flag", c: 2 }, 
+            { t: "Turn 1 Incident", c: 4 }, 
+            { t: "Unsafe Release Investigation", c: 3 }, 
+            { t: "Track Limits Penalty", c: 3 }, 
+            { t: "Yellow Flag Sector 1", c: 2 }, 
+            { t: "Yellow Flag Sector 2", c: 2 }, 
+            { t: "Yellow Flag Sector 3", c: 2 },
+            { t: "Debris on Track", c: 3 }, 
+            { t: "DRS Disabled", c: 3 }, 
+            { t: "Medical Car Deployed", c: 5 },
+            { t: "5s Penalty Issued", c: 2 }, 
+            { t: "10s Penalty Issued", c: 3 }, 
+            { t: "Grid Drop Penalty", c: 4 },
+            { t: "Race Control: No Investigation", c: 3 }, 
+            { t: "Formation Lap Issue", c: 4 }, 
+            { t: "Standing Start Restart", c: 5 }, 
+            { t: "Rolling Start Restart", c: 4 }
         ]
     }
 };
