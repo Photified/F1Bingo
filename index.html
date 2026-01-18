@@ -697,7 +697,7 @@
             `;
             const content = row.querySelector('.driver-content');
 
-            const qpBtn = document.createElement('div'); qpBtn.className = 'qp-red-btn'; qpBtn.innerText = '⚡ TEAM STRATEGY';
+            const qpBtn = document.createElement('div'); qpBtn.className = 'qp-red-btn'; qpBtn.innerText = 'TEAM QUICK PICKS';
             qpBtn.onclick = (e) => { e.stopPropagation(); applyQuickPicks(t.name, null, 'maximize_team'); };
             content.appendChild(qpBtn);
 
@@ -727,7 +727,7 @@
         
         const content = row.querySelector('.driver-content');
         
-        const qpBtn = document.createElement('div'); qpBtn.className = 'qp-red-btn'; qpBtn.innerText = '🎲 RANDOMIZE EVENTS';
+        const qpBtn = document.createElement('div'); qpBtn.className = 'qp-red-btn'; qpBtn.innerText = 'FIA QUICK PICK';
         qpBtn.onclick = (e) => { e.stopPropagation(); applyQuickPicks(null, null, 'random_fia'); };
         content.appendChild(qpBtn);
 
