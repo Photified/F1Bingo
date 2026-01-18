@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en" translate="no"> <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google" content="notranslate">
+    
     <title>F1 2026: PICK 'EM</title>
     <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
     <script src="bingo_data.js"></script>
@@ -105,7 +106,6 @@
         .slot[data-req="team"] { background: #e0fbf8; border-color: var(--c-team); color: var(--c-team); opacity: 0.8; }
         .slot[data-req="fia"] { background: #fff2f2; border-color: var(--c-fia); color: var(--c-fia); opacity: 0.8; }
 
-        /* FILLED SLOT: HORIZONTAL LAYOUT */
         .slot.filled { 
             border: none !important; color: white !important; 
             box-shadow: 0 4px 10px rgba(0,0,0,0.2); 
@@ -117,25 +117,23 @@
         .slot.filled[data-type="team"] { background: linear-gradient(135deg, #00d2be, #009e8e) !important; }
         .slot.filled[data-type="fia"] { background: linear-gradient(135deg, #e10600, #a30000) !important; }
 
-        /* UPDATE: 3X Size Image Side */
+        /* 3X Size Image Side */
         .slot-img-container {
-            width: 90px; /* 3X Bigger (was ~30-40) */
-            flex-shrink: 0; background: rgba(0,0,0,0.1);
+            width: 90px; flex-shrink: 0; background: rgba(0,0,0,0.1);
             display: flex; align-items: center; justify-content: center;
             border-right: 1px solid rgba(255,255,255,0.2);
         }
         .slot-img {
-            width: 80px; height: 80px; object-fit: contain; /* Large Image */
+            width: 80px; height: 80px; object-fit: contain; 
             border-radius: 6px; 
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
-        /* UPDATE: Invert FIA Logo to White */
+        /* INVERT FIA LOGO TO WHITE */
         .slot.filled[data-type="fia"] .slot-img {
             filter: brightness(0) invert(1);
         }
 
-        /* Text Side (Right) */
         .slot-text-container {
             flex: 1; display: flex; flex-direction: column; justify-content: center;
             padding: 4px 10px; min-width: 0;
@@ -150,7 +148,7 @@
 
         .slot.center { background: #222 !important; color: white !important; border: none !important; font-size: 16px; text-transform: uppercase; }
         .slot.matched { opacity: 1; box-shadow: inset 0 0 0 5px var(--score-win); transform: scale(1.02); z-index: 5; }
-        .slot.matched::after { content: '✓'; position: absolute; top: -8px; right: -8px; background: var(--score-win); color: black; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        .slot.matched::after { content: '✓'; position: absolute; top: -8px; right: -8px; background: var(--score-win); color: black; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
 
         /* RIGHT PANEL */
         .right-content { flex: 1; overflow-y: auto; padding: 15px; display: none; }
@@ -219,7 +217,7 @@
         <span id="displayTeamName">GUEST</span>
     </div>
     <div class="header-title" ondblclick="toggleAdmin()">
-        <img src="images/logo192.png" class="header-logo" alt="F1 Pick Em">
+        <img src="images/f1pickembannerlogo.png" class="header-logo" alt="F1 Pick Em">
     </div>
     <button onclick="saveLocal()" style="background:var(--brand-red); color:white; border:none; padding:8px 20px; border-radius:20px; font-weight:bold; cursor:pointer;">SAVE</button>
 </header>
@@ -433,7 +431,7 @@
                 content.appendChild(btn);
                 const grid = document.createElement('div'); grid.className = 'sub-content';
                 content.appendChild(grid);
-                // PASS 'Race Control' as the driver name for image lookup
+                // PASS 'Race Control' and 'fia' correctly
                 BINGO_CONFIG.templates.fia.forEach(t => createChip(grid, t, 'fia', false, 'Race Control', 'fia')); 
             } else {
                 createSubSection(content, "QUALIFYING", BINGO_CONFIG.templates.quali, `${d.name} `, 'driver', 'quali', d.name, 'driver');
@@ -497,8 +495,6 @@
             }
         }
         
-        // Parse Text for clean display
-        // Drop logic: store driverName for image lookup
         currentGrid[index] = { text, type, driver: driverName, subtype: subType };
         renderGrid();
         saveLocal();
@@ -608,7 +604,7 @@
                 else s.classList.remove('matched');
             } else {
                 const req = s.dataset.req;
-                s.innerHTML = req === 'fia' ? "FIA" : req.toUpperCase();
+                s.innerText = req === 'fia' ? "FIA" : req.toUpperCase();
                 s.className = 'slot';
                 delete s.dataset.type;
                 s.classList.remove('matched');
