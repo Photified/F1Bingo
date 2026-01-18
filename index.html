@@ -47,7 +47,6 @@
         .tab-btn:hover { background: #f0f0f0; }
         .tab-btn.active { color: #000; border-bottom-color: var(--brand-red); background: white; }
         
-        /* Static Title for Left Panel */
         .static-tab { flex: 1; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 13px; color: #333; background: #f9f9f9; border-bottom: 1px solid #eee; letter-spacing: 1px; }
 
         /* DRIVER MARKET */
@@ -56,11 +55,15 @@
         .driver-header { padding: 12px 15px; display: flex; align-items: center; gap: 15px; cursor: pointer; background: linear-gradient(90deg, transparent 95%, #fafafa); }
         .driver-header:hover { background: #f5f5f5; }
         
-        .helmet-icon { width: 28px; height: 28px; background: var(--team-color); border-radius: 50% 50% 10% 10%; border: 2px solid #333; position: relative; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        .helmet-icon::after { content: ''; position: absolute; top: 8px; left: 2px; right: 2px; height: 8px; background: rgba(0,0,0,0.6); border-radius: 2px; }
-        .driver-header[data-team="FIA"] .helmet-icon { border-radius: 4px; background: #333; }
-        .driver-header[data-team="FIA"] .helmet-icon::after { display: none; }
-        .driver-header[data-team="FIA"] .helmet-icon::before { content: '🏁'; position: absolute; top: 2px; left: 4px; font-size: 16px; }
+        /* NEW IMAGE STYLING */
+        .driver-face { 
+            width: 40px; height: 40px; object-fit: contain; 
+            border-radius: 50%; background: #eee; 
+            border: 2px solid var(--team-color);
+            padding: 2px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        /* Fallback if image breaks */
+        .driver-face[src=""] { display: none; } 
 
         .driver-name { font-weight: 800; font-size: 14px; color: #333; }
         .driver-team { font-size: 10px; color: #888; text-transform: uppercase; margin-top:2px; }
@@ -289,7 +292,7 @@
     const templates = {
         balanced: ['driver','driver','team','driver','fia','driver','team','fia','driver','team','team','driver','FREE','driver','team','team','fia','driver','team','fia','driver','team','team','driver','fia'],
         team: ['team','team','driver','team','team','team','driver','team','fia','team','driver','team','FREE','team','team','driver','team','fia','team','driver','team','team','team','driver','fia'],
-        chaos: ['fia','fia','driver','team','fia','fia','driver','team','fia','driver','driver','team','FREE','fia','fia','team','fia','driver','fia','driver','fia','driver','fia','team','fia'],
+        fia: ['fia','fia','driver','team','fia','fia','driver','team','fia','driver','driver','team','FREE','fia','fia','team','fia','driver','fia','driver','fia','driver','fia','team','fia'],
         driver: ['driver','driver','driver','team','driver','driver','team','fia','driver','driver','team','driver','FREE','driver','team','driver','fia','team','driver','driver','driver','driver','team','driver','fia']
     };
 
@@ -369,7 +372,7 @@
             
             row.innerHTML = `
                 <div class="driver-header" onclick="toggleDriver(this)" data-team="${d.team}" style="--team-color:${d.color}">
-                    <div class="helmet-icon"></div>
+                    <img src="${d.img}" class="driver-face" onerror="this.style.display='none'">
                     <div>
                         <div class="driver-name">${d.name}</div>
                         <div class="driver-team">${d.team}</div>

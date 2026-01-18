@@ -1,3 +1,9 @@
+/* F1 2026 PICK 'EM DATA
+   - 25 Races (Full Calendar)
+   - Image paths linked to 'images/' folder
+   - FIA events included
+*/
+
 const BINGO_CONFIG = {
     // 25 RACES - FULL LIST
     races: [
@@ -28,31 +34,31 @@ const BINGO_CONFIG = {
         {id:'abu', c:'ae', n:'Abu Dhabi', d:'Dec 6'}
     ],
 
-    // DRIVER ROSTER
+    // DRIVER ROSTER & IMAGE PATHS
     drivers: [
-        { name: "Race Control", team: "FIA", color: "#333333" }, 
-        { name: "Max Verstappen", team: "Red Bull", color: "#3671C6" },
-        { name: "Isack Hadjar", team: "Red Bull", color: "#3671C6" },
-        { name: "Lando Norris", team: "McLaren", color: "#FF8000" },
-        { name: "Oscar Piastri", team: "McLaren", color: "#FF8000" },
-        { name: "Lewis Hamilton", team: "Ferrari", color: "#E80020" },
-        { name: "Charles Leclerc", team: "Ferrari", color: "#E80020" },
-        { name: "George Russell", team: "Mercedes", color: "#27F4D2" },
-        { name: "Kimi Antonelli", team: "Mercedes", color: "#27F4D2" },
-        { name: "Fernando Alonso", team: "Aston Martin", color: "#229971" },
-        { name: "Lance Stroll", team: "Aston Martin", color: "#229971" },
-        { name: "Pierre Gasly", team: "Alpine", color: "#FF87BC" },
-        { name: "Franco Colapinto", team: "Alpine", color: "#0093CC" },
-        { name: "Alex Albon", team: "Williams", color: "#64C4FF" },
-        { name: "Carlos Sainz", team: "Williams", color: "#64C4FF" },
-        { name: "Liam Lawson", team: "VCARB", color: "#6692FF" },
-        { name: "Arvid Lindblad", team: "VCARB", color: "#6692FF" },
-        { name: "Esteban Ocon", team: "Haas", color: "#B6BABD" },
-        { name: "Ollie Bearman", team: "Haas", color: "#B6BABD" },
-        { name: "Nico Hulkenberg", team: "Audi", color: "#F2F2F2" },
-        { name: "Gabriel Bortoleto", team: "Audi", color: "#F2F2F2" },
-        { name: "Valtteri Bottas", team: "Cadillac", color: "#FFD700" },
-        { name: "Sergio Perez", team: "Cadillac", color: "#FFD700" }
+        { name: "Race Control", team: "FIA", color: "#333333", img: "images/fia.png" }, 
+        { name: "Max Verstappen", team: "Red Bull", color: "#3671C6", img: "images/max.png" },
+        { name: "Isack Hadjar", team: "Red Bull", color: "#3671C6", img: "images/hadjar.png" },
+        { name: "Lando Norris", team: "McLaren", color: "#FF8000", img: "images/lando.png" },
+        { name: "Oscar Piastri", team: "McLaren", color: "#FF8000", img: "images/oscar.png" },
+        { name: "Lewis Hamilton", team: "Ferrari", color: "#E80020", img: "images/lewis.png" },
+        { name: "Charles Leclerc", team: "Ferrari", color: "#E80020", img: "images/charles.png" },
+        { name: "George Russell", team: "Mercedes", color: "#27F4D2", img: "images/george.png" },
+        { name: "Kimi Antonelli", team: "Mercedes", color: "#27F4D2", img: "images/kimi.png" },
+        { name: "Fernando Alonso", team: "Aston Martin", color: "#229971", img: "images/alonso.png" },
+        { name: "Lance Stroll", team: "Aston Martin", color: "#229971", img: "images/lance.png" },
+        { name: "Pierre Gasly", team: "Alpine", color: "#FF87BC", img: "images/gasly.png" },
+        { name: "Franco Colapinto", team: "Alpine", color: "#0093CC", img: "images/franco.png" },
+        { name: "Alex Albon", team: "Williams", color: "#64C4FF", img: "images/albon.png" },
+        { name: "Carlos Sainz", team: "Williams", color: "#64C4FF", img: "images/sainz.png" },
+        { name: "Liam Lawson", team: "VCARB", color: "#6692FF", img: "images/lawson.png" },
+        { name: "Arvid Lindblad", team: "VCARB", color: "#6692FF", img: "images/lindblad.png" },
+        { name: "Esteban Ocon", team: "Haas", color: "#B6BABD", img: "images/ocon.png" },
+        { name: "Ollie Bearman", team: "Haas", color: "#B6BABD", img: "images/bearman.png" },
+        { name: "Nico Hulkenberg", team: "Audi", color: "#F2F2F2", img: "images/hulk.png" },
+        { name: "Gabriel Bortoleto", team: "Audi", color: "#F2F2F2", img: "images/gabriel.png" },
+        { name: "Valtteri Bottas", team: "Cadillac", color: "#FFD700", img: "images/bottas.png" },
+        { name: "Sergio Perez", team: "Cadillac", color: "#FFD700", img: "images/checo.png" }
     ],
 
     // TEMPLATES
@@ -73,8 +79,6 @@ const BINGO_CONFIG = {
             "Double Podium", "1-2 Finish", "Double Points", "Double DNF", 
             "Pit Stop Error (>4s)", "Strategy Error", "Engine Failure"
         ],
-        
-        // MASSIVE FIA EXPANSION
         fia: [
             "Safety Car Deployed", "Green Flag Race (No SC)", "Virtual Safety Car", 
             "Red Flag Suspends Race", "Rain / Wet Track", "All Cars Finish (No DNF)",
