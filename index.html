@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google" content="notranslate">
-    <title>F1 2026: PICK 'EM</title>
+    <title>F1 2026: PICK 'EM (3x3)</title>
     <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
     <script src="bingo_data.js"></script>
 
@@ -104,7 +104,7 @@
         .chip.team { border-left-color: var(--c-team); }
         .chip.fia { border-left-color: var(--c-fia); }
 
-        /* CENTER GRID */
+        /* CENTER GRID - UPDATED FOR 3x3 */
         .active-panel { background: white; border-radius: 12px; border: 1px solid #e0e0e0; padding: 0; display: flex; flex-direction: column; overflow: hidden; height: 100%; position: relative; }
         
         #raceHeader { padding: 15px 20px; background: #fff; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; height: 80px; box-sizing: border-box; }
@@ -120,7 +120,16 @@
         .lock-timer { font-size: 12px; font-weight: 700; color: #555; margin-top: 4px; }
 
         .grid-container { padding: 20px; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow-y: auto; }
-        .bingo-grid { display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(5, 1fr); gap: 10px; width: 100%; aspect-ratio: 1/1; max-height: 600px; }
+        /* 3x3 GRID UPDATE */
+        .bingo-grid { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            grid-template-rows: repeat(3, 1fr); 
+            gap: 15px; 
+            width: 100%; 
+            aspect-ratio: 1/1; 
+            max-height: 600px; /* Kept height but fewer items = bigger cards */
+        }
         
         .grid-locked .slot { opacity: 0.7; pointer-events: none; filter: grayscale(0.5); }
         .grid-locked .slot.filled { filter: grayscale(0); opacity: 1; }
@@ -130,7 +139,6 @@
         .slot[data-req="team"] { background: #e0fbf8; border-color: var(--c-team); color: var(--c-team); opacity: 0.8; }
         .slot[data-req="fia"] { background: #fff2f2; border-color: var(--c-fia); color: var(--c-fia); opacity: 0.8; }
 
-        /* --- FILLED CARD STYLING (DARK MODE) --- */
         .slot.filled { 
             background: #2B2B33 !important; 
             border: 1px solid #444 !important; 
@@ -141,7 +149,6 @@
             position: relative;
         }
 
-        /* CORNER TABS */
         .slot.filled::before {
             content: ''; position: absolute; top: 0; left: 0;
             width: 0; height: 0;
@@ -153,12 +160,11 @@
         .slot.filled[data-type="team"]::before { border-color: var(--c-team) transparent transparent transparent; }
         .slot.filled[data-type="fia"]::before { border-color: var(--c-fia) transparent transparent transparent; }
 
-        /* UPDATED: BLACK & WHITE X BUTTON */
         .remove-pick-btn {
             position: absolute; top: 0; right: 0;
-            width: 20px; height: 20px; 
-            background: #000; /* Black Background */
-            color: #fff;      /* White Text */
+            width: 24px; height: 24px; /* Slightly larger for touch */
+            background: #000; 
+            color: #fff;
             font-weight: 900; font-size: 14px; line-height: 18px;
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; z-index: 10;
@@ -168,25 +174,24 @@
         }
         .remove-pick-btn:hover { background: #333; opacity: 1; }
 
-        /* LEFT COLUMN (TEAM COLOR) */
+        /* Left Side (Team Color) */
         .slot-img-container { 
-            width: 90px; flex-shrink: 0; 
+            width: 35%; flex-shrink: 0; 
             display: flex; align-items: center; justify-content: center; 
             border-right: 1px solid rgba(255,255,255,0.1);
             background-color: var(--team-color-hex); 
         }
         .slot-img { 
-            width: 80px; height: 80px; object-fit: contain; 
+            width: 80%; height: 80%; object-fit: contain; 
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
         }
         .slot.filled[data-type="fia"] .slot-img { filter: brightness(0) invert(1); }
 
-        /* RIGHT COLUMN (DARK GREY + CHECKERED PATTERN) */
+        /* Right Side (Text) */
         .slot-text-container { 
             flex: 1; display: flex; flex-direction: column; justify-content: center; 
-            padding: 4px 10px; min-width: 0;
+            padding: 4px 15px; min-width: 0;
             background-color: #2B2B33;
-            /* Subtle Checkered Overlay */
             background-image:
                 linear-gradient(45deg, rgba(0,0,0,0.2) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.2) 75%, rgba(0,0,0,0.2)),
                 linear-gradient(45deg, rgba(0,0,0,0.2) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.2) 75%, rgba(0,0,0,0.2));
@@ -195,16 +200,16 @@
         }
         
         .slot-sub { 
-            font-size: 10px; text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 3px;
+            font-size: 11px; text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 4px;
             color: var(--cat-text-color); 
         }
-        .slot-main { font-size: 12px; font-weight: 700; line-height: 1.2; word-wrap: break-word; overflow: hidden; }
+        .slot-main { font-size: 14px; font-weight: 700; line-height: 1.2; word-wrap: break-word; overflow: hidden; }
 
         /* FREE SPACE */
         .slot.center { 
             background-color: #222 !important; 
             border: 2px solid #333 !important; 
-            color: white !important; font-size: 16px; text-transform: uppercase; 
+            color: white !important; font-size: 24px; text-transform: uppercase; 
             background-image:
                 linear-gradient(45deg, #1a1a1a 25%, transparent 25%, transparent 75%, #1a1a1a 75%, #1a1a1a),
                 linear-gradient(45deg, #1a1a1a 25%, transparent 25%, transparent 75%, #1a1a1a 75%, #1a1a1a) !important;
@@ -213,7 +218,7 @@
             box-shadow: inset 0 0 30px #000 !important; 
         }
         .slot.matched { opacity: 1; box-shadow: inset 0 0 0 5px var(--score-win); transform: scale(1.02); z-index: 5; }
-        .slot.matched::after { content: '✓'; position: absolute; bottom: 5px; right: 5px; background: var(--score-win); color: black; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        .slot.matched::after { content: '✓'; position: absolute; bottom: 5px; right: 5px; background: var(--score-win); color: black; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 18px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
 
         /* ACTIONS FOOTER */
         .actions-footer { padding: 15px; width: 100%; box-sizing: border-box; display: flex; gap: 10px; }
@@ -246,10 +251,12 @@
         .big-flag { width: 100px; height: auto; border-radius: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         .strategy-title { font-size: 32px; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 1; }
 
+        /* STRATEGY GRID 3x3 ADAPTATION? No, strategy selection is 2x2 cards */
         .strat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-width: 600px; width: 100%; }
         .strat-card { background: #f9f9f9; border: 2px solid #eee; border-radius: 12px; padding: 20px; cursor: pointer; display: flex; flex-direction: column; align-items: center; transition: 0.2s; }
         .strat-card:hover { border-color: var(--brand-red); background: white; transform: translateY(-3px); }
-        .mini-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; width: 60px; height: 60px; margin-bottom: 10px; opacity: 0.6; }
+        /* MINI GRID 3x3 for preview */
+        .mini-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; width: 60px; height: 60px; margin-bottom: 10px; opacity: 0.6; }
         .mg-c { background: #ddd; border-radius: 1px; }
 
         /* CUSTOM MODAL */
@@ -326,19 +333,19 @@
             
             <div class="strat-grid">
                 <div class="strat-card" onclick="confirmStrategy('balanced')">
-                    <div class="mini-grid"><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-team)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-team)"></div><div class="mg-c" style="background:var(--c-fia)"></div></div>
+                    <div class="mini-grid"><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-team)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-team)"></div><div class="mg-c" style="background:#222"></div><div class="mg-c" style="background:var(--c-fia)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-fia)"></div><div class="mg-c" style="background:var(--c-team)"></div></div>
                     <strong>⚖️ Balanced</strong>
                 </div>
                 <div class="strat-card" onclick="confirmStrategy('team')">
-                    <div class="mini-grid"><div class="mg-c" style="background:var(--c-team)"></div><div class="mg-c" style="background:var(--c-team)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-team)"></div><div class="mg-c" style="background:var(--c-team)"></div></div>
+                    <div class="mini-grid"><div class="mg-c" style="background:var(--c-team)"></div><div class="mg-c" style="background:var(--c-team)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-team)"></div><div class="mg-c" style="background:#222"></div><div class="mg-c" style="background:var(--c-team)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-team)"></div><div class="mg-c" style="background:var(--c-fia)"></div></div>
                     <strong>🛠️ Constructor</strong>
                 </div>
                 <div class="strat-card" onclick="confirmStrategy('chaos')">
-                    <div class="mini-grid"><div class="mg-c" style="background:var(--c-fia)"></div><div class="mg-c" style="background:var(--c-fia)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-fia)"></div><div class="mg-c" style="background:var(--c-fia)"></div></div>
+                    <div class="mini-grid"><div class="mg-c" style="background:var(--c-fia)"></div><div class="mg-c" style="background:var(--c-fia)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-fia)"></div><div class="mg-c" style="background:#222"></div><div class="mg-c" style="background:var(--c-fia)"></div><div class="mg-c" style="background:var(--c-team)"></div><div class="mg-c" style="background:var(--c-fia)"></div><div class="mg-c" style="background:var(--c-driver)"></div></div>
                     <strong>🚩 FIA / Track</strong>
                 </div>
                 <div class="strat-card" onclick="confirmStrategy('driver')">
-                    <div class="mini-grid"><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-driver)"></div></div>
+                    <div class="mini-grid"><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-team)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:#222"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-fia)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-team)"></div></div>
                     <strong>🏎️ Driver</strong>
                 </div>
             </div>
@@ -390,20 +397,20 @@
             <div class="rules-block">
                 <div class="rules-title">HOW TO PLAY</div>
                 <div class="rules-text">
-                    1. Select a <strong>Race Strategy</strong> to generate your grid layout.<br><br>
+                    1. Select a <strong>Race Strategy</strong> to generate your 3x3 grid.<br><br>
                     2. Drag chips from the <strong>My Picks</strong> menu onto matching colored slots.<br><br>
-                    3. <strong>Limit:</strong> You may only select 1 chip per category (e.g., 1 Quali result) per driver.<br><br>
-                    4. <strong>LOCK:</strong> You must manually Lock your card when full. You can Unlock to edit until the deadline.
+                    3. <strong>Limit:</strong> You may only select 1 chip per category per driver.<br><br>
+                    4. <strong>LOCK:</strong> You must manually Lock your card when full.
                 </div>
             </div>
             <div class="rules-block">
                 <div class="rules-title">SCORING</div>
                 <ul class="rules-list">
                     <li><strong>10 PTS</strong> - Each Correct Tile</li>
-                    <li><strong>+30 PTS</strong> - Straight Line Bonus</li>
+                    <li><strong>+30 PTS</strong> - 3-in-a-Row (Line)</li>
                     <li><strong>+50 PTS</strong> - 4 Corners Bonus</li>
                     <li><strong>+150 PTS</strong> - The X Bonus</li>
-                    <li><strong>+1000 PTS</strong> - Full Card Bonus</li>
+                    <li><strong>+1000 PTS</strong> - Full Card (9/9)</li>
                 </ul>
             </div>
             <div class="rules-block">
@@ -420,17 +427,18 @@
 
 <script>
     let activeRace = 'aus';
-    let currentGrid = Array(25).fill(null);
+    let currentGrid = Array(9).fill(null); // 3x3 GRID
     let verifiedResults = [];
     let modalCallback = null;
     let isGridLocked = false;
     let isUserLocked = false;
 
+    // UPDATED 3x3 TEMPLATES (9 items, index 4 is FREE)
     const templates = {
-        balanced: ['driver','driver','team','driver','fia','driver','team','fia','driver','team','team','driver','FREE','driver','team','team','fia','driver','team','fia','driver','team','team','driver','fia'],
-        team: ['team','team','driver','team','team','team','driver','team','fia','team','driver','team','FREE','team','team','driver','team','fia','team','driver','team','team','team','driver','fia'],
-        chaos: ['fia','fia','driver','team','fia','fia','driver','team','fia','driver','driver','team','FREE','fia','fia','team','fia','driver','fia','driver','fia','driver','fia','team','fia'],
-        driver: ['driver','driver','driver','team','driver','driver','team','fia','driver','driver','team','driver','FREE','driver','team','driver','fia','team','driver','driver','driver','driver','team','driver','fia']
+        balanced: ['driver','team','driver', 'team','FREE','fia', 'driver','fia','team'],
+        team:     ['team','team','driver', 'team','FREE','team', 'driver','team','fia'],
+        chaos:    ['fia','fia','driver',   'fia','FREE','fia',    'team','fia','driver'],
+        driver:   ['driver','driver','team', 'driver','FREE','driver', 'fia','driver','team']
     };
 
     window.onload = () => {
@@ -494,7 +502,8 @@
         const unlockBtn = document.getElementById('unlockBtn');
         const grid = document.getElementById('grid');
 
-        const isFull = currentGrid.every((slot, i) => i === 12 || slot !== null);
+        // Check 3x3 full (index 4 is free)
+        const isFull = currentGrid.every((slot, i) => i === 4 || slot !== null);
 
         if(isGridLocked) {
             grid.classList.add('grid-locked');
@@ -567,7 +576,7 @@
     function performReset() {
         localStorage.removeItem(`grid_${activeRace}`);
         localStorage.removeItem(`userLock_${activeRace}`);
-        currentGrid = Array(25).fill(null);
+        currentGrid = Array(9).fill(null); // 3x3 Reset
         isUserLocked = false;
         
         const r = BINGO_CONFIG.races.find(r=>r.id===activeRace);
@@ -717,7 +726,7 @@
             saveLocal();
             checkLockStatus();
         } else {
-            showModal("Grid Full / Conflicts", "Could not place all picks. Check if grid is full or driver already has predictions.", false);
+            showModal("Grid Full / Conflicts", "Could not place all picks.", false);
         }
     }
 
@@ -840,7 +849,7 @@
     function resetGrid() {
         if(!confirm("Are you sure? This will clear your current card.")) return;
         localStorage.removeItem(`grid_${activeRace}`);
-        currentGrid = Array(25).fill(null);
+        currentGrid = Array(9).fill(null); // 3x3
         const r = BINGO_CONFIG.races.find(r=>r.id===activeRace);
         if(r) document.getElementById('stratRaceTitle').innerText = r.n.toUpperCase();
         switchState('strategy');
@@ -972,12 +981,12 @@
 
     function updateScore() {
         let score = 0;
-        let matches = Array(25).fill(false);
-        matches[12] = true; // Free space
+        let matches = Array(9).fill(false); // 3x3
+        matches[4] = true; // Free space
 
         currentGrid.forEach((item, i) => {
             if(!item) return;
-            if(i===12) return;
+            if(i===4) return;
             if(verifiedResults.includes(item.text)) {
                 score += 10;
                 matches[i] = true;
@@ -987,25 +996,26 @@
         const bonuses = [];
         let lineCount = 0;
 
-        for(let r=0; r<5; r++) {
+        // 3x3 Logic
+        for(let r=0; r<3; r++) {
             let isLine = true;
-            for(let c=0; c<5; c++) { if(!matches[r*5 + c]) isLine = false; }
+            for(let c=0; c<3; c++) { if(!matches[r*3 + c]) isLine = false; }
             if(isLine) { score += 30; lineCount++; }
         }
-        for(let c=0; c<5; c++) {
+        for(let c=0; c<3; c++) {
             let isLine = true;
-            for(let r=0; r<5; r++) { if(!matches[r*5 + c]) isLine = false; }
+            for(let r=0; r<3; r++) { if(!matches[r*3 + c]) isLine = false; }
             if(isLine) { score += 30; lineCount++; }
         }
         if(lineCount > 0) bonuses.push(`${lineCount} LINE BONUS (+${lineCount*30})`);
 
-        if(matches[0] && matches[4] && matches[20] && matches[24]) {
+        if(matches[0] && matches[2] && matches[6] && matches[8]) {
             score += 50;
             bonuses.push("4 CORNERS BONUS (+50)");
         }
 
-        const d1 = matches[0] && matches[6] && matches[12] && matches[18] && matches[24];
-        const d2 = matches[4] && matches[8] && matches[12] && matches[16] && matches[20];
+        const d1 = matches[0] && matches[4] && matches[8];
+        const d2 = matches[2] && matches[4] && matches[6];
         if(d1 && d2) {
             score += 150;
             bonuses.push("THE X BONUS (+150)");
