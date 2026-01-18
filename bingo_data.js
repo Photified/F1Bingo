@@ -1,8 +1,4 @@
-/* F1 2026 PICK 'EM DATA
-   - 25 Races
-   - Budget Logic: BALANCED
-   - Max Victory Package (~$73M) allows for ~$6.75M avg for remaining picks
-*/
+/* F1 2026 PICK 'EM DATA */
 
 const BINGO_CONFIG = {
     // 25 RACES
@@ -34,9 +30,8 @@ const BINGO_CONFIG = {
         {id:'abu', c:'ae', n:'Abu Dhabi', d:'Dec 6'}
     ],
 
-    // DRIVER ROSTER - Prices Dialed Back
+    // DRIVER ROSTER
     drivers: [
-        { name: "Race Control", team: "FIA", color: "#333333", img: "images/fia.png", price: 0 }, 
         { name: "Max Verstappen", team: "Red Bull", color: "#3671C6", img: "images/max.png", price: 18 },
         { name: "Isack Hadjar", team: "Red Bull", color: "#3671C6", img: "images/hadjar.png", price: 4 },
         { name: "Lando Norris", team: "McLaren", color: "#FF8000", img: "images/lando.png", price: 16 },
@@ -61,27 +56,44 @@ const BINGO_CONFIG = {
         { name: "Sergio Perez", team: "Cadillac", color: "#FFD700", img: "images/checo.png", price: 5 }
     ],
 
-    // EVENT COSTS (Winning/Pole made slightly cheaper to incentivize risk)
+    // NEW: CONSTRUCTORS (Plus FIA)
+    // You can now add team logos in 'img'
+    constructors: [
+        { name: "Race Control", type: "FIA", color: "#333333", img: "images/fia.png", price: 0 },
+        { name: "Red Bull", type: "Team", color: "#3671C6", img: "images/logo_rb.png", price: 10 },
+        { name: "McLaren", type: "Team", color: "#FF8000", img: "images/logo_mclaren.png", price: 9 },
+        { name: "Ferrari", type: "Team", color: "#E80020", img: "images/logo_ferrari.png", price: 9 },
+        { name: "Mercedes", type: "Team", color: "#27F4D2", img: "images/logo_merc.png", price: 8 },
+        { name: "Aston Martin", type: "Team", color: "#229971", img: "images/logo_aston.png", price: 6 },
+        { name: "Alpine", type: "Team", color: "#FF87BC", img: "images/logo_alpine.png", price: 5 },
+        { name: "Williams", type: "Team", color: "#64C4FF", img: "images/logo_williams.png", price: 5 },
+        { name: "VCARB", type: "Team", color: "#6692FF", img: "images/logo_vcarb.png", price: 4 },
+        { name: "Haas", type: "Team", color: "#B6BABD", img: "images/logo_haas.png", price: 4 },
+        { name: "Audi", type: "Team", color: "#F2F2F2", img: "images/logo_audi.png", price: 3 },
+        { name: "Cadillac", type: "Team", color: "#FFD700", img: "images/logo_cadillac.png", price: 3 }
+    ],
+
+    // EVENT COSTS
     templates: {
         quali: [
-            { t: "Pole Position", c: 3 }, // Cost 3 + Driver Price
+            { t: "Pole Position", c: 3 }, 
             { t: "Front Row Start", c: 5 }, 
-            { t: "Q3 Appearance", c: 9 }, // Safe = Expensive
+            { t: "Q3 Appearance", c: 9 }, 
             { t: "Q2 Exit", c: 4 }, 
             { t: "Q1 Exit", c: 3 }, 
             { t: "Beats Teammate (Quali)", c: 6 }
         ],
         race: [
-            { t: "Race Win", c: 3 }, // Cost 3 + Driver Price
+            { t: "Race Win", c: 3 }, 
             { t: "Podium Finish", c: 6 }, 
             { t: "Top 5 Finish", c: 8 }, 
-            { t: "Top 10 Finish", c: 10 }, // Safe = Expensive
+            { t: "Top 10 Finish", c: 10 }, 
             { t: "Points Finish", c: 10 }, 
-            { t: "Crash / DNF", c: 2 }, // Very Cheap
+            { t: "Crash / DNF", c: 2 }, 
             { t: "11th-20th Finish", c: 5 }
         ],
         bonus: [
-            { t: "Fastest Lap", c: 2 }, // Cheap (Hard to predict)
+            { t: "Fastest Lap", c: 2 }, 
             { t: "Driver of the Day", c: 3 }, 
             { t: "Beats Teammate (Race)", c: 7 }, 
             { t: "5s Penalty", c: 3 }, 
@@ -90,8 +102,8 @@ const BINGO_CONFIG = {
         ],
         team: [
             { t: "Double Podium", c: 4 }, 
-            { t: "1-2 Finish", c: 2 }, // Cheap (Very Hard)
-            { t: "Double Points", c: 8 }, // Safe
+            { t: "1-2 Finish", c: 2 }, 
+            { t: "Double Points", c: 8 }, 
             { t: "Double DNF", c: 1 }, 
             { t: "Pit Stop Error (>4s)", c: 5 }, 
             { t: "Strategy Error", c: 5 }, 
@@ -100,7 +112,7 @@ const BINGO_CONFIG = {
             { t: "Team Orders Used", c: 3 }
         ],
         fia: [
-            { t: "Safety Car Deployed", c: 8 }, // Expensive (Likely)
+            { t: "Safety Car Deployed", c: 8 }, 
             { t: "Green Flag Race (No SC)", c: 3 }, 
             { t: "Virtual Safety Car", c: 6 }, 
             { t: "Red Flag Suspends Race", c: 2 }, 
