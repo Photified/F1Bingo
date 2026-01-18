@@ -7,7 +7,7 @@
 
 const BINGO_CONFIG = {
     // 25 RACES - FULL LIST
-    // NOTE: 'lockTime' format is YYYY-MM-DDTHH:MM:SS
+    // NOTE: 'lockTime' format is YYYY-MM-DDTHH:MM:SS (Adjust to real quali times)
     races: [
         {id:'aus', c:'au', n:'Australia', d:'Mar 8', lockTime:'2026-03-07T05:00:00'}, 
         {id:'chn', c:'cn', n:'China', d:'Mar 15', lockTime:'2026-03-14T07:00:00'},
@@ -79,7 +79,8 @@ const BINGO_CONFIG = {
         ],
         team: [
             "Double Podium", "1-2 Finish", "Double Points", "Double DNF", 
-            "Pit Stop Error (>4s)", "Strategy Error", "Engine Failure"
+            "Pit Stop Error (>4s)", "Strategy Error", "Engine Failure",
+            "One Driver in Points", "Team Orders Used"
         ],
         fia: [
             "Safety Car Deployed", "Green Flag Race (No SC)", "Virtual Safety Car", 

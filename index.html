@@ -82,7 +82,6 @@
         .qp-victory { background: linear-gradient(135deg, #FFD700, #ffaa00); color: black; text-shadow: none; border-color: #eebb00; }
         .qp-podium { background: linear-gradient(135deg, #C0C0C0, #9aa); color: black; text-shadow: none; border-color: #999; }
         .qp-points { background: linear-gradient(135deg, #00d2be, #009e8e); border-color: #00887a; }
-        
         .qp-clean { background: linear-gradient(135deg, #22c55e, #16a34a); border-color: #15803d; }
         .qp-caution { background: linear-gradient(135deg, #e10600, #b91c1c); border-color: #991b1b; }
 
@@ -130,6 +129,7 @@
         .grid-container { padding: 20px; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow-y: auto; }
         .bingo-grid { display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(5, 1fr); gap: 10px; width: 100%; aspect-ratio: 1/1; max-height: 600px; }
         
+        /* LOCKED STATE (Manual or Time) */
         .grid-locked .slot { opacity: 0.7; pointer-events: none; filter: grayscale(0.5); }
         .grid-locked .slot.filled { filter: grayscale(0); opacity: 1; }
 
@@ -154,6 +154,15 @@
         .slot.center { background: #222 !important; color: white !important; border: none !important; font-size: 16px; text-transform: uppercase; }
         .slot.matched { opacity: 1; box-shadow: inset 0 0 0 5px var(--score-win); transform: scale(1.02); z-index: 5; }
         .slot.matched::after { content: '✓'; position: absolute; top: -8px; right: -8px; background: var(--score-win); color: black; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+
+        /* ACTIONS FOOTER */
+        .actions-footer { padding: 15px; width: 100%; box-sizing: border-box; display: flex; gap: 10px; }
+        .btn-action { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-weight: 900; font-size: 12px; text-transform: uppercase; cursor: pointer; transition: 0.2s; }
+        .btn-reset { background: #fff; color: #e10600; }
+        .btn-reset:hover { background: #fff0f0; }
+        .btn-lock { background: #22c55e; color: white; border-color: #16a34a; display: none; } /* Hidden by default */
+        .btn-lock:hover { background: #16a34a; }
+        .btn-unlock { background: #e10600; color: white; border-color: #b91c1c; display: none; }
 
         /* RIGHT PANEL */
         .right-content { flex: 1; overflow-y: auto; padding: 15px; display: none; }
@@ -182,9 +191,6 @@
         .strat-card:hover { border-color: var(--brand-red); background: white; transform: translateY(-3px); }
         .mini-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; width: 60px; height: 60px; margin-bottom: 10px; opacity: 0.6; }
         .mg-c { background: #ddd; border-radius: 1px; }
-
-        .reset-btn { width: 100%; padding: 12px; margin-top: 20px; background: #fff; border: 1px solid #ddd; color: #e10600; font-weight: 900; cursor: pointer; border-radius: 6px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; transition: 0.2s; }
-        .reset-btn:hover { background: #fff0f0; border-color: #e10600; }
 
         /* CUSTOM MODAL */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 5000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
@@ -297,8 +303,10 @@
                 <div id="grid" class="bingo-grid"></div>
             </div>
             
-            <div style="padding: 10px; width: 100%; box-sizing: border-box;">
-                <button id="resetBtn" class="reset-btn" onclick="triggerReset()">Reset Card / Change Strategy</button>
+            <div class="actions-footer">
+                <button id="resetBtn" class="btn-action btn-reset" onclick="triggerReset()">Reset Card</button>
+                <button id="lockBtn" class="btn-action btn-lock" onclick="toggleUserLock()">LOCK CARD</button>
+                <button id="unlockBtn" class="btn-action btn-unlock" onclick="toggleUserLock()">UNLOCK CARD</button>
             </div>
         </div>
     </div>
@@ -324,8 +332,8 @@
                 <div class="rules-text">
                     1. Select a <strong>Race Strategy</strong> to generate your grid layout.<br><br>
                     2. Drag chips from the <strong>My Picks</strong> menu onto matching colored slots.<br><br>
-                    3. <strong>Limit:</strong> You may only select 1 chip per category (e.g., 1 Quali result) per driver.<br><br>
-                    4. <strong>TEAM LOCK:</strong> Picks lock at the start of Qualifying.
+                    3. <strong>Limit:</strong> You may only select 1 chip per category per driver.<br><br>
+                    4. <strong>LOCK:</strong> You must manually Lock your card when full. You can Unlock to edit until the deadline.
                 </div>
             </div>
             <div class="rules-block">
@@ -355,7 +363,8 @@
     let currentGrid = Array(25).fill(null);
     let verifiedResults = [];
     let modalCallback = null;
-    let isGridLocked = false;
+    let isGridLocked = false; // Time lock
+    let isUserLocked = false; // Manual lock
 
     const templates = {
         balanced: ['driver','driver','team','driver','fia','driver','team','fia','driver','team','team','driver','FREE','driver','team','team','fia','driver','team','fia','driver','team','team','driver','fia'],
@@ -377,6 +386,10 @@
         if(savedName) document.getElementById('teamNameInput').value = savedName;
         
         const savedGrid = localStorage.getItem(`grid_${activeRace}`);
+        const savedUserLock = localStorage.getItem(`userLock_${activeRace}`);
+        
+        if(savedUserLock === 'true') isUserLocked = true;
+
         if(savedName && savedGrid) login();
         
         setInterval(checkLockStatus, 1000);
@@ -393,32 +406,70 @@
         const statusBadge = document.getElementById('rhStatus');
         const timerDisplay = document.getElementById('rhTimer');
         const grid = document.getElementById('grid');
-        const resetBtn = document.getElementById('resetBtn');
-
+        
+        // Time Lock Override
         if (diff <= 0) {
             isGridLocked = true;
-            if(statusBadge) {
-                statusBadge.innerText = "LOCKED";
-                statusBadge.className = "status-badge status-locked";
-            }
+            if(statusBadge) { statusBadge.innerText = "LOCKED"; statusBadge.className = "status-badge status-locked"; }
             if(timerDisplay) timerDisplay.innerText = "Picks Closed";
-            if(grid) grid.classList.add('grid-locked');
-            if(resetBtn) resetBtn.style.display = 'none';
+            updateActionButtons(); 
+            return;
+        } 
+        
+        // Timer Running
+        isGridLocked = false;
+        const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        if(timerDisplay) timerDisplay.innerText = `LOCKS IN: ${d}D ${h}H`;
+
+        if(isUserLocked) {
+            if(statusBadge) { statusBadge.innerText = "READY"; statusBadge.className = "status-badge status-locked"; }
         } else {
-            isGridLocked = false;
-            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            if(statusBadge) { statusBadge.innerText = "OPEN"; statusBadge.className = "status-badge status-open"; }
+        }
+        updateActionButtons();
+    }
+
+    function updateActionButtons() {
+        const resetBtn = document.getElementById('resetBtn');
+        const lockBtn = document.getElementById('lockBtn');
+        const unlockBtn = document.getElementById('unlockBtn');
+        const grid = document.getElementById('grid');
+
+        // Check if grid is full (ignore center free space)
+        const isFull = currentGrid.every((slot, i) => i === 12 || slot !== null);
+
+        if(isGridLocked) {
+            // PERMANENT LOCK
+            grid.classList.add('grid-locked');
+            resetBtn.style.display = 'none';
+            lockBtn.style.display = 'none';
+            unlockBtn.style.display = 'none';
+        } else if(isUserLocked) {
+            // MANUAL LOCK (Editable)
+            grid.classList.add('grid-locked');
+            resetBtn.style.display = 'none';
+            lockBtn.style.display = 'none';
+            unlockBtn.style.display = 'block';
+        } else {
+            // OPEN
+            grid.classList.remove('grid-locked');
+            resetBtn.style.display = 'block';
+            unlockBtn.style.display = 'none';
             
-            if(statusBadge) {
-                statusBadge.innerText = "OPEN";
-                statusBadge.className = "status-badge status-open";
-            }
-            if(timerDisplay) timerDisplay.innerText = `LOCKS IN: ${d}D ${h}H`;
-            if(grid) grid.classList.remove('grid-locked');
-            if(resetBtn) resetBtn.style.display = 'block';
+            if(isFull) lockBtn.style.display = 'block';
+            else lockBtn.style.display = 'none';
         }
     }
 
+    function toggleUserLock() {
+        isUserLocked = !isUserLocked;
+        localStorage.setItem(`userLock_${activeRace}`, isUserLocked);
+        checkLockStatus();
+    }
+
+    // --- EXISTING FUNCTIONS (Render, DragDrop, etc.) ---
+    
     function renderRaceHeader() {
         const r = BINGO_CONFIG.races.find(x => x.id === activeRace);
         if(!r) return;
@@ -457,13 +508,15 @@
     }
 
     function triggerReset() {
-        if(isGridLocked) return;
+        if(isGridLocked || isUserLocked) return;
         showModal("Race Control", "Are you sure you want to retire this card? All current predictions for this race will be deleted.", true, performReset);
     }
 
     function performReset() {
         localStorage.removeItem(`grid_${activeRace}`);
+        localStorage.removeItem(`userLock_${activeRace}`);
         currentGrid = Array(25).fill(null);
+        isUserLocked = false;
         
         const r = BINGO_CONFIG.races.find(r=>r.id===activeRace);
         if(r) {
@@ -543,9 +596,8 @@
         });
     }
 
-    // --- QUICK PICK LOGIC ---
     function applyQuickPicks(driverName, teamName, tier) {
-        if(isGridLocked) { showModal("Race Locked", "Picks closed.", false); return; }
+        if(isGridLocked || isUserLocked) { showModal("Card Locked", "Cannot modify picks.", false); return; }
 
         let picks = [];
 
@@ -592,12 +644,10 @@
             const slotIndex = currentGrid.findIndex((slot, i) => {
                 if(slot !== null) return false;
                 const slotEl = document.querySelector(`.slot[data-index="${i}"]`);
-                // Match type (driver/team/fia)
                 return slotEl && slotEl.dataset.req === p.type;
             });
 
             if(slotIndex !== -1) {
-                // Check conflicts (only relevant for Driver bets, FIA can dup)
                 let conflict = false;
                 if(p.type === 'driver') {
                     conflict = currentGrid.some(x => x && x.driver === driverName && x.subtype === p.subtype);
@@ -613,6 +663,7 @@
         if(placedCount > 0) {
             renderGrid();
             saveLocal();
+            checkLockStatus(); // Update buttons
         } else {
             showModal("Grid Full / Conflicts", "Could not place all picks. Check if grid is full or driver already has predictions.", false);
         }
@@ -643,7 +694,7 @@
         chip.innerText = text;
         chip.draggable = true;
         chip.ondragstart = e => {
-            if(isGridLocked) {
+            if(isGridLocked || isUserLocked) {
                 e.preventDefault();
                 return false;
             }
@@ -658,8 +709,8 @@
     function handleDrop(e, index, reqType) {
         e.preventDefault();
         
-        if(isGridLocked) {
-            showModal("Race Locked", "Picks for this race are closed.", false);
+        if(isGridLocked || isUserLocked) {
+            showModal("Card Locked", "Unlock your card to make changes.", false);
             return;
         }
 
@@ -680,11 +731,10 @@
             }
         }
         
-        // Parse Text for clean display
-        // Drop logic: store driverName for image lookup
         currentGrid[index] = { text, type, driver: driverName, subtype: subType };
         renderGrid();
         saveLocal();
+        checkLockStatus(); // Update buttons
     }
 
     function login() {
@@ -727,15 +777,6 @@
         saveLocal();
     }
 
-    function resetGrid() {
-        if(!confirm("Are you sure? This will clear your current card.")) return;
-        localStorage.removeItem(`grid_${activeRace}`);
-        currentGrid = Array(25).fill(null);
-        const r = BINGO_CONFIG.races.find(r=>r.id===activeRace);
-        if(r) document.getElementById('stratRaceTitle').innerText = r.n.toUpperCase();
-        switchState('strategy');
-    }
-
     function renderGridStructure(pattern) {
         const grid = document.getElementById('grid');
         grid.innerHTML = '';
@@ -761,11 +802,9 @@
             const idx = parseInt(s.dataset.index);
             const data = currentGrid[idx];
             if(data) {
-                // FIND IMAGE
                 const drv = BINGO_CONFIG.drivers.find(d => d.name === data.driver);
                 const imgSrc = drv ? drv.img : '';
                 
-                // PARSE TEXT FOR CLEAN LOOK
                 let mainText = data.text;
                 if(drv && mainText.startsWith(drv.name)) {
                     mainText = mainText.replace(drv.name, '').trim();
@@ -773,7 +812,6 @@
                     mainText = mainText.replace(drv.team, '').trim();
                 }
 
-                // HEADER TEXT
                 let subText = data.subtype ? data.subtype.toUpperCase() : "EVENT";
                 if(subText === 'FIA') subText = 'TRACK';
 
