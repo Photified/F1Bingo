@@ -1,8 +1,7 @@
 /* F1 2026 PICK 'EM DATA
    - 25 Races
-   - Budget Logic: REBALANCED FOR PLAYABILITY
-   - High Risk = Low Cost (encourages gambling)
-   - High Safety = High Cost (taxes safe bets)
+   - Budget Logic: BALANCED
+   - Max Victory Package (~$73M) allows for ~$6.75M avg for remaining picks
 */
 
 const BINGO_CONFIG = {
@@ -35,7 +34,7 @@ const BINGO_CONFIG = {
         {id:'abu', c:'ae', n:'Abu Dhabi', d:'Dec 6'}
     ],
 
-    // DRIVER ROSTER - Prices lowered slightly to make "Victory" possible
+    // DRIVER ROSTER - Prices Dialed Back
     drivers: [
         { name: "Race Control", team: "FIA", color: "#333333", img: "images/fia.png", price: 0 }, 
         { name: "Max Verstappen", team: "Red Bull", color: "#3671C6", img: "images/max.png", price: 18 },
@@ -62,7 +61,7 @@ const BINGO_CONFIG = {
         { name: "Sergio Perez", team: "Cadillac", color: "#FFD700", img: "images/checo.png", price: 5 }
     ],
 
-    // EVENT COSTS (Adjusted to allow completion)
+    // EVENT COSTS (Winning/Pole made slightly cheaper to incentivize risk)
     templates: {
         quali: [
             { t: "Pole Position", c: 3 }, // Cost 3 + Driver Price
