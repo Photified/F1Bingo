@@ -29,7 +29,6 @@
             padding: 0; 
             box-shadow: 0 4px 10px rgba(0,0,0,0.05); z-index: 20; flex-shrink: 0; 
         }
-
         .logo-area { 
             flex-shrink: 0; padding: 0 20px; 
             height: 100%; display: flex; align-items: center;
@@ -65,16 +64,16 @@
         .main-stage { flex: 1; display: grid; grid-template-columns: 360px 1fr 300px; padding: 20px; gap: 20px; overflow: hidden; height: 100%; }
         .panel { background: white; border-radius: 12px; box-shadow: var(--card-shadow); overflow: hidden; display: flex; flex-direction: column; border: 1px solid #e0e0e0; height: 100%; }
         
-        /* SIDE TABS */
+        /* TABS */
         .tab-header { display: flex; border-bottom: 1px solid #eee; background: #f9f9f9; flex-shrink: 0; height: 42px; }
         .tab-btn { flex: 1; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px; cursor: pointer; color: #888; border-bottom: 3px solid transparent; transition: 0.2s; letter-spacing: 0.5px; }
         .tab-btn:hover { background: #f0f0f0; }
         .tab-btn.active { color: #000; border-bottom-color: var(--brand-red); background: white; }
 
-        /* LISTS */
         .side-content { flex: 1; overflow-y: auto; padding: 10px; background: #f4f4f8; display: none; }
         .side-content.active { display: block; }
 
+        /* LIST ITEMS */
         .driver-row { background: white; border-radius: 8px; margin-bottom: 8px; border: 1px solid #eee; overflow: hidden; transition: 0.2s; }
         .driver-header { padding: 10px 12px; display: flex; align-items: center; gap: 12px; cursor: pointer; background: linear-gradient(90deg, transparent 95%, #fafafa); }
         .driver-header:hover { background: #f5f5f5; }
@@ -88,6 +87,11 @@
         .driver-row.open .driver-content { display: flex; }
         .driver-row.open .driver-header { background: #eee; border-bottom: 1px solid #ddd; }
 
+        .menu-label { font-size: 10px; font-weight: 900; color: #999; text-transform: uppercase; margin: 12px 0 6px 4px; letter-spacing: 0.5px; border-bottom: 1px solid #eee; padding-bottom: 2px; }
+
+        .qp-red-btn { background: var(--brand-red); color: white; font-family: 'Titillium Web', sans-serif; font-weight: 800; font-size: 12px; text-transform: uppercase; text-align: center; padding: 12px; width: 100%; border: none; border-radius: 4px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: 0.2s; margin-bottom: 5px; box-sizing: border-box; }
+        .qp-red-btn:hover { background: #b00; transform: translateY(-1px); }
+
         /* CHIPS */
         .chip { padding: 8px 10px; background: white; border: 1px solid #ddd; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: grab; text-align: left; border-left-width: 5px; border-left-style: solid; transition: 0.1s; display: flex; justify-content: space-between; align-items: center; }
         .chip:hover { transform: translateX(3px); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
@@ -95,11 +99,6 @@
         .chip.team { border-left-color: var(--c-team); }
         .chip.fia { border-left-color: var(--c-fia); }
         .chip-cost { background: #eee; padding: 2px 6px; border-radius: 10px; font-size: 10px; font-weight: 900; color: #555; }
-
-        /* BUTTONS */
-        .qp-red-btn { background: var(--brand-red); color: white; font-family: 'Titillium Web', sans-serif; font-weight: 800; font-size: 12px; text-transform: uppercase; text-align: center; padding: 12px; width: 100%; border: none; border-radius: 4px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: 0.2s; margin-bottom: 5px; box-sizing: border-box; }
-        .qp-red-btn:hover { background: #b00; transform: translateY(-1px); }
-        .menu-label { font-size: 10px; font-weight: 900; color: #999; text-transform: uppercase; margin: 12px 0 6px 4px; letter-spacing: 0.5px; border-bottom: 1px solid #eee; padding-bottom: 2px; }
 
         .sub-btn { background: #f8f9fa; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 11px; font-weight: 800; text-transform: uppercase; cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: #555; transition: 0.1s; border-left-width: 6px; border-left-style: solid; }
         .sub-btn:hover { background: #f0f0f0; color: #000; }
@@ -161,10 +160,6 @@
         .slot-text-container { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 4px 15px; min-width: 0; background-color: #f4f4f4; background-image: linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee), linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee); background-position: 0 0, 10px 10px; background-size: 20px 20px; }
         .slot-sub { font-size: 13px; text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 5px; color: var(--cat-text-color); }
         .slot-main { font-size: 18px; font-weight: 800; line-height: 1.1; word-wrap: break-word; overflow: hidden; color: #222; }
-
-        .slot.center { background-color: #ddd !important; border: 2px solid #ccc !important; color: #444 !important; font-size: 24px; text-transform: uppercase; background-image: linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc), linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc) !important; background-position: 0 0, 10px 10px !important; background-size: 20px 20px !important; box-shadow: inset 0 0 20px rgba(0,0,0,0.05) !important; }
-        .slot.matched { opacity: 1; box-shadow: inset 0 0 0 5px var(--score-win); transform: scale(1.02); z-index: 5; }
-        .slot.matched::after { content: '✓'; position: absolute; bottom: 5px; right: 5px; background: var(--score-win); color: black; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 18px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
 
         .actions-footer { padding: 15px; width: 100%; box-sizing: border-box; display: flex; gap: 10px; }
         .btn-action { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-weight: 900; font-size: 12px; text-transform: uppercase; cursor: pointer; transition: 0.2s; }
@@ -252,7 +247,8 @@
     <div class="panel">
         <div class="tab-header">
             <div class="tab-btn active" onclick="showSideTab('drivers', this)">DRIVERS</div>
-            <div class="tab-btn" onclick="showSideTab('teams', this)">TEAMS & FIA</div>
+            <div class="tab-btn" onclick="showSideTab('teams', this)">TEAMS</div>
+            <div class="tab-btn" onclick="showSideTab('fia', this)">FIA</div>
         </div>
         
         <div id="panel-drivers" class="side-content active">
@@ -261,6 +257,10 @@
         
         <div id="panel-teams" class="side-content">
             <div id="teamList"></div>
+        </div>
+
+        <div id="panel-fia" class="side-content">
+            <div id="fiaList"></div>
         </div>
     </div>
 
@@ -280,19 +280,19 @@
             
             <div class="strat-grid">
                 <div class="strat-card" onclick="confirmStrategy('balanced')">
-                    <div class="mini-grid"><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-team)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-team)"></div><div class="mg-c" style="background:#222"></div><div class="mg-c" style="background:var(--c-fia)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-fia)"></div><div class="mg-c" style="background:var(--c-team)"></div></div>
+                    <div class="mini-grid"><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-team)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-team)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-fia)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-fia)"></div><div class="mg-c" style="background:var(--c-team)"></div></div>
                     <strong>⚖️ Balanced</strong>
                 </div>
                 <div class="strat-card" onclick="confirmStrategy('team')">
-                    <div class="mini-grid"><div class="mg-c" style="background:var(--c-team)"></div><div class="mg-c" style="background:var(--c-team)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-team)"></div><div class="mg-c" style="background:#222"></div><div class="mg-c" style="background:var(--c-team)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-team)"></div><div class="mg-c" style="background:var(--c-fia)"></div></div>
+                    <div class="mini-grid"><div class="mg-c" style="background:var(--c-team)"></div><div class="mg-c" style="background:var(--c-team)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-team)"></div><div class="mg-c" style="background:var(--c-team)"></div><div class="mg-c" style="background:var(--c-team)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-team)"></div><div class="mg-c" style="background:var(--c-fia)"></div></div>
                     <strong>🛠️ Constructor</strong>
                 </div>
                 <div class="strat-card" onclick="confirmStrategy('chaos')">
-                    <div class="mini-grid"><div class="mg-c" style="background:var(--c-fia)"></div><div class="mg-c" style="background:var(--c-fia)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-fia)"></div><div class="mg-c" style="background:#222"></div><div class="mg-c" style="background:var(--c-fia)"></div><div class="mg-c" style="background:var(--c-team)"></div><div class="mg-c" style="background:var(--c-fia)"></div><div class="mg-c" style="background:var(--c-driver)"></div></div>
+                    <div class="mini-grid"><div class="mg-c" style="background:var(--c-fia)"></div><div class="mg-c" style="background:var(--c-fia)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-fia)"></div><div class="mg-c" style="background:var(--c-fia)"></div><div class="mg-c" style="background:var(--c-fia)"></div><div class="mg-c" style="background:var(--c-team)"></div><div class="mg-c" style="background:var(--c-fia)"></div><div class="mg-c" style="background:var(--c-driver)"></div></div>
                     <strong>🚩 FIA / Track</strong>
                 </div>
                 <div class="strat-card" onclick="confirmStrategy('driver')">
-                    <div class="mini-grid"><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-team)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:#222"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-fia)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-team)"></div></div>
+                    <div class="mini-grid"><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-team)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-fia)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-team)"></div></div>
                     <strong>🏎️ Driver</strong>
                 </div>
             </div>
@@ -385,18 +385,19 @@
 
 <script>
     let activeRace = 'aus';
-    let currentGrid = Array(9).fill(null); // 3x3
+    let currentGrid = Array(9).fill(null); // 3x3 - All slots playable
     let verifiedResults = [];
     let modalCallback = null;
     let isGridLocked = false;
     let isUserLocked = false;
     const BUDGET_CAP = 100;
 
+    // UPDATED TEMPLATES: Replaced 'FREE' with real categories
     const templates = {
-        balanced: ['driver','team','driver','team','FREE','fia','driver','fia','team'],
-        team:     ['team','team','driver','team','FREE','team','driver','team','fia'],
-        chaos:    ['fia','fia','driver','fia','FREE','fia','team','fia','driver'],
-        driver:   ['driver','driver','team','driver','FREE','driver','fia','driver','team']
+        balanced: ['driver','team','driver', 'team','driver','fia', 'driver','fia','team'],
+        team:     ['team','team','driver', 'team','team','team', 'driver','team','fia'],
+        chaos:    ['fia','fia','driver',   'fia','fia','fia',    'team','fia','driver'],
+        driver:   ['driver','driver','team', 'driver','driver','driver', 'fia','driver','team']
     };
 
     window.onload = () => {
@@ -408,6 +409,7 @@
         renderRaces();
         buildDriverMarket();
         buildTeamMarket();
+        buildFIAMarket();
         
         const savedName = localStorage.getItem('f1_team_name');
         if(savedName) document.getElementById('teamNameInput').value = savedName;
@@ -473,7 +475,8 @@
         const unlockBtn = document.getElementById('unlockBtn');
         const grid = document.getElementById('grid');
 
-        const isFull = currentGrid.every((slot, i) => i === 4 || slot !== null);
+        // Check if full (all 9 slots must be non-null)
+        const isFull = currentGrid.every(slot => slot !== null);
 
         if(isGridLocked) {
             grid.classList.add('grid-locked');
@@ -524,7 +527,6 @@
         const remaining = BUDGET_CAP - spent;
         const pct = (remaining / BUDGET_CAP) * 100;
         
-        // Update new HUD elements
         const val = document.getElementById('hudBudgetVal');
         const bar = document.getElementById('hudBudgetBar');
         
@@ -539,9 +541,11 @@
     function getChipCost(driverName, type, templateText) {
         let basePrice = 0;
         
-        if (type === 'team' || type === 'fia') {
+        if (type === 'team') {
              const constr = BINGO_CONFIG.constructors.find(c => c.name === driverName);
              basePrice = constr ? (constr.price || 0) : 0;
+        } else if (type === 'fia') {
+             basePrice = 0; // FIA usually 0
         } else {
              const drv = BINGO_CONFIG.drivers.find(d => d.name === driverName);
              basePrice = drv ? (drv.price || 0) : 0;
@@ -615,10 +619,14 @@
         btn.classList.add('active');
     }
 
+    // --- TAB 1: DRIVERS ---
     function buildDriverMarket() {
         const container = document.getElementById('driverList');
         container.innerHTML = ''; 
-        BINGO_CONFIG.drivers.forEach(d => {
+        // Filter out "Race Control" from drivers tab
+        const realDrivers = BINGO_CONFIG.drivers.filter(d => d.team !== 'FIA');
+        
+        realDrivers.forEach(d => {
             const row = document.createElement('div');
             row.className = 'driver-row';
             
@@ -653,10 +661,14 @@
         });
     }
 
+    // --- TAB 2: TEAMS ---
     function buildTeamMarket() {
         const container = document.getElementById('teamList');
         container.innerHTML = '';
-        BINGO_CONFIG.constructors.forEach(t => {
+        // Filter out 'Race Control' from constructors if it exists there
+        const realTeams = BINGO_CONFIG.constructors.filter(c => c.type === 'Team');
+
+        realTeams.forEach(t => {
              const row = document.createElement('div');
             row.className = 'driver-row';
             row.innerHTML = `
@@ -664,26 +676,50 @@
                     <img src="${t.img}" class="driver-face" onerror="this.style.display='none'">
                     <div>
                         <div class="driver-name">${t.name}</div>
-                        <div class="driver-team">${t.type}</div>
+                        <div class="driver-team">CONSTRUCTOR</div>
                     </div>
                 </div>
                 <div class="driver-content"></div>
             `;
             const content = row.querySelector('.driver-content');
 
-            if (t.name === 'Race Control') {
-                 const qpBtn = document.createElement('div'); qpBtn.className = 'qp-red-btn'; qpBtn.innerText = '🎲 RANDOMIZE EVENTS';
-                 qpBtn.onclick = (e) => { e.stopPropagation(); applyQuickPicks(null, null, 'random_fia'); };
-                 content.appendChild(qpBtn);
-                 createSubSection(content, "FIA / TRACK EVENTS", BINGO_CONFIG.templates.fia, '', 'fia', 'fia', 'Race Control', 'fia');
-            } else {
-                 const qpBtn = document.createElement('div'); qpBtn.className = 'qp-red-btn'; qpBtn.innerText = '⚡ TEAM STRATEGY';
-                 qpBtn.onclick = (e) => { e.stopPropagation(); applyQuickPicks(t.name, null, 'maximize_team'); };
-                 content.appendChild(qpBtn);
-                 createSubSection(content, "CONSTRUCTOR", BINGO_CONFIG.templates.team, `${t.name} `, 'team', 'team', t.name, 'team');
-            }
+            const qpBtn = document.createElement('div'); qpBtn.className = 'qp-red-btn'; qpBtn.innerText = '⚡ TEAM STRATEGY';
+            qpBtn.onclick = (e) => { e.stopPropagation(); applyQuickPicks(t.name, null, 'maximize_team'); };
+            content.appendChild(qpBtn);
+
+            createSubSection(content, "CONSTRUCTOR EVENTS", BINGO_CONFIG.templates.team, `${t.name} `, 'team', 'team', t.name, 'team');
+            
             container.appendChild(row);
         });
+    }
+
+    // --- TAB 3: FIA ---
+    function buildFIAMarket() {
+        const container = document.getElementById('fiaList');
+        container.innerHTML = '';
+        
+        const row = document.createElement('div');
+        row.className = 'driver-row open'; // Always open
+        row.innerHTML = `
+            <div class="driver-header" style="--team-color:#333">
+                <img src="images/fia.png" class="driver-face" style="filter:invert(1)">
+                <div>
+                    <div class="driver-name">RACE CONTROL</div>
+                    <div class="driver-team">FIA</div>
+                </div>
+            </div>
+            <div class="driver-content" style="display:flex"></div>
+        `;
+        
+        const content = row.querySelector('.driver-content');
+        
+        const qpBtn = document.createElement('div'); qpBtn.className = 'qp-red-btn'; qpBtn.innerText = '🎲 RANDOMIZE EVENTS';
+        qpBtn.onclick = (e) => { e.stopPropagation(); applyQuickPicks(null, null, 'random_fia'); };
+        content.appendChild(qpBtn);
+
+        createSubSection(content, "TRACK EVENTS", BINGO_CONFIG.templates.fia, '', 'fia', 'fia', 'Race Control', 'fia');
+        
+        container.appendChild(row);
     }
 
     function createSubSection(parent, title, items, prefix, type, subtype, driverName = null, colorClass = '') {
@@ -695,14 +731,13 @@
 
         const grid = document.createElement('div');
         grid.className = 'sub-content';
-        // Now passing raw template object {t, c} to handle cost
         items.forEach(t => createChip(grid, prefix + t.t, type, subtype, driverName, '', t.c, t.t));
         parent.appendChild(grid);
     }
 
     function toggleDriver(header) {
         const allRows = document.querySelectorAll('.driver-row');
-        allRows.forEach(r => { if(r !== header.parentElement) r.classList.remove('open'); });
+        // Close others? No, lets keep independent
         header.parentElement.classList.toggle('open');
     }
 
@@ -800,7 +835,7 @@
         } else if (mode === 'random_fia') {
              const allFia = BINGO_CONFIG.templates.fia;
              let shuffled = [...allFia].sort(() => 0.5 - Math.random());
-             priorities = shuffled.slice(0, 5).map(f => ({ t: f.t, type: 'fia', st: 'fia' }));
+             priorities = shuffled.slice(0, 9).map(f => ({ t: f.t, type: 'fia', st: 'fia' }));
         }
 
         let tempGrid = [...currentGrid];
@@ -808,7 +843,7 @@
         let addedCount = 0;
 
         for (let i = 0; i < 9; i++) {
-            if (i === 4) continue; 
+            // Check if slot empty
             if (tempGrid[i] !== null) continue; 
 
             const slotEl = document.querySelector(`.slot[data-index="${i}"]`);
@@ -823,7 +858,7 @@
                 let st = p.st;
 
                 if (p.type === 'driver') { fullText = `${driverName} ${p.t}`; dName = driverName; }
-                if (p.type === 'team') { fullText = `${driverName} ${p.t}`; dName = driverName; } // Teams use driverName arg for constructor
+                if (p.type === 'team') { fullText = `${driverName} ${p.t}`; dName = driverName; } 
 
                 let conflict = false;
                 if (p.type === 'driver' || p.type === 'team') {
@@ -899,7 +934,7 @@
     }
 
     function confirmStrategy(type) {
-        currentGrid = templates[type].map(t => t === 'FREE' ? {text:'FREE', type:'FREE'} : null);
+        currentGrid = templates[type].map(t => null); // Start empty, strict structure
         renderGridStructure(templates[type]);
         switchState('game');
         saveLocal();
@@ -920,40 +955,34 @@
         pattern.forEach((type, i) => {
             const slot = document.createElement('div');
             slot.dataset.index = i;
-            if(type === 'FREE') {
-                slot.className = 'slot center'; slot.innerHTML = "🏁<br>FREE";
-            } else {
-                slot.className = 'slot'; 
-                slot.dataset.req = type; 
-                slot.innerText = type === 'fia' ? "FIA" : type.toUpperCase();
-                slot.ondragover = e => e.preventDefault();
-                slot.ondrop = e => handleDrop(e, i, type);
-            }
+            // No free space
+            slot.className = 'slot'; 
+            slot.dataset.req = type; 
+            slot.innerText = type === 'fia' ? "FIA" : type.toUpperCase();
+            slot.ondragover = e => e.preventDefault();
+            slot.ondrop = e => handleDrop(e, i, type);
+            
             grid.appendChild(slot);
         });
     }
 
     function renderGrid() {
-        const slots = document.querySelectorAll('.slot:not(.center)');
+        const slots = document.querySelectorAll('.slot');
         slots.forEach(s => {
             const idx = parseInt(s.dataset.index);
             const data = currentGrid[idx];
             if(data) {
-                // Find in Drivers OR Constructors to get image
                 let drv = BINGO_CONFIG.drivers.find(d => d.name === data.driver);
                 if (!drv) drv = BINGO_CONFIG.constructors.find(c => c.name === data.driver);
+                if (!drv && data.type === 'fia') drv = {name:'Race Control', color:'#333', img:'images/fia.png'};
 
                 const imgSrc = drv ? drv.img : '';
                 const teamColor = drv ? drv.color : '#333';
                 
                 let mainText = data.text;
-                // Clean up text display
                 if(drv && mainText.startsWith(drv.name)) {
                     mainText = mainText.replace(drv.name, '').trim();
-                } else if(drv && drv.type === 'Team' && mainText.startsWith(drv.name)) {
-                     // Handle Constructor text cleanup if needed
-                     mainText = mainText.replace(drv.name, '').trim();
-                }
+                } 
 
                 let subText = data.subtype ? data.subtype.toUpperCase() : "EVENT";
                 if(subText === 'FIA') subText = 'TRACK';
@@ -989,8 +1018,6 @@
                 s.classList.remove('matched');
             }
         });
-        const center = document.querySelector('.slot.center');
-        if(center) center.classList.add('matched');
         updateScore();
     }
 
@@ -1021,7 +1048,7 @@
         if(p.style.display === 'flex') {
             const list = document.getElementById('adminList');
             list.innerHTML = '';
-            let items = currentGrid.filter(x => x && x.type !== 'FREE').map(x => x.text);
+            let items = currentGrid.filter(x => x).map(x => x.text);
             items = [...new Set(items)];
             if(items.length === 0) list.innerHTML = "<div style='color:#aaa'>Grid empty.</div>";
             items.forEach(text => {
@@ -1046,12 +1073,10 @@
 
     function updateScore() {
         let score = 0;
-        let matches = Array(9).fill(false); // 3x3
-        matches[4] = true; // Free space
+        let matches = Array(9).fill(false);
 
         currentGrid.forEach((item, i) => {
             if(!item) return;
-            if(i===4) return;
             if(verifiedResults.includes(item.text)) {
                 score += 10;
                 matches[i] = true;
@@ -1076,13 +1101,6 @@
         if(matches[0] && matches[2] && matches[6] && matches[8]) {
             score += 50;
             bonuses.push("4 CORNERS BONUS (+50)");
-        }
-
-        const d1 = matches[0] && matches[4] && matches[8];
-        const d2 = matches[2] && matches[4] && matches[6];
-        if(d1 && d2) {
-            score += 150;
-            bonuses.push("THE X BONUS (+150)");
         }
 
         const allMatched = matches.every(m => m === true);
