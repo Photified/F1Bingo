@@ -12,7 +12,7 @@
         :root {
             --brand-red: #e10600; --brand-dark: #15151e; --bg-body: #f4f4f8;
             --card-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            /* Category Colors (Corner Tabs) */
+            /* Colors */
             --c-driver: #ff9500; 
             --c-team: #00d2be; 
             --c-fia: #e10600; 
@@ -118,7 +118,7 @@
         .slot[data-req="team"] { background: #e0fbf8; border-color: var(--c-team); color: var(--c-team); opacity: 0.8; }
         .slot[data-req="fia"] { background: #fff2f2; border-color: var(--c-fia); color: var(--c-fia); opacity: 0.8; }
 
-        /* --- FILLED CARD STYLING --- */
+        /* --- FILLED CARD STYLING (DARK MODE) --- */
         .slot.filled { 
             background: #2B2B33 !important; 
             border: 1px solid #444 !important; 
@@ -129,7 +129,7 @@
             position: relative;
         }
 
-        /* 1. CORNER TABS (Top Left Triangle) */
+        /* CORNER TABS */
         .slot.filled::before {
             content: ''; position: absolute; top: 0; left: 0;
             width: 0; height: 0;
@@ -137,12 +137,11 @@
             border-width: 16px 16px 0 0;
             z-index: 5;
         }
-        /* Color by Category */
         .slot.filled[data-type="driver"]::before { border-color: var(--c-driver) transparent transparent transparent; }
         .slot.filled[data-type="team"]::before { border-color: var(--c-team) transparent transparent transparent; }
         .slot.filled[data-type="fia"]::before { border-color: var(--c-fia) transparent transparent transparent; }
 
-        /* 2. SQUARE REMOVE BUTTON (Top Right, Always Visible) */
+        /* SQUARE REMOVE BUTTON */
         .remove-pick-btn {
             position: absolute; top: 0; right: 0;
             width: 20px; height: 20px; 
@@ -155,48 +154,49 @@
         }
         .remove-pick-btn:hover { background: #cc0000; opacity: 1; }
 
-        /* 3. LEFT COLUMN: Solid Team Color Background */
+        /* LEFT COLUMN (TEAM COLOR) */
         .slot-img-container { 
             width: 90px; flex-shrink: 0; 
             display: flex; align-items: center; justify-content: center; 
             border-right: 1px solid rgba(255,255,255,0.1);
-            background-color: var(--team-color-hex); /* Set by JS */
+            background-color: var(--team-color-hex); 
         }
-        
         .slot-img { 
             width: 80px; height: 80px; object-fit: contain; 
-            /* No Border/BG on image itself, it sits on the color field */
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
         }
-        /* Invert FIA logo on dark BG */
         .slot.filled[data-type="fia"] .slot-img { filter: brightness(0) invert(1); }
 
-        /* 4. RIGHT COLUMN: Dark Grey with Gradient Bleed */
+        /* RIGHT COLUMN (DARK GREY + CHECKERED PATTERN) */
         .slot-text-container { 
             flex: 1; display: flex; flex-direction: column; justify-content: center; 
             padding: 4px 10px; min-width: 0;
-            background: #2B2B33; /* Fallback */
-            background: linear-gradient(90deg, var(--team-color-hex) 0%, #2B2B33 15%, #2B2B33 100%);
+            background-color: #2B2B33;
+            /* Subtle Checkered Overlay */
+            background-image:
+                linear-gradient(45deg, rgba(0,0,0,0.2) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.2) 75%, rgba(0,0,0,0.2)),
+                linear-gradient(45deg, rgba(0,0,0,0.2) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.2) 75%, rgba(0,0,0,0.2));
+            background-position: 0 0, 10px 10px;
+            background-size: 20px 20px;
         }
         
         .slot-sub { 
             font-size: 10px; text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 3px;
-            color: var(--cat-text-color); /* Colored by category */
+            color: var(--cat-text-color); 
         }
         .slot-main { font-size: 12px; font-weight: 700; line-height: 1.2; word-wrap: break-word; overflow: hidden; }
 
-        /* FREE SPACE: Checkered Pattern */
+        /* FREE SPACE */
         .slot.center { 
             background-color: #222 !important; 
             border: 2px solid #333 !important; 
             color: white !important; font-size: 16px; text-transform: uppercase; 
-            /* Checkered Pattern */
             background-image:
                 linear-gradient(45deg, #1a1a1a 25%, transparent 25%, transparent 75%, #1a1a1a 75%, #1a1a1a),
                 linear-gradient(45deg, #1a1a1a 25%, transparent 25%, transparent 75%, #1a1a1a 75%, #1a1a1a) !important;
             background-position: 0 0, 10px 10px !important;
             background-size: 20px 20px !important;
-            box-shadow: inset 0 0 30px #000 !important; /* Vignette */
+            box-shadow: inset 0 0 30px #000 !important; 
         }
         .slot.matched { opacity: 1; box-shadow: inset 0 0 0 5px var(--score-win); transform: scale(1.02); z-index: 5; }
         .slot.matched::after { content: '✓'; position: absolute; bottom: 5px; right: 5px; background: var(--score-win); color: black; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
@@ -884,7 +884,7 @@
                         <img src="${imgSrc}" class="slot-img" onerror="this.style.display='none'">
                     </div>
                     <div class="slot-text-container">
-                        <div class="slot-sub" style="color:${teamColor}">${subText}</div>
+                        <div class="slot-sub" style="color:${catColor}">${subText}</div>
                         <div class="slot-main">${mainText}</div>
                     </div>
                 `;
