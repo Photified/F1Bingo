@@ -1,4 +1,4 @@
-/* F1 2026 PICK 'EM DATA - DYNAMIC PRICING EDITION */
+/* F1 2026 PICK 'EM DATA */
 
 const BINGO_CONFIG = {
     races: [
@@ -100,19 +100,14 @@ const BINGO_CONFIG = {
             { t: "Team Orders Used", c: 2, tiers: [1, 2] }
         ],
         fia: [
-            /* HIGH PROBABILITY (Expensive) */
             { t: "Yellow Flag", c: 8, tiers: [1,2,3] }, 
             { t: "Blue Flags Shown", c: 8, tiers: [1,2,3] }, 
             { t: "Track Limits Penalty", c: 7, tiers: [1,2,3] }, 
             { t: "Virtual Safety Car", c: 6, tiers: [1,2,3] }, 
             { t: "Safety Car Deployed", c: 6, tiers: [1,2,3] }, 
             { t: "5s Penalty Issued", c: 6, tiers: [1,2,3] }, 
-            
-            /* MEDIUM PROBABILITY (Moderate) */
             { t: "Debris on Track", c: 5, tiers: [1,2,3] }, 
             { t: "DRS Disabled", c: 5, tiers: [1,2,3] }, 
-            
-            /* LOW PROBABILITY (Cheap) */
             { t: "Red Flag", c: 4, tiers: [1,2,3] }, 
             { t: "Rain / Wet Track", c: 4, tiers: [1,2,3] }, 
             { t: "Grid Drop Penalty", c: 3, tiers: [1,2,3] },
