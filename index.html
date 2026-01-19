@@ -100,22 +100,15 @@
         .qp-red-btn:hover { background: #b00; transform: translateY(-1px); }
 
         /* CHIPS */
-        .chip { padding: 8px 10px; background: white; border: 1px solid #ddd; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: pointer; text-align: left; border-left-width: 5px; border-left-style: solid; transition: 0.1s; display: flex; justify-content: space-between; align-items: center; }
+        .chip { padding: 8px 10px; background: white; border: 1px solid #ddd; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: pointer; text-align: left; border-left-width: 5px; border-left-style: solid; transition: 0.1s; display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
         .chip:hover { transform: translateX(3px); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .chip.driver { border-left-color: var(--c-driver); }
         .chip.team { border-left-color: var(--c-team); }
         .chip.fia { border-left-color: var(--c-fia); }
         .chip-cost { background: #eee; padding: 2px 6px; border-radius: 10px; font-size: 10px; font-weight: 900; color: #555; }
 
-        .sub-btn { background: #f8f9fa; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 11px; font-weight: 800; text-transform: uppercase; cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: #555; transition: 0.1s; border-left-width: 6px; border-left-style: solid; }
-        .sub-btn:hover { background: #f0f0f0; color: #000; }
-        .sub-btn.active { background: #f4f4f4; color: #000; box-shadow: inset 0 0 5px rgba(0,0,0,0.05); }
-        .sub-btn.driver { border-left-color: var(--c-driver); }
-        .sub-btn.team { border-left-color: var(--c-team); }
-        .sub-btn.fia { border-left-color: var(--c-fia); }
-        .sub-content { display: none; grid-template-columns: 1fr; gap: 6px; padding: 8px 5px; animation: fadeIn 0.2s; }
-        .sub-btn.active + .sub-content { display: grid; }
-
+        /* No longer using sub-btn accordion style, chips are direct */
+        
         /* CENTER GRID */
         .active-panel { background: white; border-radius: 12px; border: 1px solid #e0e0e0; padding: 0; display: flex; flex-direction: column; overflow: hidden; height: 100%; position: relative; }
         
@@ -159,19 +152,6 @@
 
         .remove-pick-btn { position: absolute; top: 0; right: 0; width: 24px; height: 24px; background: #000; color: #fff; font-weight: 900; font-size: 14px; line-height: 18px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; border-bottom-left-radius: 4px; opacity: 0.8; transition: 0.2s; }
         .remove-pick-btn:hover { background: #333; opacity: 1; }
-
-        .slot-img-container { width: 35%; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; border-right: 1px solid rgba(255,255,255,0.1); background-color: var(--team-color-hex); position: relative; }
-        .slot-img { width: 70%; height: 70%; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); margin-bottom: 2px; }
-        .slot.filled[data-type="team"] .slot-img { width: 90%; height: auto; margin-top: 10px; }
-        .slot-price-tag { background: rgba(0,0,0,0.4); color: white; font-size: 12px; font-weight: 900; padding: 2px 6px; border-radius: 4px; margin-top: 4px; }
-        .slot.filled[data-type="fia"] .slot-img { filter: brightness(0) invert(1); }
-
-        .slot-text-container { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 4px 15px; min-width: 0; background-color: #f4f4f4; background-image: linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee), linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee); background-position: 0 0, 10px 10px; background-size: 20px 20px; }
-        .slot-sub { font-size: 13px; text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 5px; color: var(--cat-text-color); }
-        .slot-main { font-size: 18px; font-weight: 800; line-height: 1.1; word-wrap: break-word; overflow: hidden; color: #222; }
-
-        .slot.matched { opacity: 1; box-shadow: inset 0 0 0 5px var(--score-win); transform: scale(1.02); z-index: 5; }
-        .slot.matched::after { content: '✓'; position: absolute; bottom: 5px; right: 5px; background: var(--score-win); color: black; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 18px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
 
         .actions-footer { padding: 15px; width: 100%; box-sizing: border-box; display: flex; gap: 10px; justify-content: space-between; align-items: center; }
         .btn-action { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-weight: 900; font-size: 12px; text-transform: uppercase; cursor: pointer; transition: 0.2s; }
@@ -284,6 +264,16 @@
         <div id="view-login" class="view-login" style="justify-content: center;">
             <h1 style="font-style:italic; font-size:28px;">TEAM PRINCIPAL LOGIN</h1>
             <input type="text" id="teamNameInput" class="login-input" placeholder="Enter Team Name">
+            
+            <div style="width:100%; max-width:400px; margin-top:15px; display:flex; gap:10px;">
+                <select id="favDriverInput" class="login-input" style="margin-top:0; font-size:12px; text-align:left;">
+                    <option value="" disabled selected>Select Favorite Driver</option>
+                </select>
+                <select id="favTeamInput" class="login-input" style="margin-top:0; font-size:12px; text-align:left;">
+                    <option value="" disabled selected>Select Favorite Team</option>
+                </select>
+            </div>
+
             <button class="login-btn" onclick="login()">ENTER PADDOCK</button>
         </div>
 
@@ -424,6 +414,7 @@
         const savedRace = localStorage.getItem('current_race_id');
         if(savedRace) activeRace = savedRace;
 
+        populateLoginDropdowns();
         renderRaces();
         buildDriverMarket();
         buildTeamMarket();
@@ -442,6 +433,23 @@
         setInterval(checkLockStatus, 1000);
         updateBudgetUI();
     };
+
+    function populateLoginDropdowns() {
+        const dSel = document.getElementById('favDriverInput');
+        const tSel = document.getElementById('favTeamInput');
+        
+        BINGO_CONFIG.drivers.filter(d=>d.team!=='FIA').sort((a,b)=>a.name.localeCompare(b.name)).forEach(d => {
+            const opt = document.createElement('option');
+            opt.value = d.name; opt.innerText = d.name;
+            dSel.appendChild(opt);
+        });
+        
+        BINGO_CONFIG.constructors.filter(c=>c.type==='Team').sort((a,b)=>a.name.localeCompare(b.name)).forEach(t => {
+             const opt = document.createElement('option');
+             opt.value = t.name; opt.innerText = t.name;
+             tSel.appendChild(opt);
+        });
+    }
 
     function showSideTab(tabName, btn) {
         document.querySelectorAll('.side-content').forEach(el => el.classList.remove('active'));
@@ -664,7 +672,7 @@
         btn.classList.add('active');
     }
 
-    // --- TAB 1: DRIVERS ---
+    // --- TAB 1: DRIVERS (Refactored to single list) ---
     function buildDriverMarket() {
         const container = document.getElementById('driverList');
         if(!container) return;
@@ -674,6 +682,7 @@
         realDrivers.forEach(d => {
             const row = document.createElement('div');
             row.className = 'driver-row';
+            row.dataset.driverName = d.name; // For finding
             
             row.innerHTML = `
                 <div class="driver-header" onclick="toggleDriver(this)" data-team="${d.team}" style="--team-color:${d.color}">
@@ -688,19 +697,23 @@
             
             const content = row.querySelector('.driver-content');
             
-            const label = document.createElement('div'); label.className = 'menu-label'; label.innerText = 'QUICK PICKS';
-            content.appendChild(label);
-
             const qpBtn = document.createElement('div'); qpBtn.className = 'qp-red-btn'; qpBtn.innerText = 'DRIVER QUICK PICKS';
             qpBtn.onclick = (e) => { e.stopPropagation(); applyQuickPicks(d.name, d.team, 'maximize_driver'); };
             content.appendChild(qpBtn);
 
-            const label2 = document.createElement('div'); label2.className = 'menu-label'; label2.innerText = 'MANUAL SELECTION';
-            content.appendChild(label2);
+            const label = document.createElement('div'); label.className = 'menu-label'; label.innerText = 'SELECT PREDICTION';
+            content.appendChild(label);
 
-            createSubSection(content, "QUALIFYING", BINGO_CONFIG.templates.quali, `${d.name} `, 'driver', 'quali', d.name, 'driver');
-            createSubSection(content, "RACE RESULT", BINGO_CONFIG.templates.race, `${d.name} `, 'driver', 'race', d.name, 'driver');
-            createSubSection(content, "BONUS", BINGO_CONFIG.templates.bonus, `${d.name} `, 'driver', 'bonus', d.name, 'driver');
+            // Combine all templates
+            const allTemplates = [
+                ...BINGO_CONFIG.templates.quali.map(t=>({...t, sub:'quali'})),
+                ...BINGO_CONFIG.templates.race.map(t=>({...t, sub:'race'})),
+                ...BINGO_CONFIG.templates.bonus.map(t=>({...t, sub:'bonus'}))
+            ];
+            
+            allTemplates.forEach(t => {
+                 createChip(content, `${d.name} ${t.t}`, 'driver', t.sub, d.name, '', t.c, t.t);
+            });
             
             container.appendChild(row);
         });
@@ -716,6 +729,7 @@
         realTeams.forEach(t => {
              const row = document.createElement('div');
             row.className = 'driver-row';
+            row.dataset.teamName = t.name;
             row.innerHTML = `
                 <div class="driver-header" onclick="toggleDriver(this)" style="--team-color:${t.color}">
                     <img src="${t.img}" class="driver-face car-face" onerror="this.style.display='none'">
@@ -732,7 +746,12 @@
             qpBtn.onclick = (e) => { e.stopPropagation(); applyQuickPicks(t.name, null, 'maximize_team'); };
             content.appendChild(qpBtn);
 
-            createSubSection(content, "CONSTRUCTOR EVENTS", BINGO_CONFIG.templates.team, `${t.name} `, 'team', 'team', t.name, 'team');
+            const label = document.createElement('div'); label.className = 'menu-label'; label.innerText = 'SELECT PREDICTION';
+            content.appendChild(label);
+
+            BINGO_CONFIG.templates.team.forEach(tp => {
+                createChip(content, `${t.name} ${tp.t}`, 'team', 'team', t.name, '', tp.c, tp.t);
+            });
             
             container.appendChild(row);
         });
@@ -746,6 +765,7 @@
         
         const row = document.createElement('div');
         row.className = 'driver-row open'; 
+        row.dataset.driverName = 'Race Control';
         row.innerHTML = `
             <div class="driver-header" style="--team-color:#333">
                 <img src="images/fia.png" class="driver-face" style="filter:invert(1)">
@@ -763,22 +783,14 @@
         qpBtn.onclick = (e) => { e.stopPropagation(); applyQuickPicks(null, null, 'random_fia'); };
         content.appendChild(qpBtn);
 
-        createSubSection(content, "TRACK EVENTS", BINGO_CONFIG.templates.fia, '', 'fia', 'fia', 'Race Control', 'fia');
+        const label = document.createElement('div'); label.className = 'menu-label'; label.innerText = 'SELECT EVENT';
+        content.appendChild(label);
+
+        BINGO_CONFIG.templates.fia.forEach(tp => {
+            createChip(content, tp.t, 'fia', 'fia', 'Race Control', '', tp.c, tp.t);
+        });
         
         container.appendChild(row);
-    }
-
-    function createSubSection(parent, title, items, prefix, type, subtype, driverName = null, colorClass = '') {
-        const btn = document.createElement('div');
-        btn.className = `sub-btn ${colorClass}`;
-        btn.innerText = title;
-        btn.onclick = () => btn.classList.toggle('active');
-        parent.appendChild(btn);
-
-        const grid = document.createElement('div');
-        grid.className = 'sub-content';
-        items.forEach(t => createChip(grid, prefix + t.t, type, subtype, driverName, '', t.c, t.t));
-        parent.appendChild(grid);
     }
 
     function toggleDriver(header) {
@@ -864,24 +876,36 @@
 
         const req = slot.dataset.req;
         
-        // Show tab AND expand first item
-        if(req === 'driver') openTabAndExpandFirst('drivers');
-        if(req === 'team') openTabAndExpandFirst('teams');
-        if(req === 'fia') openTabAndExpandFirst('fia');
+        if(req === 'driver') {
+            const fav = localStorage.getItem('f1_fav_driver');
+            openTabAndExpand('drivers', fav);
+        }
+        if(req === 'team') {
+            const fav = localStorage.getItem('f1_fav_team');
+            openTabAndExpand('teams', fav);
+        }
+        if(req === 'fia') openTabAndExpand('fia', null);
     }
 
-    function openTabAndExpandFirst(tabName) {
+    function openTabAndExpand(tabName, specificName) {
         showSideTab(tabName);
         const panel = document.getElementById(`panel-${tabName}`);
         if(panel) {
-            // Find first driver row
-            const firstRow = panel.querySelector('.driver-row');
-            if(firstRow) {
-                // Collapse all others just in case, then open this one
+            let targetRow = null;
+            
+            if(specificName) {
+                // Try to find specific favorite
+                if(tabName === 'drivers') targetRow = panel.querySelector(`.driver-row[data-driver-name="${specificName}"]`);
+                if(tabName === 'teams') targetRow = panel.querySelector(`.driver-row[data-team-name="${specificName}"]`);
+            }
+            
+            // Fallback to first row if not found or no fav
+            if(!targetRow) targetRow = panel.querySelector('.driver-row');
+
+            if(targetRow) {
                 panel.querySelectorAll('.driver-row').forEach(r => r.classList.remove('open'));
-                firstRow.classList.add('open');
-                // Scroll to top
-                panel.scrollTop = 0;
+                targetRow.classList.add('open');
+                targetRow.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         }
     }
@@ -1026,8 +1050,14 @@
 
     function login() {
         const name = document.getElementById('teamNameInput').value;
+        const favD = document.getElementById('favDriverInput').value;
+        const favT = document.getElementById('favTeamInput').value;
+        
         if(!name) return alert("Enter Name");
         localStorage.setItem('f1_team_name', name);
+        if(favD) localStorage.setItem('f1_fav_driver', favD);
+        if(favT) localStorage.setItem('f1_fav_team', favT);
+        
         document.getElementById('displayTeamName').innerText = name.toUpperCase();
         checkLocalGrid();
     }
