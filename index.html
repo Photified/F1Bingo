@@ -68,38 +68,86 @@
 
         /* GRID */
         .grid-container { padding: 15px; flex: 1; overflow-y: auto; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .bingo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; max-width: 600px; aspect-ratio: 1/1; }
+        .bingo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; max-width: 600px; }
         
-        /* Empty Slot */
-        .slot { background: #fafafa; border: 2px dashed #ddd; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; position: relative; cursor: pointer; user-select: none; transition: 0.2s; text-transform: uppercase; color: #aaa; }
+        /* EMPTY SLOT - FIXED ASPECT RATIO */
+        .slot { 
+            aspect-ratio: 3/4; /* Keeps them taller rectangles */
+            background: #fafafa; border: 2px dashed #ddd; border-radius: 12px; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 11px; font-weight: 800; position: relative; 
+            cursor: pointer; user-select: none; transition: 0.2s; 
+            text-transform: uppercase; color: #aaa;
+        }
         .slot:active { transform: scale(0.98); background: #eee; }
         .slot[data-req="driver"] { background: #fff8e6; border-color: var(--c-driver); color: var(--c-driver); }
         .slot[data-req="team"] { background: #e0fbf8; border-color: var(--c-team); color: var(--c-team); }
         .slot[data-req="fia"] { background: #fff2f2; border-color: var(--c-fia); color: var(--c-fia); }
 
-        /* Filled Slot - IMPROVED DESIGN */
-        .slot.filled { background: white !important; border: 1px solid #ddd !important; padding: 0; overflow: hidden; display: flex; flex-direction: row; align-items: stretch; text-align: left; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-radius: 8px; }
-        .slot.filled::before { content: ''; position: absolute; top: 0; left: 0; width: 0; height: 0; border-style: solid; border-width: 24px 24px 0 0; z-index: 5; }
-        .slot.filled[data-type="driver"]::before { border-color: var(--c-driver) transparent transparent transparent; }
-        .slot.filled[data-type="team"]::before { border-color: var(--c-team) transparent transparent transparent; }
-        .slot.filled[data-type="fia"]::before { border-color: var(--c-fia) transparent transparent transparent; }
-
-        .slot-img-container { width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; background-color: var(--team-color-hex); position: relative; overflow: hidden; }
-        .slot-img { width: 100%; height: 90%; object-fit: contain; object-position: bottom center; filter: drop-shadow(0 -4px 4px rgba(0,0,0,0.2)); z-index: 2; margin-bottom: -2px; }
-        .slot.filled[data-type="team"] .slot-img { width: 110%; height: auto; margin-bottom: 20px; object-position: center; }
-        .slot.filled[data-type="fia"] .slot-img { width: 70%; margin-bottom: 10px; filter: brightness(0) invert(1); }
+        /* FILLED SLOT - TOP/BOTTOM LAYOUT */
+        .slot.filled { 
+            aspect-ratio: 3/4; /* Lock size */
+            background: white !important; border: 1px solid #ddd !important; 
+            padding: 0; overflow: hidden; display: flex; flex-direction: column; 
+            text-align: left; box-shadow: 0 4px 10px rgba(0,0,0,0.08); border-radius: 12px;
+        }
         
-        .slot-price-tag { background: rgba(0,0,0,0.8); color: white; font-size: 11px; font-weight: 900; padding: 3px 8px; border-radius: 12px; position: absolute; top: 5px; right: 5px; z-index: 10; border: 1px solid rgba(255,255,255,0.2); }
-
-        .slot-text-container { width: 50%; display: flex; flex-direction: column; justify-content: center; padding: 8px 12px; background: white; border-left: 1px solid #f0f0f0; }
-        .slot-sub { font-size: 9px; text-transform: uppercase; font-weight: 900; color: var(--cat-text-color); margin-bottom: 4px; letter-spacing: 0.5px; opacity: 0.8; }
-        .slot-main { font-size: 12px; font-weight: 900; line-height: 1.2; color: #222; text-transform: uppercase; }
+        /* Top Section: Image + Color */
+        .slot-img-container { 
+            width: 100%; height: 65%; /* 65% height for image */
+            display: flex; align-items: flex-end; justify-content: center; 
+            background-color: var(--team-color-hex); position: relative; overflow: hidden; 
+        }
         
-        .remove-pick-btn { position: absolute; top: 0; right: 0; width: 28px; height: 28px; background: rgba(0,0,0,0.05); color: #888; display: flex; align-items: center; justify-content: center; z-index: 15; border-bottom-left-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        .remove-pick-btn:hover { background: #ef4444; color: white; }
+        /* Image Styling logic */
+        .slot-img { z-index: 2; transition: 0.2s; }
+        
+        /* Drivers: Big Zoom */
+        .slot.filled[data-type="driver"] .slot-img {
+            width: 100%; height: 110%; /* Zoom in */
+            object-fit: cover; object-position: top center;
+            margin-bottom: -5px; /* Anchor to bottom */
+        }
+        
+        /* Teams: Wide Car */
+        .slot.filled[data-type="team"] .slot-img {
+            width: 95%; height: auto; 
+            object-fit: contain; margin-bottom: 20px;
+            filter: drop-shadow(0 4px 4px rgba(0,0,0,0.2));
+        }
+        
+        /* FIA: Inverted Logo */
+        .slot.filled[data-type="fia"] .slot-img {
+            width: 50%; height: auto; margin-bottom: 25px;
+            filter: brightness(0) invert(1); opacity: 0.8;
+        }
+
+        /* Price Tag - Floating Top Right */
+        .slot-price-tag { 
+            background: rgba(0,0,0,0.8); color: white; font-size: 10px; font-weight: 900; 
+            padding: 3px 8px; border-radius: 12px; position: absolute; bottom: 5px; right: 5px; 
+            z-index: 10; border: 1px solid rgba(255,255,255,0.2); 
+        }
+
+        /* Bottom Section: Text */
+        .slot-text-container { 
+            width: 100%; height: 35%; /* 35% height for text */
+            display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+            padding: 5px; background: white; border-top: 1px solid rgba(0,0,0,0.05);
+        }
+        .slot-sub { font-size: 8px; text-transform: uppercase; font-weight: 900; color: var(--cat-text-color); margin-bottom: 2px; letter-spacing: 0.5px; opacity: 0.7; }
+        .slot-main { font-size: 11px; font-weight: 900; line-height: 1.1; color: #222; text-transform: uppercase; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        
+        /* Remove Button - Top Left Overlay */
+        .remove-pick-btn { 
+            position: absolute; top: 5px; left: 5px; width: 22px; height: 22px; 
+            background: rgba(0,0,0,0.3); color: #fff; display: flex; align-items: center; justify-content: center; 
+            z-index: 15; border-radius: 50%; font-size: 14px; font-weight: bold; cursor: pointer; backdrop-filter: blur(2px);
+        }
+        .remove-pick-btn:hover { background: #ef4444; }
 
         .slot.matched { opacity: 1; box-shadow: inset 0 0 0 3px var(--score-win); transform: scale(1.02); z-index: 5; }
-        .slot.matched::after { content: '✓'; position: absolute; bottom: 5px; right: 5px; background: var(--score-win); color: black; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .slot.matched::after { content: '✓'; position: absolute; top: 5px; right: 5px; background: var(--score-win); color: black; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); z-index: 20; }
 
         /* MARKET STYLES */
         .tab-header { display: flex; border-bottom: 1px solid #eee; background: #f9f9f9; flex-shrink: 0; height: 45px; }
@@ -125,7 +173,6 @@
         .back-btn { font-size: 20px; cursor: pointer; color: #888; }
         .prediction-list { padding: 15px; overflow-y: auto; }
         
-        /* PREDICTION BUTTONS (With Budget Logic) */
         .prediction-btn { background: white; border-radius: 8px; overflow: hidden; display: flex; height: 55px; margin-bottom: 10px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid #ddd; transition: 0.2s; }
         .prediction-btn:active { transform: scale(0.98); }
         .prediction-btn.unaffordable { opacity: 0.6; filter: grayscale(0.8); pointer-events: none; } /* Grey out */
@@ -529,20 +576,21 @@
                 if(!drv) drv = BINGO_CONFIG.constructors.find(c => c.name === data.driver);
                 if(!drv && data.type === 'fia') drv = {name:'RC', color:'#333', img:'images/fia.png'};
 
-                s.style.setProperty('--team-color-hex', drv.color);
-                s.style.setProperty('--cat-text-color', data.type==='driver'?'#ff9500':(data.type==='team'?'#00d2be':'#e10600'));
+                const color = drv ? drv.color : '#333';
+                const img = drv ? drv.img : '';
+                
+                s.style.setProperty('--team-color-hex', color);
+                let catColor = '#ff9500';
+                if(data.type === 'team') catColor = '#00d2be';
+                if(data.type === 'fia') catColor = '#e10600';
+                s.style.setProperty('--cat-text-color', catColor);
+
                 s.className = `slot filled`; s.dataset.type = data.type; s.onclick = null;
                 
                 s.innerHTML = `
                     <div class="remove-pick-btn" onclick="removePick(${idx}); event.stopPropagation();">×</div>
-                    <div class="slot-img-container">
-                        <img src="${drv.img}" class="slot-img">
-                        <div class="slot-price-tag">$${data.cost}M</div>
-                    </div>
-                    <div class="slot-text-container">
-                        <div class="slot-sub">${data.subtype}</div>
-                        <div class="slot-main">${data.text.replace(data.driver,'').trim()}</div>
-                    </div>
+                    <div class="slot-img-container"><img src="${img}" class="slot-img"><div class="slot-price-tag">$${data.cost}M</div></div>
+                    <div class="slot-text-container"><div class="slot-sub">${data.subtype}</div><div class="slot-main">${data.text.replace(data.driver,'').trim()}</div></div>
                 `;
             } else {
                 s.className = 'slot'; s.removeAttribute('style'); delete s.dataset.type;
