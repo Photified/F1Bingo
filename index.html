@@ -37,7 +37,7 @@
         .panel { background: white; border-radius: 12px; box-shadow: var(--card-shadow); overflow: hidden; display: flex; flex-direction: column; border: 1px solid #e0e0e0; height: 100%; }
         .active-panel { background: white; border-radius: 12px; border: 1px solid #e0e0e0; padding: 0; display: flex; flex-direction: column; overflow: hidden; height: 100%; position: relative; }
 
-        .view-login, .view-strategy, .view-game, .view-standings, .view-rules { padding-bottom: 100px !important; }
+        .view-login, .view-strategy, .view-game, .view-standings, .view-rules { padding-bottom: 120px !important; }
 
         @media (max-width: 1024px) {
             .main-stage { grid-template-columns: 1fr; padding: 10px; padding-bottom: 0; }
@@ -66,7 +66,7 @@
         .budget-hud-bar-bg { width: 80px; height: 5px; background: #e0e0e0; margin-top: 4px; border-radius: 3px; }
         .budget-hud-bar-fill { height: 100%; background: #22c55e; width: 50%; border-radius: 3px; transition: 0.3s; }
 
-        /* GRID SLOTS (Main View) */
+        /* GRID */
         .grid-container { padding: 15px; flex: 1; overflow-y: auto; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .bingo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; max-width: 600px; aspect-ratio: 1/1; }
         .slot { background: #fafafa; border: 2px dashed #ddd; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; position: relative; cursor: pointer; user-select: none; transition: 0.2s; text-transform: uppercase; color: #aaa; }
@@ -92,7 +92,7 @@
         .slot.filled[data-type="team"] .slot-img { width: 95%; height: auto; }
         .slot.filled[data-type="fia"] .slot-img { filter: brightness(0) invert(1); }
 
-        /* --- MARKET PANEL --- */
+        /* MARKET STYLES */
         .tab-header { display: flex; border-bottom: 1px solid #eee; background: #f9f9f9; flex-shrink: 0; height: 45px; }
         .tab-btn { flex: 1; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px; cursor: pointer; color: #888; border-bottom: 3px solid transparent; transition: 0.2s; }
         .tab-btn.active { background: white; color: #000; }
@@ -100,87 +100,87 @@
         #tabBtn-teams.active { border-bottom-color: var(--c-team); color: var(--c-team); }
         #tabBtn-fia.active { border-bottom-color: var(--c-fia); color: var(--c-fia); }
 
-        /* NEW DRIVER GRID (3 Cols, Taller) */
         .market-grid-drivers { padding: 15px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .driver-card-market { 
-            background: var(--team-color); border-radius: 12px; overflow: hidden;
-            display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
-            height: 160px; /* Taller */
-            cursor: pointer; position: relative;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-        }
-        .driver-card-market:active { transform: scale(0.97); }
+        .driver-card-market { background: var(--team-color); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 160px; cursor: pointer; position: relative; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
         .dcm-img { width: 100%; height: 85%; object-fit: contain; object-position: bottom; margin-bottom: 0; z-index: 1; filter: drop-shadow(0 0 5px rgba(0,0,0,0.2)); }
-        .dcm-name { 
-            width: 100%; background: rgba(20,20,30,0.9); color: white; 
-            font-size: 10px; font-weight: 800; text-align: center; 
-            padding: 6px 2px; z-index: 2; text-transform: uppercase; line-height: 1;
-        }
+        .dcm-name { width: 100%; background: rgba(20,20,30,0.9); color: white; font-size: 10px; font-weight: 800; text-align: center; padding: 6px 2px; z-index: 2; text-transform: uppercase; line-height: 1; }
 
-        /* NEW TEAM LIST (Vertical) */
         .market-list-teams { padding: 15px; display: flex; flex-direction: column; gap: 10px; }
-        .team-card-market { 
-            width: 100%; height: 70px; background: white; 
-            border-radius: 8px; border: 1px solid #eee; border-left: 8px solid var(--team-color);
-            display: flex; align-items: center; justify-content: space-between; 
-            padding: 0 15px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-        .team-card-market:active { transform: scale(0.98); background: #f9f9f9; }
+        .team-card-market { width: 100%; height: 70px; background: white; border-radius: 8px; border: 1px solid #eee; border-left: 8px solid var(--team-color); display: flex; align-items: center; justify-content: space-between; padding: 0 15px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .tcm-name { font-size: 14px; font-weight: 900; text-transform: uppercase; color: #333; }
         .tcm-img { height: 90%; width: 60%; object-fit: contain; object-position: right center; }
 
-        /* DRILL DOWN */
         .market-detail-view { display: none; flex-direction: column; height: 100%; background: #f4f4f8; }
         .market-detail-view.active { display: flex; }
         .market-detail-header { background: white; padding: 15px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #eee; font-weight: 900; font-size: 16px; color: #333; position: sticky; top: 0; z-index: 10; }
         .back-btn { font-size: 20px; cursor: pointer; color: #888; }
         .prediction-list { padding: 15px; overflow-y: auto; }
         
-        /* PREDICTION BUTTONS */
-        .prediction-btn { 
-            background: white; border-radius: 8px; overflow: hidden; 
-            display: flex; height: 55px; margin-bottom: 10px; cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid #ddd;
-        }
-        .prediction-btn:active { transform: scale(0.98); }
+        .prediction-btn { background: white; border-radius: 8px; overflow: hidden; display: flex; height: 55px; margin-bottom: 10px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid #ddd; }
         .pb-left { width: 55px; background: var(--team-color); display: flex; align-items: center; justify-content: center; }
         .pb-img { width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2)); }
-        
-        /* BIG TEAM BUTTON (Custom class) */
         .prediction-btn.team-mode .pb-left { width: 140px; } 
         .prediction-btn.team-mode .pb-img { width: 90%; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.3)); }
-
-        .pb-left.fia-bg .pb-img { filter: brightness(0) invert(1); } /* FIA White Logo */
-
+        .pb-left.fia-bg .pb-img { filter: brightness(0) invert(1); } 
         .pb-right { flex: 1; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; background: linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff), linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff); background-size: 10px 10px; background-color: #fafafa; }
         .pb-text { font-size: 12px; font-weight: 800; color: #333; text-transform: uppercase; }
         .pb-cost { background: #333; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 900; }
 
-        /* STRATEGY HEADER (Replaces old style) */
-        .view-strategy { text-align: center; width: 100%; display: flex; flex-direction: column; align-items: center; height: 100%; padding: 20px; overflow-y: auto; }
+        /* IMPROVED LOGIN SLIDER CARDS */
+        .selection-slider { display: flex; overflow-x: auto; gap: 12px; padding: 10px 5px; width: 100%; max-width: 600px; scroll-snap-type: x mandatory; margin-bottom: 20px; scrollbar-width: none; }
+        
+        .selection-card { 
+            flex: 0 0 100px; height: 110px; 
+            border: 1px solid #eee; border-radius: 12px; 
+            display: flex; flex-direction: column; justify-content: flex-end; align-items: center;
+            cursor: pointer; transition: 0.2s; background: white; 
+            position: relative; scroll-snap-align: start; overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        .selection-card.selected { border: 3px solid #22c55e; box-shadow: 0 4px 15px rgba(34, 197, 94, 0.2); transform: scale(1.02); z-index: 2; }
+        .selection-card.selected::after { content: '✓'; position: absolute; top: 5px; right: 5px; background: #22c55e; color: white; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; }
+        
+        /* The Color Bar at Top */
+        .selection-card-color { position: absolute; top: 0; left: 0; width: 100%; height: 6px; background: var(--team-color); }
+        
+        .selection-img { width: 90%; height: 65%; object-fit: contain; object-position: bottom; margin-bottom: 0; z-index: 1; }
+        .selection-name { width: 100%; background: #f9f9f9; font-size: 9px; font-weight: 800; text-align: center; padding: 6px 2px; text-transform: uppercase; color: #333; border-top: 1px solid #eee; z-index: 2; }
+
+        /* SCROLL TRACK HINT */
+        .scroll-hint { height: 4px; width: 50px; background: #eee; border-radius: 2px; margin: -10px auto 20px auto; position: relative; }
+        .scroll-hint::after { content:''; position: absolute; top:0; left:0; height:100%; width: 20px; background:#ccc; border-radius: 2px; animation: scrollAnim 2s infinite; }
+        @keyframes scrollAnim { 0% { left: 0; } 50% { left: 30px; } 100% { left: 0; } }
+
+        /* FOOTER ACTIONS */
+        .actions-footer { padding: 15px; display: flex; gap: 10px; align-items: center; justify-content: center; width: 100%; }
+        
+        .btn-action { 
+            flex: 1; padding: 12px; border-radius: 8px; font-weight: 900; 
+            font-size: 11px; text-transform: uppercase; cursor: pointer; border: none; 
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: 0.2s;
+        }
+        .btn-action:active { transform: translateY(2px); }
+        
+        .btn-lock { background: #22c55e; color: white; }
+        .btn-unlock { background: #ef4444; color: white; }
+        .btn-change-strat { background: white; color: #555; border: 2px solid #ddd; }
+
         .strategy-header-container { margin-top: 20px; margin-bottom: 30px; display: flex; flex-direction: column; align-items: center; gap: 5px; }
         .big-flag { width: 100px; height: auto; border-radius: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 10px; }
         .strat-race-name { font-size: 32px; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 1; color: var(--brand-dark); }
         .strat-race-date { font-size: 16px; font-weight: 700; color: #888; text-transform: uppercase; margin-bottom: 10px; }
         .strat-sub { color: #888; font-size: 11px; font-weight: 800; letter-spacing: 1px; }
-
-        /* OTHER STYLES */
-        .selection-slider { display: flex; overflow-x: auto; gap: 12px; padding: 5px; width: 100%; max-width: 600px; scroll-snap-type: x mandatory; margin-bottom: 20px; scrollbar-width: none; }
-        .selection-card { flex: 0 0 90px; height: 100px; border: 2px solid #eee; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; background: white; position: relative; scroll-snap-align: start; }
-        .selection-card.selected { border-width: 3px; background: #f0fdf4; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transform: scale(1.05); z-index: 2; }
-        .selection-card.selected::after { content: '✓'; position: absolute; top: 5px; right: 5px; background: #22c55e; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; }
-        .selection-img { width: 60%; height: 50%; object-fit: contain; margin-bottom: 6px; }
-        .selection-name { font-size: 9px; font-weight: 800; text-align: center; padding: 0 4px; text-transform: uppercase; }
         .strat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-width: 500px; width: 100%; }
         .strat-card { background: #fff; border: 2px solid #eee; border-radius: 12px; padding: 20px; cursor: pointer; display: flex; flex-direction: column; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .mini-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; width: 60px; height: 60px; margin-bottom: 10px; opacity: 0.8; } .mg-c { border-radius: 1px; }
-        .actions-footer { padding: 15px; display: flex; gap: 10px; justify-content: space-between; align-items: center; }
-        .btn-change-strat { background: white; color: #888; border: 2px solid #eee; padding: 10px 25px; font-size: 11px; font-weight: 800; text-transform: uppercase; border-radius: 6px; cursor: pointer; transition: 0.2s; }
         #customModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 5000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
         .modal-box { background: white; padding: 25px; border-radius: 15px; width: 85%; max-width: 320px; text-align: center; }
         .btn-modal { padding: 12px 24px; border-radius: 8px; font-weight: 800; cursor: pointer; border: none; margin: 5px; font-size: 14px; }
         .btn-confirm { background: var(--brand-red); color: white; }
         .btn-cancel { background: #eee; color: #333; }
+        .score-box { text-align: center; margin-bottom: 20px; padding: 25px; background: #fff; border-radius: 12px; border: 1px solid #eee; box-shadow: var(--card-shadow); }
+        .score-val { font-size: 42px; font-weight: 900; color: var(--brand-dark); line-height: 1; }
         .login-btn { padding: 16px; width: 100%; max-width: 400px; margin-top: 20px; background: var(--brand-red); color: white; border: none; font-weight: 900; cursor: pointer; border-radius: 10px; font-size: 16px; box-shadow: 0 4px 10px rgba(225, 6, 0, 0.2); margin-bottom: 50px; }
         .login-input { padding: 15px; width: 100%; text-align: center; border: 2px solid #eee; border-radius: 10px; font-weight: bold; font-size: 18px; max-width: 400px; margin-bottom: 25px; background: #fff; }
         .rules-card { background: white; border: 1px solid #eee; border-radius: 12px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
@@ -190,11 +190,7 @@
         .step-title { font-weight: 900; font-size: 14px; margin-bottom: 5px; text-transform: uppercase; color: #333; }
         .step-desc { font-size: 13px; color: #666; line-height: 1.4; margin: 0; }
         .chip-example { display: flex; align-items: center; gap: 10px; margin-top: 5px; background: #f9f9f9; padding: 8px; border-radius: 6px; border: 1px solid #eee; }
-        .ce-icon { width: 30px; height: 30px; border-radius: 4px; object-fit: contain; }
         .ce-text { font-size: 11px; font-weight: 800; color: #333; }
-        .score-box { text-align: center; margin-bottom: 20px; padding: 25px; background: #fff; border-radius: 12px; border: 1px solid #eee; box-shadow: var(--card-shadow); }
-        .score-val { font-size: 42px; font-weight: 900; color: var(--brand-dark); line-height: 1; }
-        .score-lbl { font-size: 12px; font-weight: 700; color: #888; text-transform: uppercase; margin-top: 5px; letter-spacing: 1px; }
 
     </style>
 </head>
@@ -206,14 +202,16 @@
 
 <div id="customModal" class="hidden">
     <div class="modal-box">
-        <h3 id="modalTitle" style="margin-top:0; color:#e10600; font-style:italic;">RACE CONTROL</h3>
-        <p id="modalText" style="color:#555; margin-bottom:20px;">Text</p>
+        <h3 id="modalTitle" style="margin-top:0; color:#e10600; font-style:italic; font-size:20px;">RACE CONTROL</h3>
+        <p id="modalText" style="font-size:14px; color:#555; margin-bottom:20px; line-height:1.4;">Text</p>
         <div id="modalActions"></div>
     </div>
 </div>
 
 <header>
-    <div class="logo-area" onclick="location.reload()"><img src="images/logotop.png" class="header-logo" alt="F1 Pick Em"></div>
+    <div class="logo-area" onclick="location.reload()">
+        <img src="images/logotop.png" class="header-logo" alt="F1 Pick Em">
+    </div>
     <div class="race-scroll-area" id="raceBar"></div>
     <div class="user-area" id="displayTeamName">GUEST</div>
 </header>
@@ -222,18 +220,15 @@
     
     <div class="panel" id="marketPanel">
         <div class="mobile-close-btn" onclick="closeMobileMarket()">CLOSE MARKET ×</div>
-        
         <div class="tab-header" id="marketTabs">
             <div class="tab-btn active" id="tabBtn-drivers" onclick="showMarketTab('drivers')">DRIVERS</div>
             <div class="tab-btn" id="tabBtn-teams" onclick="showMarketTab('teams')">TEAMS</div>
             <div class="tab-btn" id="tabBtn-fia" onclick="showMarketTab('fia')">FIA</div>
         </div>
-
         <div id="marketContent" style="flex:1; overflow-y:auto; position:relative;">
             <div id="drivers-root" class="market-grid-drivers"></div>
             <div id="teams-root" class="market-list-teams" style="display:none;"></div>
             <div id="fia-root" class="prediction-list" style="display:none;"></div>
-
             <div id="market-detail" class="market-detail-view">
                 <div class="market-detail-header">
                     <div class="back-btn" onclick="backToRoot()">←</div>
@@ -249,10 +244,12 @@
         <div id="view-login" class="view-login">
             <h2 style="font-style:italic; font-size:24px; margin-bottom:20px;">TEAM PRINCIPAL LOGIN</h2>
             <input type="text" id="teamNameInput" class="login-input" placeholder="Enter Team Name">
-            <div style="font-size:11px; font-weight:900; color:#999; margin:10px 0; width:100%; text-align:center;">SELECT FAVORITE DRIVER</div>
+            <div class="section-header">Select Favorite Driver</div>
             <div id="favDriverGrid" class="selection-slider"></div>
-            <div style="font-size:11px; font-weight:900; color:#999; margin:10px 0; width:100%; text-align:center;">SELECT FAVORITE TEAM</div>
+            <div class="scroll-hint"></div>
+            <div class="section-header">Select Favorite Team</div>
             <div id="favTeamGrid" class="selection-slider"></div>
+            <div class="scroll-hint"></div>
             <button class="login-btn" onclick="login()">ENTER PADDOCK</button>
         </div>
 
@@ -278,11 +275,11 @@
             </div>
             <div class="grid-container"><div id="grid" class="bingo-grid"></div></div>
             <div style="padding:15px; border-top:1px solid #eee; text-align:center;">
-                <div class="actions-footer" style="margin-bottom:10px;">
-                    <button id="lockBtn" class="btn-action btn-lock" onclick="toggleUserLock()" style="background:#22c55e; color:white; border:none; display:none;">LOCK CARD</button>
-                    <button id="unlockBtn" class="btn-action btn-unlock" onclick="toggleUserLock()" style="background:#e10600; color:white; border:none; display:none;">UNLOCK CARD</button>
+                <div class="actions-footer">
+                    <button id="lockBtn" class="btn-action btn-lock" onclick="toggleUserLock()">🔒 LOCK CARD</button>
+                    <button id="unlockBtn" class="btn-action btn-unlock" onclick="toggleUserLock()">🔓 UNLOCK CARD</button>
+                    <button class="btn-action btn-change-strat" onclick="changeStrategy()">⚙ SETUP</button>
                 </div>
-                <button class="btn-change-strat" onclick="changeStrategy()">CHANGE GRID SETUP</button>
             </div>
         </div>
         
@@ -295,31 +292,21 @@
             <div class="rules-card">
                 <div class="rule-step">
                     <div class="step-num">1</div>
-                    <div class="step-content">
-                        <div class="step-title">Select Strategy</div>
-                        <div class="step-desc">Choose a grid layout that fits your style (Balanced, Driver Focus, etc).</div>
-                    </div>
+                    <div class="step-content"><div class="step-title">Select Strategy</div><div class="step-desc">Choose a grid layout that fits your style.</div></div>
                 </div>
                 <div class="rule-step">
                     <div class="step-num">2</div>
                     <div class="step-content">
                         <div class="step-title">Fill The Grid</div>
                         <div class="step-desc">Tap a slot to open the market and pick a prediction.</div>
-                        <div class="chip-example">
-                            <img src="images/max.png" class="ce-icon" style="background:#3671C6">
-                            <div class="ce-text">Max Verstappen • Pole Position</div>
-                        </div>
+                        <div class="chip-example"><div class="ce-text">Driver Name • Pole Position</div></div>
                     </div>
                 </div>
                 <div class="rule-step">
                     <div class="step-num">3</div>
-                    <div class="step-content">
-                        <div class="step-title">Manage Budget</div>
-                        <div class="step-desc">You have <strong>$100M</strong>. High probability events cost more!</div>
-                    </div>
+                    <div class="step-content"><div class="step-title">Manage Budget</div><div class="step-desc">You have <strong>$100M</strong>. High probability events cost more!</div></div>
                 </div>
             </div>
-            
             <div class="rules-card">
                 <div class="step-title" style="margin-bottom:15px; border-bottom:none;">SCORING</div>
                 <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;"><span>Correct Tile</span><b>10 PTS</b></div>
@@ -407,12 +394,17 @@
 
     function buildLoginSelectionGrids() {
         const dGrid = document.getElementById('favDriverGrid');
-        BINGO_CONFIG.drivers.filter(d=>d.team!=='FIA').sort((a,b)=>a.name.localeCompare(b.name)).forEach(d => {
+        // Sort by Tier (ascending) to show top drivers first
+        const sortedDrivers = BINGO_CONFIG.drivers.filter(d=>d.team!=='FIA').sort((a,b) => a.tier - b.tier);
+        sortedDrivers.forEach(d => {
             const c = createSelectionCard(d, 'driver');
             dGrid.appendChild(c);
         });
+
         const tGrid = document.getElementById('favTeamGrid');
-        BINGO_CONFIG.constructors.filter(c=>c.type==='Team').sort((a,b)=>a.name.localeCompare(b.name)).forEach(t => {
+        // Sort by Tier
+        const sortedTeams = BINGO_CONFIG.constructors.filter(c=>c.type==='Team').sort((a,b) => a.tier - b.tier);
+        sortedTeams.forEach(t => {
             const c = createSelectionCard(t, 'team');
             tGrid.appendChild(c);
         });
@@ -421,7 +413,8 @@
     function createSelectionCard(entity, type) {
         const div = document.createElement('div');
         div.className = 'selection-card';
-        div.style.borderColor = entity.color;
+        // Remove border logic, add top color bar
+        div.style.setProperty('--team-color', entity.color);
         div.onclick = () => {
             const p = div.parentElement;
             p.querySelectorAll('.selection-card').forEach(c=>c.classList.remove('selected'));
@@ -429,7 +422,11 @@
             if(type==='driver') favDriver = entity.name;
             else favTeam = entity.name;
         };
-        div.innerHTML = `<img src="${entity.img}" class="selection-img"><div class="selection-name">${entity.name}</div>`;
+        div.innerHTML = `
+            <div class="selection-card-color"></div>
+            <img src="${entity.img}" class="selection-img">
+            <div class="selection-name">${entity.name}</div>
+        `;
         return div;
     }
 
@@ -661,7 +658,6 @@
         document.getElementById('rhTitle').innerText = r.n;
         document.getElementById('rhDate').innerText = r.d;
         
-        // Update Strat Header too
         document.getElementById('stratFlag').src = `https://flagcdn.com/w160/${r.c}.png`;
         document.getElementById('stratRaceName').innerText = r.n.toUpperCase();
         document.getElementById('stratRaceDate').innerText = r.d.toUpperCase();
@@ -678,12 +674,12 @@
         const full = currentGrid.every(x=>x);
         if(isGridLocked || isUserLocked) {
             l.style.display = 'none';
-            u.style.display = isUserLocked && !isGridLocked ? 'inline-block' : 'none';
+            u.style.display = isUserLocked && !isGridLocked ? 'flex' : 'none';
             document.getElementById('grid').classList.add('grid-locked');
         } else {
             document.getElementById('grid').classList.remove('grid-locked');
             u.style.display = 'none';
-            l.style.display = full ? 'inline-block' : 'none';
+            l.style.display = full ? 'flex' : 'none';
         }
     }
 
