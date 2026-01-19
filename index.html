@@ -247,6 +247,7 @@
         .btn-lock { background: #22c55e; color: white; border: 1px solid #16a34a; }
         .btn-unlock { background: #ef4444; color: white; border: 1px solid #b91c1c; }
         .btn-change-strat { background: white; color: #555; border: 2px solid #ddd; box-shadow: none; }
+        .btn-install-manual { background: #333; color: white; display: none; } /* Hidden unless installable */
 
         /* MODAL */
         #customModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 5000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
@@ -254,6 +255,7 @@
         .btn-modal { padding: 12px 24px; border-radius: 8px; font-weight: 800; cursor: pointer; border: none; margin: 5px; font-size: 14px; }
         .btn-confirm { background: var(--brand-red); color: white; }
         .btn-cancel { background: #eee; color: #333; }
+        
         #installModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 6000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
         .install-box { background: white; width: 85%; max-width: 320px; border-radius: 16px; padding: 30px 20px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
         .install-icon { width: 60px; height: 60px; background: #e10600; border-radius: 12px; margin-bottom: 15px; display: inline-flex; align-items: center; justify-content: center; color: white; font-size: 30px; font-weight: bold; }
@@ -278,7 +280,27 @@
 <body>
 
 <script>
+  // Service Worker
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+  
+  // PWA Prompt Logic
+  let deferredPrompt;
+  const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
+  const isInStandaloneMode = ('standalone' in window.navigator) && (window.navigator.standalone);
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    document.getElementById('installModal').classList.remove('hidden');
+    // Also show footer button
+    document.querySelector('.btn-install-manual').style.display = 'flex';
+  });
+
+  // iOS Detection (Manually show instructions if on iOS and not installed)
+  if (isIos && !isInStandaloneMode) {
+      // You can uncomment this to force the modal on iOS, but usually it's annoying.
+      // document.getElementById('installModal').classList.remove('hidden');
+  }
 </script>
 
 <div id="installModal" class="hidden">
@@ -286,8 +308,8 @@
         <div class="install-icon">F1</div>
         <h3 style="margin:0; font-style:italic; font-size:22px; color:#222;">INSTALL APP</h3>
         <p style="font-size:13px; color:#666; margin-top:5px; line-height:1.5;">Install F1 Pick'Em for the best fullscreen experience and offline access.</p>
-        <button id="btnInstall" class="install-btn">INSTALL NOW</button>
-        <button id="btnDismiss" class="install-dismiss">CONTINUE IN BROWSER</button>
+        <button id="btnInstall" class="install-btn" onclick="triggerInstall()">INSTALL NOW</button>
+        <button id="btnDismiss" class="install-dismiss" onclick="document.getElementById('installModal').classList.add('hidden')">CONTINUE IN BROWSER</button>
     </div>
 </div>
 
@@ -363,6 +385,7 @@
                 <button id="lockBtn" class="btn-action btn-lock" onclick="toggleUserLock()">🔒 LOCK CARD</button>
                 <button id="unlockBtn" class="btn-action btn-unlock" onclick="toggleUserLock()">🔓 UNLOCK CARD</button>
                 <button class="btn-action btn-change-strat" onclick="changeStrategy()">⚙ SETUP</button>
+                <button class="btn-action btn-install-manual" onclick="triggerInstall()">⬇ INSTALL APP</button>
             </div>
         </div>
         
@@ -412,6 +435,17 @@
 </div>
 
 <script>
+    async function triggerInstall() {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+                deferredPrompt = null;
+                document.getElementById('installModal').classList.add('hidden');
+            }
+        }
+    }
+
     class DataManager {
         constructor() { this.type = 'local'; }
         save(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
@@ -433,26 +467,6 @@
         chaos:    ['fia','fia','driver',   'fia','fia','fia',    'team','fia','driver'],
         driver:   ['driver','driver','team', 'driver','driver','driver', 'fia','driver','team']
     };
-
-    let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        document.getElementById('installModal').classList.remove('hidden');
-    });
-
-    document.getElementById('btnInstall').addEventListener('click', async () => {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            deferredPrompt = null;
-            document.getElementById('installModal').classList.add('hidden');
-        }
-    });
-
-    document.getElementById('btnDismiss').addEventListener('click', () => {
-        document.getElementById('installModal').classList.add('hidden');
-    });
 
     window.onload = () => {
         if(typeof BINGO_CONFIG === 'undefined') return alert("Error: bingo_data.js missing.");
