@@ -6,165 +6,104 @@
     <meta name="theme-color" content="#e10600">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
     <title>F1 2026: PICK 'EM</title>
-    
     <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
     <link rel="manifest" href="manifest.json">
-    
     <script src="bingo_data.js"></script>
 
     <style>
         :root {
             --brand-red: #e10600; --brand-dark: #15151e; --bg-body: #f8f9fa;
             --card-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            /* Category Colors */
-            --c-driver: #ff9500; 
-            --c-team: #00d2be; 
-            --c-fia: #e10600; 
-            --score-win: #39ff14; 
+            --c-driver: #ff9500; --c-team: #00d2be; --c-fia: #e10600; --score-win: #39ff14; 
         }
-
-        /* RESET & BASE */
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         body { font-family: 'Titillium Web', sans-serif; background: var(--bg-body); color: var(--brand-dark); margin: 0; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
         .hidden { display: none !important; }
 
-        /* --- HEADER SECTION --- */
-        header { 
-            background: white; border-bottom: 3px solid var(--brand-red); 
-            height: 60px; display: flex; align-items: center; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05); z-index: 20; flex-shrink: 0; 
-        }
+        /* HEADER */
+        header { background: white; border-bottom: 3px solid var(--brand-red); height: 60px; display: flex; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); z-index: 20; flex-shrink: 0; }
         .logo-area { padding: 0 15px; height: 100%; display: flex; align-items: center; border-right: 1px solid #eee; cursor: pointer; }
         .header-logo { max-height: 28px; width: auto; }
-        
-        .race-scroll-area { 
-            flex: 1; display: flex; flex-direction: row; align-items: center; 
-            overflow-x: auto; height: 100%; scrollbar-width: none; 
-            -webkit-overflow-scrolling: touch;
-        }
-        .race-card { 
-            flex: 0 0 65px; height: 100%; display: inline-flex; flex-direction: column; 
-            align-items: center; justify-content: center; border-right: 1px solid #f5f5f5; 
-            cursor: pointer; opacity: 0.5; transition: 0.2s; 
-        }
+        .race-scroll-area { flex: 1; display: flex; flex-direction: row; align-items: center; overflow-x: auto; height: 100%; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+        .race-card { flex: 0 0 65px; height: 100%; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; border-right: 1px solid #f5f5f5; cursor: pointer; opacity: 0.5; transition: 0.2s; }
         .race-card.active { opacity: 1; background: #fff; border-bottom: 4px solid var(--brand-red); }
         .race-flag-img { width: 24px; height: 16px; object-fit: cover; border-radius: 2px; margin-bottom: 4px; }
         .race-name { font-size: 10px; font-weight: 800; text-transform: uppercase; }
-
         .user-area { padding: 0 15px; font-weight: 800; font-size: 12px; border-left: 1px solid #eee; height: 100%; display: flex; align-items: center; background: #fff; z-index: 25; }
 
-        /* --- MAIN LAYOUT GRID --- */
+        /* LAYOUT */
         .main-stage { flex: 1; display: grid; grid-template-columns: 320px 1fr 300px; padding: 20px; gap: 20px; overflow: hidden; height: 100%; }
-        
         .panel { background: white; border-radius: 12px; box-shadow: var(--card-shadow); overflow: hidden; display: flex; flex-direction: column; border: 1px solid #e0e0e0; height: 100%; }
         .active-panel { background: white; border-radius: 12px; border: 1px solid #e0e0e0; padding: 0; display: flex; flex-direction: column; overflow: hidden; height: 100%; position: relative; }
 
-        /* --- MOBILE RESPONSIVE OVERRIDES --- */
         @media (max-width: 1024px) {
-            .main-stage { grid-template-columns: 1fr; padding: 10px; padding-bottom: 70px; /* Pad for bottom nav */ }
-            /* Hide Desktop Side Panels */
+            .main-stage { grid-template-columns: 1fr; padding: 10px; padding-bottom: 70px; }
             .panel { display: none; } 
-            /* Convert Market Panel to Full Screen Drawer */
             .panel.mobile-modal { display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; border-radius: 0; animation: slideUp 0.3s ease-out; }
             .mobile-close-btn { display: block !important; }
         }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-
         .mobile-close-btn { display: none; padding: 15px; background: #333; color: white; text-align: center; font-weight: 800; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* --- BOTTOM NAVIGATION (Mobile) --- */
+        /* NAV */
         .mobile-nav { display: none; position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background: white; border-top: 1px solid #ddd; z-index: 1000; justify-content: space-around; align-items: center; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
         .nav-item { flex: 1; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; color: #888; text-transform: uppercase; cursor: pointer; }
         .nav-item.active { color: var(--brand-red); background: #fff5f5; }
         .nav-icon { font-size: 20px; margin-bottom: 2px; }
         @media (max-width: 1024px) { .mobile-nav { display: flex; } }
 
-        /* --- GAME HEADER (Budget & Info) --- */
+        /* GAME HEADER */
         #raceHeader { padding: 15px; background: #fff; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; height: 70px; }
         .rh-left { display: flex; align-items: center; gap: 12px; }
         .rh-flag { width: 50px; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .rh-title { font-size: 22px; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 1; }
         .rh-date { font-size: 11px; color: #888; font-weight: 700; margin-top: 2px; }
-        
         .budget-hud { background: #f4f4f8; padding: 8px 15px; border-radius: 6px; border: 1px solid #ddd; border-left: 4px solid #22c55e; display: flex; flex-direction: column; align-items: flex-end; }
         .budget-hud-val { font-size: 16px; font-weight: 900; color: #22c55e; line-height: 1; }
         .budget-hud-bar-bg { width: 80px; height: 5px; background: #e0e0e0; margin-top: 4px; border-radius: 3px; }
         .budget-hud-bar-fill { height: 100%; background: #22c55e; width: 50%; border-radius: 3px; transition: 0.3s; }
 
-        /* --- THE GRID --- */
+        /* GRID */
         .grid-container { padding: 15px; flex: 1; overflow-y: auto; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .bingo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; max-width: 600px; aspect-ratio: 1/1; }
         
-        /* Empty Slot Styling */
-        .slot { 
-            background: #fafafa; border: 2px dashed #ddd; border-radius: 8px; 
-            display: flex; align-items: center; justify-content: center; 
-            font-size: 11px; font-weight: 800; position: relative; 
-            cursor: pointer; user-select: none; transition: 0.2s;
-            text-transform: uppercase; color: #aaa;
-        }
+        .slot { background: #fafafa; border: 2px dashed #ddd; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; position: relative; cursor: pointer; user-select: none; transition: 0.2s; text-transform: uppercase; color: #aaa; }
         .slot:active { transform: scale(0.98); background: #eee; }
         .slot[data-req="driver"] { background: #fff8e6; border-color: var(--c-driver); color: var(--c-driver); }
         .slot[data-req="team"] { background: #e0fbf8; border-color: var(--c-team); color: var(--c-team); }
         .slot[data-req="fia"] { background: #fff2f2; border-color: var(--c-fia); color: var(--c-fia); }
 
-        /* --- FILLED CARD STYLING (The "Complex" Look) --- */
-        .slot.filled { 
-            background: #f4f4f4 !important; border: 1px solid #d0d0d0 !important; 
-            color: #333 !important; padding: 0; overflow: hidden; 
-            display: flex; flex-direction: row; align-items: stretch; text-align: left;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-        }
-        /* Top-left colored triangle corner */
+        .slot.filled { background: #f4f4f4 !important; border: 1px solid #d0d0d0 !important; color: #333 !important; padding: 0; overflow: hidden; display: flex; flex-direction: row; align-items: stretch; text-align: left; box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
         .slot.filled::before { content: ''; position: absolute; top: 0; left: 0; width: 0; height: 0; border-style: solid; border-width: 20px 20px 0 0; z-index: 5; }
         .slot.filled[data-type="driver"]::before { border-color: var(--c-driver) transparent transparent transparent; }
         .slot.filled[data-type="team"]::before { border-color: var(--c-team) transparent transparent transparent; }
         .slot.filled[data-type="fia"]::before { border-color: var(--c-fia) transparent transparent transparent; }
 
         .remove-pick-btn { position: absolute; top: 0; right: 0; width: 24px; height: 24px; background: rgba(0,0,0,0.8); color: #fff; display: flex; align-items: center; justify-content: center; z-index: 10; border-bottom-left-radius: 6px; font-size: 14px; font-weight: bold; cursor: pointer; }
-
-        /* Left Side: Image on Color Background */
-        .slot-img-container { 
-            width: 40%; display: flex; flex-direction: column; align-items: center; justify-content: center; 
-            background-color: var(--team-color-hex); position: relative; 
-            border-right: 1px solid rgba(255,255,255,0.2);
-        }
+        .slot-img-container { width: 40%; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: var(--team-color-hex); position: relative; border-right: 1px solid rgba(255,255,255,0.2); }
         .slot-img { width: 85%; height: 85%; object-fit: contain; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.3)); z-index: 2; }
         .slot.filled[data-type="team"] .slot-img { width: 95%; height: auto; }
         .slot.filled[data-type="fia"] .slot-img { filter: brightness(0) invert(1); }
+        .slot-price-tag { background: rgba(0,0,0,0.7); color: white; font-size: 10px; font-weight: 900; padding: 2px 6px; border-radius: 4px; position: absolute; bottom: 5px; z-index: 3; }
         
-        /* Price Tag */
-        .slot-price-tag { 
-            background: rgba(0,0,0,0.7); color: white; font-size: 10px; font-weight: 900; 
-            padding: 2px 6px; border-radius: 4px; position: absolute; bottom: 5px; z-index: 3;
-        }
-
-        /* Right Side: Checkered Flag Pattern */
-        .slot-text-container { 
-            flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 5px 10px; 
-            background-color: #f9f9f9; 
-            /* The Checkered Pattern */
-            background-image: linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee), linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee); 
-            background-size: 16px 16px; background-position: 0 0, 8px 8px; 
-        }
+        .slot-text-container { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 5px 10px; background-color: #f9f9f9; background-image: linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee), linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee); background-size: 16px 16px; background-position: 0 0, 8px 8px; }
         .slot-sub { font-size: 9px; text-transform: uppercase; font-weight: 900; color: var(--cat-text-color); margin-bottom: 2px; letter-spacing: 0.5px; }
         .slot-main { font-size: 13px; font-weight: 800; line-height: 1.1; word-wrap: break-word; color: #111; }
-        
         @media (max-width: 400px) { .slot-main { font-size: 10px; } }
 
-        /* --- MARKET / LEFT PANEL --- */
+        .slot.matched { opacity: 1; box-shadow: inset 0 0 0 5px var(--score-win); transform: scale(1.02); z-index: 5; }
+        .slot.matched::after { content: '✓'; position: absolute; bottom: 5px; right: 5px; background: var(--score-win); color: black; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 18px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+
+        /* MARKET */
         .tab-header { display: flex; border-bottom: 1px solid #eee; background: #f9f9f9; flex-shrink: 0; height: 45px; }
         .tab-btn { flex: 1; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px; cursor: pointer; color: #888; border-bottom: 3px solid transparent; transition: 0.2s; }
         .tab-btn.active { background: white; color: #000; }
         #tabBtn-drivers.active { border-bottom-color: var(--c-driver); color: var(--c-driver); }
         #tabBtn-teams.active { border-bottom-color: var(--c-team); color: var(--c-team); }
         #tabBtn-fia.active { border-bottom-color: var(--c-fia); color: var(--c-fia); }
-
         .side-content { flex: 1; overflow-y: auto; background: #f4f4f8; display: none; }
         .side-content.active { display: block; }
-
         .driver-row { background: white; border-bottom: 1px solid #eee; margin-bottom: 0; }
         .driver-header { padding: 12px 15px; display: flex; align-items: center; gap: 12px; cursor: pointer; background: white; }
         .driver-header:hover { background: #f9f9f9; }
@@ -172,76 +111,60 @@
         .driver-info { display: flex; flex-direction: column; }
         .d-name { font-weight: 800; font-size: 13px; color: #333; }
         .d-team { font-size: 10px; color: #999; text-transform: uppercase; }
-
         .driver-content { display: none; padding: 10px; background: #fafafa; border-top: 1px solid #eee; }
         .driver-row.open .driver-content { display: block; }
         .driver-row.open .driver-header { background: #eee; }
-        
-        .chip { 
-            padding: 10px 12px; background: white; border: 1px solid #ddd; 
-            border-left-width: 5px; border-radius: 6px; margin-bottom: 8px; 
-            font-size: 11px; font-weight: 700; display: flex; justify-content: space-between; 
-            align-items: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.03);
-        }
+        .chip { padding: 10px 12px; background: white; border: 1px solid #ddd; border-left-width: 5px; border-radius: 6px; margin-bottom: 8px; font-size: 11px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.03); }
         .chip:active { transform: scale(0.98); background: #f0f0f0; }
         .chip.driver { border-left-color: var(--c-driver); }
         .chip.team { border-left-color: var(--c-team); }
         .chip.fia { border-left-color: var(--c-fia); }
         .chip-cost { background: #eee; padding: 3px 8px; border-radius: 12px; font-size: 10px; font-weight: 900; color: #555; }
 
-        /* --- LOGIN & SELECTION GRIDS --- */
+        /* LOGIN */
         .view-login { width: 100%; display: flex; flex-direction: column; align-items: center; padding: 25px; box-sizing: border-box; overflow-y: auto; height: 100%; }
         .login-input { padding: 15px; width: 100%; text-align: center; border: 2px solid #eee; border-radius: 10px; font-weight: bold; font-size: 18px; max-width: 400px; margin-bottom: 25px; background: #fff; }
-        
         .section-header { font-size: 11px; font-weight: 900; color: #999; text-transform: uppercase; margin: 15px 0 10px 0; width: 100%; max-width: 600px; border-bottom: 1px solid #eee; padding-bottom: 5px; letter-spacing: 1px; }
-        
         .selection-grid { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; max-width: 600px; margin-bottom: 20px; width: 100%; }
-        .selection-card { 
-            width: 90px; height: 90px; 
-            border: 2px solid #eee; border-radius: 10px; 
-            display: flex; flex-direction: column; align-items: center; justify-content: center; 
-            cursor: pointer; transition: 0.2s; background: white; 
-            position: relative;
-        }
+        .selection-card { width: 90px; height: 90px; border: 2px solid #eee; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; background: white; position: relative; }
         .selection-card.selected { border-width: 3px; background: #f0fdf4; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transform: scale(1.05); z-index: 2; }
         .selection-card.selected::after { content: '✓'; position: absolute; top: 5px; right: 5px; background: #22c55e; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; }
-        
         .selection-img { width: 60%; height: 50%; object-fit: contain; margin-bottom: 6px; pointer-events: none; }
         .selection-name { font-size: 9px; font-weight: 800; text-align: center; line-height: 1.1; pointer-events: none; padding: 0 4px; text-transform: uppercase; }
-        
         .login-btn { padding: 16px; width: 100%; max-width: 400px; margin-top: 20px; background: var(--brand-red); color: white; border: none; font-weight: 900; cursor: pointer; border-radius: 10px; font-size: 16px; box-shadow: 0 4px 10px rgba(225, 6, 0, 0.2); }
 
-        /* --- STRATEGY CARDS --- */
+        /* STRATEGY */
         .view-strategy { text-align: center; width: 100%; display: flex; flex-direction: column; align-items: center; height: 100%; padding: 20px; overflow-y: auto; }
         .strategy-header-container { margin-top: 20px; margin-bottom: 30px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
         .big-flag { width: 100px; height: auto; border-radius: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         .strategy-title { font-size: 32px; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 1; }
-
         .strat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-width: 500px; width: 100%; }
         .strat-card { background: #fff; border: 2px solid #eee; border-radius: 12px; padding: 20px; cursor: pointer; display: flex; flex-direction: column; align-items: center; transition: 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .strat-card:hover { border-color: var(--brand-red); transform: translateY(-3px); }
         .mini-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; width: 60px; height: 60px; margin-bottom: 10px; opacity: 0.8; }
         .mg-c { border-radius: 1px; }
 
-        /* --- MODAL --- */
+        /* MODAL */
         #customModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 5000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
         .modal-box { background: white; padding: 25px; border-radius: 15px; width: 85%; max-width: 320px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
         .btn-modal { padding: 12px 24px; border-radius: 8px; font-weight: 800; cursor: pointer; border: none; margin: 5px; font-size: 14px; }
         .btn-confirm { background: var(--brand-red); color: white; }
         .btn-cancel { background: #eee; color: #333; }
 
-        /* --- STANDINGS & RULES --- */
+        /* STANDINGS & RULES */
         .score-box { text-align: center; margin-bottom: 20px; padding: 25px; background: #fff; border-radius: 12px; border: 1px solid #eee; box-shadow: var(--card-shadow); }
         .score-val { font-size: 42px; font-weight: 900; color: var(--brand-dark); line-height: 1; }
         .score-lbl { font-size: 12px; font-weight: 700; color: #888; text-transform: uppercase; margin-top: 5px; letter-spacing: 1px; }
-        
         .rules-block { background: white; padding: 20px; border-radius: 12px; border: 1px solid #eee; margin-bottom: 15px; }
         .rules-title { font-weight: 900; font-size: 14px; margin-bottom: 10px; text-transform: uppercase; color: var(--brand-red); border-bottom: 2px solid #f5f5f5; padding-bottom: 8px; }
         .rules-text { font-size: 13px; line-height: 1.6; color: #555; margin: 0; }
         .rules-list { padding-left: 20px; margin: 5px 0; font-size: 13px; color: #555; }
         .rules-list li { margin-bottom: 8px; }
-
-        .strategy-footer { width: 100%; margin-top: 10px; padding-top: 15px; border-top: 1px solid #eee; display: flex; justify-content: center; }
+        
+        .actions-footer { padding: 15px; width: 100%; box-sizing: border-box; display: flex; gap: 10px; justify-content: space-between; align-items: center; }
+        .btn-action { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-weight: 900; font-size: 12px; text-transform: uppercase; cursor: pointer; transition: 0.2s; }
+        .btn-lock { background: #22c55e; color: white; border-color: #16a34a; display: none; } 
+        .btn-unlock { background: #e10600; color: white; border-color: #b91c1c; display: none; }
         .btn-change-strat { background: white; color: #888; border: 2px solid #eee; padding: 10px 25px; font-size: 11px; font-weight: 800; text-transform: uppercase; border-radius: 6px; cursor: pointer; transition: 0.2s; }
         .btn-change-strat:hover { border-color: #333; color: #333; }
 
@@ -251,8 +174,7 @@
 
 <script>
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js')
-      .then(() => console.log('Service Worker Registered'));
+    navigator.serviceWorker.register('sw.js').then(() => console.log('Service Worker Registered'));
   }
 </script>
 
@@ -291,13 +213,10 @@
         <div id="view-login" class="view-login">
             <h2 style="font-style:italic; font-size:24px; margin-bottom:20px;">TEAM PRINCIPAL LOGIN</h2>
             <input type="text" id="teamNameInput" class="login-input" placeholder="Enter Team Name">
-            
             <div class="section-header">Select Favorite Driver</div>
             <div id="favDriverGrid" class="selection-grid"></div>
-
             <div class="section-header">Select Favorite Team</div>
             <div id="favTeamGrid" class="selection-grid"></div>
-
             <button class="login-btn" onclick="login()">ENTER PADDOCK</button>
         </div>
 
@@ -307,7 +226,6 @@
                 <div id="stratRaceTitle" class="strategy-title">STRATEGY</div>
                 <div style="color:#888; font-size:12px; font-weight:700;">SELECT GRID FORMATION</div>
             </div>
-            
             <div class="strat-grid">
                 <div class="strat-card" onclick="confirmStrategy('balanced')">
                     <div class="mini-grid"><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-team)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-team)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-fia)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-fia)"></div><div class="mg-c" style="background:var(--c-team)"></div></div>
@@ -350,8 +268,8 @@
             
             <div style="padding:15px; border-top:1px solid #eee; text-align:center;">
                 <div class="actions-footer" style="margin-bottom:10px;">
-                    <button id="lockBtn" class="btn-action btn-lock" onclick="toggleUserLock()" style="background:#22c55e; color:white; border:none; display:none;">LOCK CARD</button>
-                    <button id="unlockBtn" class="btn-action btn-unlock" onclick="toggleUserLock()" style="background:#e10600; color:white; border:none; display:none;">UNLOCK CARD</button>
+                    <button id="lockBtn" class="btn-action btn-lock" onclick="toggleUserLock()">LOCK CARD</button>
+                    <button id="unlockBtn" class="btn-action btn-unlock" onclick="toggleUserLock()">UNLOCK CARD</button>
                 </div>
                 <button class="btn-change-strat" onclick="changeStrategy()">CHANGE GRID SETUP</button>
             </div>
@@ -361,7 +279,6 @@
             <div class="score-box">
                 <div class="score-val" id="scoreDisplay">0</div>
                 <div class="score-lbl">Total Points</div>
-                <div id="bonusDisplay" style="margin-top:15px;"></div>
             </div>
             <div style="text-align:center; color:#888; font-size:12px; margin-top:20px;">Leaderboard updating...</div>
         </div>
@@ -422,25 +339,13 @@
 </div>
 
 <script>
-    // --- DATABASE MOCKUP ---
-    // In production, replace 'local' with 'cloud' and implement fetch() calls
     class DataManager {
         constructor() { this.type = 'local'; }
-        
-        save(key, data) {
-            if(this.type === 'local') localStorage.setItem(key, JSON.stringify(data));
-        }
-        
-        load(key) {
-            if(this.type === 'local') {
-                const d = localStorage.getItem(key);
-                return d ? JSON.parse(d) : null;
-            }
-        }
+        save(key, data) { if(this.type === 'local') localStorage.setItem(key, JSON.stringify(data)); }
+        load(key) { if(this.type === 'local') { const d = localStorage.getItem(key); return d ? JSON.parse(d) : null; } }
     }
     const db = new DataManager();
 
-    // --- STATE ---
     let activeRace = 'aus';
     let currentGrid = Array(9).fill(null);
     let verifiedResults = [];
@@ -452,7 +357,6 @@
     let favDriver = null;
     let favTeam = null;
 
-    // --- TEMPLATES ---
     const templates = {
         balanced: ['driver','team','driver', 'team','driver','fia', 'driver','fia','team'],
         team:     ['team','team','driver', 'team','team','team', 'driver','team','fia'],
@@ -460,20 +364,16 @@
         driver:   ['driver','driver','team', 'driver','driver','driver', 'fia','driver','team']
     };
 
-    // --- INITIALIZATION ---
     window.onload = () => {
         if(typeof BINGO_CONFIG === 'undefined') return alert("Error: bingo_data.js missing.");
         
-        // Load Race
         const savedRace = localStorage.getItem('current_race_id');
         if(savedRace) activeRace = savedRace;
 
-        // Build UI Components
         buildLoginSelectionGrids();
         renderRaces();
         buildLists();
         
-        // Auto Login?
         const savedName = localStorage.getItem('f1_team_name');
         const savedGrid = db.load(`grid_${activeRace}`);
         
@@ -487,15 +387,12 @@
         updateBudgetUI();
     };
 
-    // --- NAVIGATION ---
     function switchMobileView(viewName, btn) {
         document.getElementById('view-game').classList.add('hidden');
         document.getElementById('view-standings').classList.add('hidden');
         document.getElementById('view-rules').classList.add('hidden');
         document.getElementById('view-strategy').classList.add('hidden');
-        
         document.getElementById(`view-${viewName}`).classList.remove('hidden');
-        
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         if(btn) btn.classList.add('active');
     }
@@ -503,14 +400,11 @@
     function showTab(tabName) {
         document.querySelectorAll('.side-content').forEach(el => el.classList.remove('active'));
         document.getElementById(`panel-${tabName}`).classList.add('active');
-        
         document.querySelectorAll('#marketPanel .tab-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(`tabBtn-${tabName}`).classList.add('active');
     }
 
-    // --- LOGIN LOGIC ---
     function buildLoginSelectionGrids() {
-        // Driver Grid
         const dGrid = document.getElementById('favDriverGrid');
         BINGO_CONFIG.drivers.filter(d=>d.team!=='FIA').sort((a,b)=>a.name.localeCompare(b.name)).forEach(d => {
             const card = document.createElement('div');
@@ -525,7 +419,6 @@
             dGrid.appendChild(card);
         });
 
-        // Team Grid
         const tGrid = document.getElementById('favTeamGrid');
         BINGO_CONFIG.constructors.filter(c=>c.type==='Team').sort((a,b)=>a.name.localeCompare(b.name)).forEach(t => {
             const card = document.createElement('div');
@@ -574,7 +467,6 @@
         updateActionButtons();
     }
 
-    // --- GAMEPLAY ---
     function confirmStrategy(type) {
         currentGrid = templates[type].map(t => null);
         renderGridStructure(templates[type]);
@@ -603,18 +495,19 @@
             slot.dataset.req = type; 
             slot.innerText = type === 'fia' ? "FIA" : type.toUpperCase();
             slot.onclick = () => handleSlotClick(i, type);
+            // Drop support for desktop drag
+            slot.ondragover = e => e.preventDefault();
+            slot.ondrop = e => handleDrop(e, i, type);
             grid.appendChild(slot);
         });
     }
 
-    // --- CORE RENDERING (Complex Card Logic) ---
     function renderGrid() {
         const slots = document.querySelectorAll('.slot');
         slots.forEach(s => {
             const idx = parseInt(s.dataset.index);
             const data = currentGrid[idx];
             if(data) {
-                // Find entity
                 let drv = BINGO_CONFIG.drivers.find(d => d.name === data.driver);
                 if(!drv) drv = BINGO_CONFIG.constructors.find(c => c.name === data.driver);
                 if(!drv && data.type === 'fia') drv = {name:'RC', color:'#333', img:'images/fia.png'};
@@ -622,9 +515,7 @@
                 const color = drv ? drv.color : '#333';
                 const img = drv ? drv.img : '';
                 
-                // Set CSS Variables for specific slot
                 s.style.setProperty('--team-color-hex', color);
-                
                 let catColor = '#ff9500';
                 if(data.type === 'team') catColor = '#00d2be';
                 if(data.type === 'fia') catColor = '#e10600';
@@ -632,9 +523,8 @@
 
                 s.className = `slot filled`;
                 s.dataset.type = data.type;
-                s.onclick = null; // Remove click to open market
+                s.onclick = null; 
 
-                // HTML Structure for the "Complex" Card
                 s.innerHTML = `
                     <div class="remove-pick-btn" onclick="removePick(${idx}); event.stopPropagation();">×</div>
                     <div class="slot-img-container">
@@ -655,7 +545,6 @@
                 s.removeAttribute('style');
                 delete s.dataset.type;
                 s.classList.remove('matched');
-                
                 const req = s.dataset.req;
                 s.innerText = req === 'fia' ? "FIA" : req.toUpperCase();
                 s.onclick = () => handleSlotClick(idx, req);
@@ -666,65 +555,80 @@
         updateActionButtons();
     }
 
-    // --- MARKET INTERACTIONS ---
     function handleSlotClick(idx, type) {
         if(currentGrid[idx] || isGridLocked || isUserLocked) return;
-        
-        // Open Modal/Panel
         const panel = document.getElementById('marketPanel');
-        if(window.innerWidth <= 1024) {
-            panel.classList.add('mobile-modal');
-        }
+        if(window.innerWidth <= 1024) panel.classList.add('mobile-modal');
         
-        // Switch Tab
         showTab(type === 'driver' ? 'drivers' : (type === 'team' ? 'teams' : 'fia'));
         
-        // Smart Expand Logic
         if(type === 'driver' && favDriver) expandRow(favDriver, 'drivers');
         if(type === 'team' && favTeam) expandRow(favTeam, 'teams');
         
-        // Set context
         panel.dataset.targetIndex = idx;
     }
 
-    function closeMobileMarket() {
-        document.getElementById('marketPanel').classList.remove('mobile-modal');
-    }
+    function closeMobileMarket() { document.getElementById('marketPanel').classList.remove('mobile-modal'); }
 
     function fillSlot(text, type, cost, driverName, subType) {
         const panel = document.getElementById('marketPanel');
         let targetIdx = parseInt(panel.dataset.targetIndex);
         
         if(isNaN(targetIdx)) {
-            // Click-to-fill fallback logic (find first empty slot)
+            // Find first available slot
             const slots = document.querySelectorAll('.slot');
             for(let i=0; i<slots.length; i++) {
-                if(currentGrid[i] === null && slots[i].dataset.req === type) {
-                    targetIdx = i;
-                    break;
-                }
+                if(currentGrid[i] === null && slots[i].dataset.req === type) { targetIdx = i; break; }
             }
             if(targetIdx === undefined || targetIdx === -1) return alert("No available slot for " + type);
         }
 
-        // Budget Check
         const currentSpent = calculateTotalCost();
         if(currentSpent + cost > BUDGET_CAP) return showModal("OVER BUDGET", "You cannot afford this pick.", false);
         
-        // Duplicate Check
-        if(driverName && subType && subType !== 'fia') {
+        // ** FIX: Duplicate Check ignores FIA **
+        if(driverName && subType && type !== 'fia') {
             const conflict = currentGrid.some(x => x && x.driver === driverName && x.subtype === subType);
             if(conflict) return showModal("RULE VIOLATION", "One pick per category per driver.", false);
         }
 
-        // Save
         currentGrid[targetIdx] = { text, type, driver: driverName, subtype: subType, cost };
         db.save(`grid_${activeRace}`, currentGrid);
         renderGrid();
         closeMobileMarket();
-        
-        // Reset target
         delete panel.dataset.targetIndex;
+    }
+
+    // Drag support for desktop
+    function handleDrop(e, index, reqType) {
+        e.preventDefault();
+        if(isGridLocked || isUserLocked) return;
+
+        const text = e.dataTransfer.getData('text');
+        const type = e.dataTransfer.getData('type');
+        const cost = parseInt(e.dataTransfer.getData('cost'));
+        const driverName = e.dataTransfer.getData('exclusive_driver');
+        const subType = e.dataTransfer.getData('subtype'); 
+
+        if(type !== reqType) return; 
+
+        const currentSpent = calculateTotalCost();
+        const oldItem = currentGrid[index];
+        const oldCost = oldItem ? oldItem.cost : 0;
+        
+        if ((currentSpent - oldCost + cost) > BUDGET_CAP) return showModal("OVER BUDGET", "", false);
+
+        // ** FIX: Duplicate Check ignores FIA **
+        if (driverName && subType && type !== 'fia') {
+            const hasConflict = currentGrid.some((item, i) => 
+                i !== index && item && item.driver === driverName && item.subtype === subType
+            );
+            if (hasConflict) return showModal("Rule Violation", "One pick per category per driver.", false);
+        }
+        
+        currentGrid[index] = { text, type, driver: driverName, subtype: subType, cost: cost };
+        renderGrid();
+        db.save(`grid_${activeRace}`, currentGrid);
     }
 
     function removePick(idx) {
@@ -734,17 +638,11 @@
         renderGrid();
     }
 
-    // --- MARKET BUILDERS ---
     function buildLists() {
-        // Drivers
         const dList = document.getElementById('driverList');
         BINGO_CONFIG.drivers.filter(d=>d.team!=='FIA').forEach(d => {
             const row = createRow(d, 'driver');
-            const opts = [
-                ...BINGO_CONFIG.templates.quali.map(t=>({...t, s:'QUALI'})),
-                ...BINGO_CONFIG.templates.race.map(t=>({...t, s:'RACE'})),
-                ...BINGO_CONFIG.templates.bonus.map(t=>({...t, s:'BONUS'}))
-            ];
+            const opts = [...BINGO_CONFIG.templates.quali.map(t=>({...t, s:'QUALI'})), ...BINGO_CONFIG.templates.race.map(t=>({...t, s:'RACE'})), ...BINGO_CONFIG.templates.bonus.map(t=>({...t, s:'BONUS'}))];
             opts.forEach(o => {
                 const cost = getCost(d, o);
                 row.querySelector('.driver-content').appendChild(createChip(d.name + ' ' + o.t, cost, 'driver', d.name, o.s));
@@ -752,7 +650,6 @@
             dList.appendChild(row);
         });
 
-        // Teams
         const tList = document.getElementById('teamList');
         BINGO_CONFIG.constructors.filter(t=>t.type==='Team').forEach(t => {
             const row = createRow(t, 'team');
@@ -763,10 +660,9 @@
             tList.appendChild(row);
         });
 
-        // FIA
         const fList = document.getElementById('fiaList');
         const fRow = createRow({name:'Race Control', team:'FIA', color:'#333', img:'images/fia.png'}, 'fia');
-        fRow.classList.add('open'); // Always open
+        fRow.classList.add('open');
         BINGO_CONFIG.templates.fia.forEach(o => {
             fRow.querySelector('.driver-content').appendChild(createChip(o.t, o.c, 'fia', 'Race Control', 'FIA'));
         });
@@ -780,10 +676,7 @@
         div.innerHTML = `
             <div class="driver-header" onclick="this.parentElement.classList.toggle('open')" style="--team-color:${entity.color}">
                 <img src="${entity.img}" class="driver-face" onerror="this.style.display='none'">
-                <div class="driver-info">
-                    <div class="d-name">${entity.name}</div>
-                    <div class="d-team">${entity.team || 'CONSTRUCTOR'}</div>
-                </div>
+                <div class="driver-info"><div class="d-name">${entity.name}</div><div class="d-team">${entity.team || 'CONSTRUCTOR'}</div></div>
             </div>
             <div class="driver-content"></div>
         `;
@@ -793,10 +686,17 @@
     function createChip(text, cost, type, dName, sub) {
         const el = document.createElement('div');
         el.className = `chip ${type}`;
-        // Clean text for display (Remove driver name if redundant)
-        const dispText = text.replace(dName, '').trim() || text;
-        el.innerHTML = `<span>${dispText}</span> <span class="chip-cost">$${cost}M</span>`;
+        el.draggable = true;
+        el.innerHTML = `<span>${text.replace(dName, '').trim() || text}</span> <span class="chip-cost">$${cost}M</span>`;
         el.onclick = () => fillSlot(text, type, cost, dName, sub);
+        el.ondragstart = e => {
+            if(isGridLocked || isUserLocked) { e.preventDefault(); return; }
+            e.dataTransfer.setData('text', text);
+            e.dataTransfer.setData('type', type);
+            e.dataTransfer.setData('cost', cost);
+            if(dName) e.dataTransfer.setData('exclusive_driver', dName);
+            if(sub) e.dataTransfer.setData('subtype', sub);
+        };
         return el;
     }
 
@@ -805,25 +705,19 @@
         const rows = list.querySelectorAll('.driver-row');
         rows.forEach(r => {
             r.classList.remove('open');
-            if(r.dataset.name === name) {
-                r.classList.add('open');
-                setTimeout(() => r.scrollIntoView({behavior:'smooth', block:'start'}), 100);
-            }
+            if(r.dataset.name === name) { r.classList.add('open'); setTimeout(() => r.scrollIntoView({behavior:'smooth', block:'start'}), 100); }
         });
     }
 
     function getCost(entity, template) {
         let cost = (entity.price || 0) + template.c;
-        if(entity.tier === 1 && (template.t.includes('Points') || template.t.includes('Podium'))) cost += 20; // Tax
+        if(entity.tier === 1 && (template.t.includes('Points') || template.t.includes('Podium'))) cost += 20; 
         if(entity.tier === 3 && template.t.includes('11th')) cost += 10;
         return cost;
     }
 
-    function calculateTotalCost() {
-        return currentGrid.reduce((sum, item) => sum + (item ? item.cost : 0), 0);
-    }
+    function calculateTotalCost() { return currentGrid.reduce((sum, item) => sum + (item ? item.cost : 0), 0); }
 
-    // --- UI UTILS ---
     function renderRaces() {
         const bar = document.getElementById('raceBar');
         bar.innerHTML = '';
@@ -847,10 +741,7 @@
     function checkLockStatus() {
         const r = BINGO_CONFIG.races.find(x => x.id === activeRace);
         if(!r.lockTime) return;
-        
-        const diff = new Date(r.lockTime) - new Date();
-        if(diff <= 0) isGridLocked = true;
-        
+        if(new Date(r.lockTime) - new Date() <= 0) isGridLocked = true;
         updateActionButtons();
     }
 
@@ -858,7 +749,6 @@
         const lock = document.getElementById('lockBtn');
         const unlock = document.getElementById('unlockBtn');
         const isFull = currentGrid.every(x => x !== null);
-
         if(isGridLocked) {
             lock.style.display = 'none'; unlock.style.display = 'none';
             document.getElementById('grid').classList.add('grid-locked');
@@ -868,8 +758,7 @@
         } else {
             document.getElementById('grid').classList.remove('grid-locked');
             unlock.style.display = 'none';
-            if(isFull) lock.style.display = 'inline-block';
-            else lock.style.display = 'none';
+            lock.style.display = isFull ? 'inline-block' : 'none';
         }
     }
 
@@ -889,14 +778,11 @@
     function updateBudgetUI() {
         const spent = calculateTotalCost();
         const rem = BUDGET_CAP - spent;
-        const hudVal = document.getElementById('hudBudgetVal');
-        const hudBar = document.getElementById('hudBudgetBar');
-        
-        hudVal.innerText = `$${rem}M`;
-        hudBar.style.width = `${(rem/BUDGET_CAP)*100}%`;
-        
-        if(rem < 0) { hudVal.style.color = 'red'; hudBar.style.backgroundColor = 'red'; }
-        else { hudVal.style.color = '#22c55e'; hudBar.style.backgroundColor = '#22c55e'; }
+        document.getElementById('hudBudgetVal').innerText = `$${rem}M`;
+        document.getElementById('hudBudgetBar').style.width = `${(rem/BUDGET_CAP)*100}%`;
+        const col = rem < 0 ? '#e10600' : '#22c55e';
+        document.getElementById('hudBudgetVal').style.color = col;
+        document.getElementById('hudBudgetBar').style.backgroundColor = col;
     }
 
     function showModal(title, text, isConfirm, callback) {
@@ -904,13 +790,9 @@
         document.getElementById('modalText').innerText = text;
         const acts = document.getElementById('modalActions');
         acts.innerHTML = '';
-        
         if(isConfirm) {
             modalCallback = callback;
-            acts.innerHTML = `
-                <button class="btn-modal btn-cancel" onclick="closeModal()">CANCEL</button>
-                <button class="btn-modal btn-confirm" onclick="execCallback()">CONFIRM</button>
-            `;
+            acts.innerHTML = `<button class="btn-modal btn-cancel" onclick="closeModal()">CANCEL</button><button class="btn-modal btn-confirm" onclick="execCallback()">CONFIRM</button>`;
         } else {
             acts.innerHTML = `<button class="btn-modal btn-confirm" onclick="closeModal()">OK</button>`;
         }
