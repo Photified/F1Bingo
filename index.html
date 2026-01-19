@@ -18,7 +18,8 @@
             --c-driver: #ff9500; --c-team: #00d2be; --c-fia: #e10600; 
         }
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-        body { font-family: 'Titillium Web', sans-serif; background: var(--bg-body); color: var(--brand-dark); margin: 0; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        /* Use 100dvh for mobile browsers to account for URL bars */
+        body { font-family: 'Titillium Web', sans-serif; background: var(--bg-body); color: var(--brand-dark); margin: 0; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
         .hidden { display: none !important; }
 
         /* HEADER */
@@ -37,7 +38,10 @@
         .panel { background: white; border-radius: 12px; box-shadow: var(--card-shadow); overflow: hidden; display: flex; flex-direction: column; border: 1px solid #e0e0e0; height: 100%; }
         .active-panel { background: white; border-radius: 12px; border: 1px solid #e0e0e0; padding: 0; display: flex; flex-direction: column; overflow: hidden; height: 100%; position: relative; }
 
-        .view-login, .view-strategy, .view-game, .view-standings, .view-rules { padding-bottom: 120px !important; }
+        .view-login, .view-strategy, .view-standings, .view-rules { padding-bottom: 120px !important; }
+        
+        /* Game view needs special handling for full height grid */
+        #view-game { padding-bottom: 70px !important; } 
 
         @media (max-width: 1024px) {
             .main-stage { grid-template-columns: 1fr; padding: 10px; padding-bottom: 0; }
@@ -66,24 +70,34 @@
         .budget-hud-bar-bg { width: 80px; height: 5px; background: #e0e0e0; margin-top: 4px; border-radius: 3px; }
         .budget-hud-bar-fill { height: 100%; background: #22c55e; width: 50%; border-radius: 3px; transition: 0.3s; }
 
-        /* GRID - ADJUSTED FOR SCREEN WIDTH */
-        .grid-container { padding: 10px; flex: 1; overflow-y: auto; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        /* GRID - AUTO FIT VIEWPORT */
+        .grid-container { 
+            flex: 1; 
+            padding: 10px; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            overflow: hidden; /* Prevent scroll */
+        }
         .bingo-grid { 
             display: grid; 
             grid-template-columns: repeat(3, 1fr); 
-            gap: 8px; /* Slightly tighter gap */
+            grid-template-rows: repeat(3, 1fr); /* Force 3 equal rows to fill height */
+            gap: 8px; 
             width: 100%; 
+            height: 100%;
             max-width: 600px; 
+            margin: 0 auto;
         }
         
         /* Empty Slot */
         .slot { 
-            aspect-ratio: 3/4; 
             background: #fafafa; border: 2px dashed #ddd; border-radius: 8px; 
             display: flex; align-items: center; justify-content: center; 
             font-size: 10px; font-weight: 800; position: relative; 
             cursor: pointer; user-select: none; transition: 0.2s; 
             text-transform: uppercase; color: #aaa;
+            height: 100%; width: 100%;
         }
         .slot:active { transform: scale(0.98); background: #eee; }
         .slot[data-req="driver"] { background: #fff8e6; border-color: var(--c-driver); color: var(--c-driver); }
@@ -92,7 +106,6 @@
 
         /* Filled Slot */
         .slot.filled { 
-            aspect-ratio: 3/4;
             background: white !important; border: 1px solid #ddd !important; 
             padding: 0; overflow: hidden; display: flex; flex-direction: column; 
             text-align: left; box-shadow: 0 4px 10px rgba(0,0,0,0.08); border-radius: 8px;
@@ -103,25 +116,36 @@
         .slot.filled[data-type="fia"]::before { border-color: var(--c-fia) transparent transparent transparent; }
 
         .slot-img-container { 
-            width: 100%; height: 62%; /* Adjusted height */
+            width: 100%; height: 60%; /* Top 60% */
             display: flex; align-items: flex-end; justify-content: center; 
             background-color: var(--team-color-hex); position: relative; overflow: hidden; 
         }
         
+        /* IMAGE SCALING LOGIC */
         .slot-img { z-index: 2; transition: 0.2s; }
-        .slot.filled[data-type="driver"] .slot-img { width: 100%; height: 100%; object-fit: cover; object-position: top center; margin-bottom: 0; }
-        .slot.filled[data-type="team"] .slot-img { width: 90%; height: auto; object-fit: contain; margin-bottom: 15px; }
+        
+        /* Drivers: Zoom In & Lower slightly to catch shoulders/face */
+        .slot.filled[data-type="driver"] .slot-img { 
+            width: 100%; height: 100%; 
+            object-fit: cover; object-position: 50% 20%; 
+            transform: scale(1.35) translateY(5%); 
+            transform-origin: top center;
+        }
+        
+        /* Teams: Full width car */
+        .slot.filled[data-type="team"] .slot-img { width: 95%; height: auto; object-fit: contain; margin-bottom: 20px; }
+        
+        /* FIA: Smaller inverted logo */
         .slot.filled[data-type="fia"] .slot-img { width: 50%; height: auto; margin-bottom: 20px; filter: brightness(0) invert(1); opacity: 0.8; }
 
         .slot-price-tag { background: rgba(0,0,0,0.8); color: white; font-size: 9px; font-weight: 900; padding: 2px 6px; border-radius: 12px; position: absolute; bottom: 4px; right: 4px; z-index: 10; border: 1px solid rgba(255,255,255,0.2); }
 
         .slot-text-container { 
-            width: 100%; height: 38%; 
+            width: 100%; height: 40%; /* Bottom 40% */
             display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
             padding: 2px 4px; background: white; border-top: 1px solid rgba(0,0,0,0.05);
         }
         .slot-sub { font-size: 7px; text-transform: uppercase; font-weight: 900; color: var(--cat-text-color); margin-bottom: 2px; letter-spacing: 0.5px; opacity: 0.7; }
-        /* Dynamic text sizing for main label */
         .slot-main { font-size: 10px; font-weight: 900; line-height: 1.1; color: #222; text-transform: uppercase; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         @media (min-width: 380px) { .slot-main { font-size: 11px; } }
 
@@ -155,8 +179,7 @@
         
         .prediction-btn { background: white; border-radius: 8px; overflow: hidden; display: flex; height: 55px; margin-bottom: 10px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid #ddd; transition: 0.2s; }
         .prediction-btn:active { transform: scale(0.98); }
-        .prediction-btn.unaffordable { opacity: 0.6; filter: grayscale(0.8); pointer-events: none; } /* Grey out */
-        
+        .prediction-btn.unaffordable { opacity: 0.6; filter: grayscale(0.8); pointer-events: none; }
         .pb-left { width: 55px; background: var(--team-color); display: flex; align-items: center; justify-content: center; }
         .pb-img { width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2)); }
         .prediction-btn.team-mode .pb-left { width: 140px; } 
@@ -164,9 +187,8 @@
         .pb-left.fia-bg .pb-img { filter: brightness(0) invert(1); } 
         .pb-right { flex: 1; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; background: linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff), linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff); background-size: 10px 10px; background-color: #fafafa; }
         .pb-text { font-size: 12px; font-weight: 800; color: #333; text-transform: uppercase; }
-        
         .pb-cost { background: #333; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 900; }
-        .prediction-btn.unaffordable .pb-cost { background: #ef4444; color: white; } /* Red Price if expensive */
+        .prediction-btn.unaffordable .pb-cost { background: #ef4444; color: white; } 
 
         /* LOGIN */
         .view-login { width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 25px; box-sizing: border-box; overflow-y: auto; height: 100%; }
@@ -185,7 +207,7 @@
         .mini-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; width: 60px; height: 60px; margin-bottom: 10px; opacity: 0.8; } .mg-c { border-radius: 1px; }
         
         /* FOOTER ACTIONS */
-        .actions-footer { padding: 15px; display: flex; gap: 10px; align-items: center; justify-content: center; width: 100%; }
+        .actions-footer { padding: 15px; display: flex; gap: 10px; align-items: center; justify-content: center; width: 100%; flex-shrink: 0; border-top: 1px solid #eee; }
         .btn-action { flex: 1; padding: 14px; border-radius: 8px; font-weight: 900; font-size: 12px; text-transform: uppercase; cursor: pointer; border: none; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: 0.2s; }
         .btn-lock { background: #22c55e; color: white; border: 1px solid #16a34a; }
         .btn-unlock { background: #ef4444; color: white; border: 1px solid #b91c1c; }
@@ -263,6 +285,12 @@
         <div id="view-login" class="view-login">
             <h2 style="font-style:italic; font-size:24px; margin-bottom:20px;">TEAM PRINCIPAL LOGIN</h2>
             <input type="text" id="teamNameInput" class="login-input" placeholder="Enter Team Name">
+            <div class="section-header">Select Favorite Driver</div>
+            <div id="favDriverGrid" class="selection-slider"></div>
+            <div class="scroll-hint"></div>
+            <div class="section-header">Select Favorite Team</div>
+            <div id="favTeamGrid" class="selection-slider"></div>
+            <div class="scroll-hint"></div>
             <button class="login-btn" onclick="login()">ENTER PADDOCK</button>
         </div>
 
@@ -287,12 +315,10 @@
                 <div class="budget-hud"><span style="font-size:9px; font-weight:800; color:#888;">CAP SPACE</span><div class="budget-hud-val" id="hudBudgetVal">$100M</div><div class="budget-hud-bar-bg"><div class="budget-hud-bar-fill" id="hudBudgetBar"></div></div></div>
             </div>
             <div class="grid-container"><div id="grid" class="bingo-grid"></div></div>
-            <div style="padding:15px; border-top:1px solid #eee; text-align:center;">
-                <div class="actions-footer">
-                    <button id="lockBtn" class="btn-action btn-lock" onclick="toggleUserLock()">🔒 LOCK CARD</button>
-                    <button id="unlockBtn" class="btn-action btn-unlock" onclick="toggleUserLock()">🔓 UNLOCK CARD</button>
-                    <button class="btn-action btn-change-strat" onclick="changeStrategy()">⚙ SETUP</button>
-                </div>
+            <div class="actions-footer">
+                <button id="lockBtn" class="btn-action btn-lock" onclick="toggleUserLock()">🔒 LOCK CARD</button>
+                <button id="unlockBtn" class="btn-action btn-unlock" onclick="toggleUserLock()">🔓 UNLOCK CARD</button>
+                <button class="btn-action btn-change-strat" onclick="changeStrategy()">⚙ SETUP</button>
             </div>
         </div>
         
@@ -312,6 +338,7 @@
                     <div class="step-content">
                         <div class="step-title">Fill The Grid</div>
                         <div class="step-desc">Tap a slot to open the market and pick a prediction.</div>
+                        <div class="chip-example"><div class="ce-text">Driver Name • Pole Position</div></div>
                     </div>
                 </div>
                 <div class="rule-step">
@@ -355,6 +382,7 @@
     let isGridLocked = false;
     let isUserLocked = false;
     const BUDGET_CAP = 100;
+    let favDriver = null, favTeam = null;
     let activeMarketTab = 'drivers';
 
     const templates = {
@@ -369,6 +397,7 @@
         const savedRace = localStorage.getItem('current_race_id');
         if(savedRace) activeRace = savedRace;
 
+        buildLoginSelectionGrids();
         renderRaces();
         buildMarketGrids(); 
         
@@ -400,6 +429,44 @@
         document.getElementById('market-detail').classList.remove('active');
 
         document.getElementById(`${tab}-root`).style.display = (tab === 'fia') ? 'block' : (tab === 'teams' ? 'flex' : 'grid');
+    }
+
+    function buildLoginSelectionGrids() {
+        const dGrid = document.getElementById('favDriverGrid');
+        // Sort by Tier (ascending) to show top drivers first
+        const sortedDrivers = BINGO_CONFIG.drivers.filter(d=>d.team!=='FIA').sort((a,b) => a.tier - b.tier);
+        sortedDrivers.forEach(d => {
+            const c = createSelectionCard(d, 'driver');
+            dGrid.appendChild(c);
+        });
+
+        const tGrid = document.getElementById('favTeamGrid');
+        // Sort by Tier
+        const sortedTeams = BINGO_CONFIG.constructors.filter(c=>c.type==='Team').sort((a,b) => a.tier - b.tier);
+        sortedTeams.forEach(t => {
+            const c = createSelectionCard(t, 'team');
+            tGrid.appendChild(c);
+        });
+    }
+
+    function createSelectionCard(entity, type) {
+        const div = document.createElement('div');
+        div.className = 'selection-card';
+        // Remove border logic, add top color bar
+        div.style.setProperty('--team-color', entity.color);
+        div.onclick = () => {
+            const p = div.parentElement;
+            p.querySelectorAll('.selection-card').forEach(c=>c.classList.remove('selected'));
+            div.classList.add('selected');
+            if(type==='driver') favDriver = entity.name;
+            else favTeam = entity.name;
+        };
+        div.innerHTML = `
+            <div class="selection-card-color"></div>
+            <img src="${entity.img}" class="selection-img">
+            <div class="selection-name">${entity.name}</div>
+        `;
+        return div;
     }
 
     function login(auto) {
