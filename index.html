@@ -2,324 +2,294 @@
 <html lang="en" translate="no">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="google" content="notranslate">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#e10600">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
     <title>F1 2026: PICK 'EM</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+    
     <script src="bingo_data.js"></script>
 
     <style>
         :root {
             --brand-red: #e10600; --brand-dark: #15151e; --bg-body: #f8f9fa;
             --card-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            /* Colors */
+            /* Category Colors */
             --c-driver: #ff9500; 
             --c-team: #00d2be; 
             --c-fia: #e10600; 
             --score-win: #39ff14; 
         }
+
+        /* RESET & BASE */
+        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         body { font-family: 'Titillium Web', sans-serif; background: var(--bg-body); color: var(--brand-dark); margin: 0; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
         .hidden { display: none !important; }
 
-        /* HEADER */
+        /* --- HEADER SECTION --- */
         header { 
             background: white; border-bottom: 3px solid var(--brand-red); 
-            height: 70px; box-sizing: border-box; 
-            display: flex; align-items: center; 
-            padding: 0; 
+            height: 60px; display: flex; align-items: center; 
             box-shadow: 0 4px 10px rgba(0,0,0,0.05); z-index: 20; flex-shrink: 0; 
         }
-        .logo-area { 
-            flex-shrink: 0; padding: 0 20px; 
-            height: 100%; display: flex; align-items: center;
-            border-right: 1px solid #eee; cursor: pointer;
-        }
-        .header-logo { max-height: 35px; width: auto; display: block; object-fit: contain; }
-
+        .logo-area { padding: 0 15px; height: 100%; display: flex; align-items: center; border-right: 1px solid #eee; cursor: pointer; }
+        .header-logo { max-height: 28px; width: auto; }
+        
         .race-scroll-area { 
-            flex: 1; display: flex; flex-direction: row; 
-            align-items: center; overflow-x: auto; height: 100%;
-            scrollbar-width: none; white-space: nowrap; 
+            flex: 1; display: flex; flex-direction: row; align-items: center; 
+            overflow-x: auto; height: 100%; scrollbar-width: none; 
+            -webkit-overflow-scrolling: touch;
         }
-        .race-scroll-area::-webkit-scrollbar { display: none; }
-
         .race-card { 
-            flex: 0 0 70px; height: 100%; 
-            display: inline-flex; flex-direction: column; align-items: center; justify-content: center;
-            border-right: 1px solid #f5f5f5; cursor: pointer; opacity: 0.5; transition: 0.2s; 
+            flex: 0 0 65px; height: 100%; display: inline-flex; flex-direction: column; 
+            align-items: center; justify-content: center; border-right: 1px solid #f5f5f5; 
+            cursor: pointer; opacity: 0.5; transition: 0.2s; 
         }
-        .race-card:hover { opacity: 1; background: #f9f9f9; }
         .race-card.active { opacity: 1; background: #fff; border-bottom: 4px solid var(--brand-red); }
-        .race-flag-img { width: 30px; height: 20px; object-fit: cover; border-radius: 2px; margin-bottom: 4px; }
-        .race-name { font-size: 10px; font-weight: 800; text-transform: uppercase; line-height: 1; }
+        .race-flag-img { width: 24px; height: 16px; object-fit: cover; border-radius: 2px; margin-bottom: 4px; }
+        .race-name { font-size: 10px; font-weight: 800; text-transform: uppercase; }
 
-        .user-area { 
-            padding: 0 25px; font-weight: 800; font-size: 13px; 
-            border-left: 1px solid #eee; height: 100%; 
-            display: flex; align-items: center; flex-shrink: 0; 
-            background: #fff; z-index: 25;
-        }
+        .user-area { padding: 0 15px; font-weight: 800; font-size: 12px; border-left: 1px solid #eee; height: 100%; display: flex; align-items: center; background: #fff; z-index: 25; }
 
-        /* MAIN LAYOUT */
-        .main-stage { flex: 1; display: grid; grid-template-columns: 360px 1fr 300px; padding: 20px; gap: 20px; overflow: hidden; height: 100%; }
+        /* --- MAIN LAYOUT GRID --- */
+        .main-stage { flex: 1; display: grid; grid-template-columns: 320px 1fr 300px; padding: 20px; gap: 20px; overflow: hidden; height: 100%; }
+        
         .panel { background: white; border-radius: 12px; box-shadow: var(--card-shadow); overflow: hidden; display: flex; flex-direction: column; border: 1px solid #e0e0e0; height: 100%; }
-        
-        /* TABS (Color Coded) */
-        .tab-header { display: flex; border-bottom: 1px solid #eee; background: #f9f9f9; flex-shrink: 0; height: 42px; }
-        .tab-btn { flex: 1; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px; cursor: pointer; color: #888; border-bottom: 3px solid transparent; transition: 0.2s; letter-spacing: 0.5px; }
-        .tab-btn:hover { background: #f0f0f0; }
-        
-        /* Active States for Tabs */
-        #tabBtn-drivers.active { color: var(--c-driver); border-bottom-color: var(--c-driver); background: white; }
-        #tabBtn-teams.active { color: var(--c-team); border-bottom-color: var(--c-team); background: white; }
-        #tabBtn-fia.active { color: var(--c-fia); border-bottom-color: var(--c-fia); background: white; }
-
-        .side-content { flex: 1; overflow-y: auto; padding: 10px; background: #f4f4f8; display: none; }
-        .side-content.active { display: block; }
-
-        /* LIST ITEMS */
-        .driver-row { background: white; border-radius: 8px; margin-bottom: 8px; border: 1px solid #eee; overflow: hidden; transition: 0.2s; }
-        .driver-header { padding: 10px 12px; display: flex; align-items: center; gap: 12px; cursor: pointer; background: linear-gradient(90deg, transparent 95%, #fafafa); }
-        .driver-header:hover { background: #f5f5f5; }
-        
-        .driver-face { width: 36px; height: 36px; object-fit: cover; border-radius: 6px; background: #eee; border: 2px solid var(--team-color); padding: 2px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); flex-shrink: 0; }
-        .driver-face[src=""] { display: none; } 
-        
-        .driver-face.car-face { width: 100px; height: 36px; object-fit: contain; border-radius: 4px; background: white; }
-
-        .driver-name { font-weight: 800; font-size: 14px; color: #333; }
-        .driver-team { font-size: 10px; color: #888; text-transform: uppercase; margin-top:2px; }
-
-        .driver-content { display: none; padding: 5px 10px 10px 10px; background: #fff; border-top: 1px solid #eee; flex-direction: column; gap: 5px;}
-        .driver-row.open .driver-content { display: flex; }
-        .driver-row.open .driver-header { background: #eee; border-bottom: 1px solid #ddd; }
-
-        .menu-label { font-size: 10px; font-weight: 900; color: #999; text-transform: uppercase; margin: 12px 0 6px 4px; letter-spacing: 0.5px; border-bottom: 1px solid #eee; padding-bottom: 2px; }
-
-        .qp-red-btn { background: var(--brand-red); color: white; font-family: 'Titillium Web', sans-serif; font-weight: 800; font-size: 12px; text-transform: uppercase; text-align: center; padding: 12px; width: 100%; border: none; border-radius: 4px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: 0.2s; margin-bottom: 5px; box-sizing: border-box; }
-        .qp-red-btn:hover { background: #b00; transform: translateY(-1px); }
-
-        /* CHIPS */
-        .chip { padding: 8px 10px; background: white; border: 1px solid #ddd; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: pointer; text-align: left; border-left-width: 5px; border-left-style: solid; transition: 0.1s; display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-        .chip:hover { transform: translateX(3px); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .chip.driver { border-left-color: var(--c-driver); }
-        .chip.team { border-left-color: var(--c-team); }
-        .chip.fia { border-left-color: var(--c-fia); }
-        .chip-cost { background: #eee; padding: 2px 6px; border-radius: 10px; font-size: 10px; font-weight: 900; color: #555; }
-
-        /* CENTER GRID */
         .active-panel { background: white; border-radius: 12px; border: 1px solid #e0e0e0; padding: 0; display: flex; flex-direction: column; overflow: hidden; height: 100%; position: relative; }
-        
-        #raceHeader { padding: 15px 25px; background: #fff; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; height: 90px; box-sizing: border-box; }
-        .rh-left { display: flex; align-items: center; gap: 15px; }
-        .rh-flag { width: 70px; height: auto; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .rh-info { display: flex; flex-direction: column; }
-        .rh-title { font-size: 24px; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 1; }
-        .rh-date { font-size: 12px; color: #888; font-weight: 700; margin-top: 4px; }
-        .rh-right { display: flex; align-items: center; gap: 20px; }
 
-        .budget-hud { background: #f4f4f8; color: #333; padding: 8px 15px; border-radius: 8px; display: flex; flex-direction: column; align-items: flex-end; box-shadow: 0 2px 6px rgba(0,0,0,0.05); border: 1px solid #ddd; border-left: 4px solid #22c55e; }
-        .budget-hud-label { font-size: 9px; font-weight: 800; color: #888; letter-spacing: 1px; }
-        .budget-hud-val { font-size: 16px; font-weight: 900; color: #22c55e; }
-        .budget-hud-bar-bg { width: 100px; height: 5px; background: #e0e0e0; margin-top: 4px; border-radius: 3px; }
+        /* --- MOBILE RESPONSIVE OVERRIDES --- */
+        @media (max-width: 1024px) {
+            .main-stage { grid-template-columns: 1fr; padding: 10px; padding-bottom: 70px; /* Pad for bottom nav */ }
+            /* Hide Desktop Side Panels */
+            .panel { display: none; } 
+            /* Convert Market Panel to Full Screen Drawer */
+            .panel.mobile-modal { display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; border-radius: 0; animation: slideUp 0.3s ease-out; }
+            .mobile-close-btn { display: block !important; }
+        }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+        .mobile-close-btn { display: none; padding: 15px; background: #333; color: white; text-align: center; font-weight: 800; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* --- BOTTOM NAVIGATION (Mobile) --- */
+        .mobile-nav { display: none; position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background: white; border-top: 1px solid #ddd; z-index: 1000; justify-content: space-around; align-items: center; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
+        .nav-item { flex: 1; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; color: #888; text-transform: uppercase; cursor: pointer; }
+        .nav-item.active { color: var(--brand-red); background: #fff5f5; }
+        .nav-icon { font-size: 20px; margin-bottom: 2px; }
+        @media (max-width: 1024px) { .mobile-nav { display: flex; } }
+
+        /* --- GAME HEADER (Budget & Info) --- */
+        #raceHeader { padding: 15px; background: #fff; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; height: 70px; }
+        .rh-left { display: flex; align-items: center; gap: 12px; }
+        .rh-flag { width: 50px; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .rh-title { font-size: 22px; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 1; }
+        .rh-date { font-size: 11px; color: #888; font-weight: 700; margin-top: 2px; }
+        
+        .budget-hud { background: #f4f4f8; padding: 8px 15px; border-radius: 6px; border: 1px solid #ddd; border-left: 4px solid #22c55e; display: flex; flex-direction: column; align-items: flex-end; }
+        .budget-hud-val { font-size: 16px; font-weight: 900; color: #22c55e; line-height: 1; }
+        .budget-hud-bar-bg { width: 80px; height: 5px; background: #e0e0e0; margin-top: 4px; border-radius: 3px; }
         .budget-hud-bar-fill { height: 100%; background: #22c55e; width: 50%; border-radius: 3px; transition: 0.3s; }
 
-        .lock-container { text-align: right; }
-        .status-badge { display: inline-block; padding: 5px 10px; border-radius: 4px; color: white; font-weight: 800; font-size: 11px; text-transform: uppercase; }
-        .status-open { background: #22c55e; }
-        .status-locked { background: #ef4444; }
-        .lock-timer { font-size: 12px; font-weight: 700; color: #555; margin-top: 4px; }
-
-        .grid-container { padding: 20px; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow-y: auto; }
-        .bingo-grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); gap: 15px; width: 100%; aspect-ratio: 1/1; max-height: 600px; }
+        /* --- THE GRID --- */
+        .grid-container { padding: 15px; flex: 1; overflow-y: auto; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .bingo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; max-width: 600px; aspect-ratio: 1/1; }
         
-        .grid-locked .slot { opacity: 0.7; pointer-events: none; filter: grayscale(0.5); }
-        .grid-locked .slot.filled { filter: grayscale(0); opacity: 1; }
-
-        .slot { background: #fafafa; border: 2px dashed #ddd; border-radius: 8px; display: flex; align-items: center; justify-content: center; text-align: center; padding: 5px; font-size: 11px; font-weight: 700; position: relative; user-select: none; transition: 0.2s; width: 100%; height: 100%; box-sizing: border-box; cursor: pointer; }
-        .slot:hover { border-color: #aaa; background: #f0f0f0; }
-        .slot[data-req="driver"] { background: #fff8e6; border-color: var(--c-driver); color: var(--c-driver); opacity: 0.8; }
-        .slot[data-req="team"] { background: #e0fbf8; border-color: var(--c-team); color: var(--c-team); opacity: 0.8; }
-        .slot[data-req="fia"] { background: #fff2f2; border-color: var(--c-fia); color: var(--c-fia); opacity: 0.8; }
-
-        /* RESTORED CARD STYLE */
-        .slot.filled { 
-            background: #f4f4f4 !important; 
-            border: 1px solid #d0d0d0 !important; 
-            color: #333 !important; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.08); 
-            opacity: 1; 
-            padding: 0; 
-            overflow: hidden; 
-            display: flex; 
-            flex-direction: row; 
-            align-items: stretch; 
-            text-align: left; 
-            position: relative; 
-            cursor: default; 
+        /* Empty Slot Styling */
+        .slot { 
+            background: #fafafa; border: 2px dashed #ddd; border-radius: 8px; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 11px; font-weight: 800; position: relative; 
+            cursor: pointer; user-select: none; transition: 0.2s;
+            text-transform: uppercase; color: #aaa;
         }
-        
-        .slot.filled::before { content: ''; position: absolute; top: 0; left: 0; width: 0; height: 0; border-style: solid; border-width: 16px 16px 0 0; z-index: 5; }
+        .slot:active { transform: scale(0.98); background: #eee; }
+        .slot[data-req="driver"] { background: #fff8e6; border-color: var(--c-driver); color: var(--c-driver); }
+        .slot[data-req="team"] { background: #e0fbf8; border-color: var(--c-team); color: var(--c-team); }
+        .slot[data-req="fia"] { background: #fff2f2; border-color: var(--c-fia); color: var(--c-fia); }
+
+        /* --- FILLED CARD STYLING (The "Complex" Look) --- */
+        .slot.filled { 
+            background: #f4f4f4 !important; border: 1px solid #d0d0d0 !important; 
+            color: #333 !important; padding: 0; overflow: hidden; 
+            display: flex; flex-direction: row; align-items: stretch; text-align: left;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+        /* Top-left colored triangle corner */
+        .slot.filled::before { content: ''; position: absolute; top: 0; left: 0; width: 0; height: 0; border-style: solid; border-width: 20px 20px 0 0; z-index: 5; }
         .slot.filled[data-type="driver"]::before { border-color: var(--c-driver) transparent transparent transparent; }
         .slot.filled[data-type="team"]::before { border-color: var(--c-team) transparent transparent transparent; }
         .slot.filled[data-type="fia"]::before { border-color: var(--c-fia) transparent transparent transparent; }
 
-        .remove-pick-btn { position: absolute; top: 0; right: 0; width: 24px; height: 24px; background: #000; color: #fff; font-weight: 900; font-size: 14px; line-height: 18px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; border-bottom-left-radius: 4px; opacity: 0.8; transition: 0.2s; }
-        .remove-pick-btn:hover { background: #333; opacity: 1; }
+        .remove-pick-btn { position: absolute; top: 0; right: 0; width: 24px; height: 24px; background: rgba(0,0,0,0.8); color: #fff; display: flex; align-items: center; justify-content: center; z-index: 10; border-bottom-left-radius: 6px; font-size: 14px; font-weight: bold; cursor: pointer; }
 
+        /* Left Side: Image on Color Background */
         .slot-img-container { 
-            width: 35%; flex-shrink: 0; 
-            display: flex; flex-direction: column; align-items: center; justify-content: center; 
-            border-right: 1px solid rgba(255,255,255,0.1); 
-            background-color: var(--team-color-hex); 
-            position: relative; 
+            width: 40%; display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            background-color: var(--team-color-hex); position: relative; 
+            border-right: 1px solid rgba(255,255,255,0.2);
         }
-        .slot-img { width: 70%; height: 70%; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); margin-bottom: 2px; }
-        .slot.filled[data-type="team"] .slot-img { width: 90%; height: auto; margin-top: 10px; }
-        .slot-price-tag { background: rgba(0,0,0,0.4); color: white; font-size: 12px; font-weight: 900; padding: 2px 6px; border-radius: 4px; margin-top: 4px; }
+        .slot-img { width: 85%; height: 85%; object-fit: contain; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.3)); z-index: 2; }
+        .slot.filled[data-type="team"] .slot-img { width: 95%; height: auto; }
         .slot.filled[data-type="fia"] .slot-img { filter: brightness(0) invert(1); }
-
-        .slot-text-container { 
-            flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 4px 15px; min-width: 0; 
-            background-color: #f4f4f4; 
-            background-image: linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee), linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee); 
-            background-position: 0 0, 10px 10px; background-size: 20px 20px; 
+        
+        /* Price Tag */
+        .slot-price-tag { 
+            background: rgba(0,0,0,0.7); color: white; font-size: 10px; font-weight: 900; 
+            padding: 2px 6px; border-radius: 4px; position: absolute; bottom: 5px; z-index: 3;
         }
-        .slot-sub { font-size: 13px; text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 5px; color: var(--cat-text-color); }
-        .slot-main { font-size: 18px; font-weight: 800; line-height: 1.1; word-wrap: break-word; overflow: hidden; color: #222; }
 
-        .slot.matched { opacity: 1; box-shadow: inset 0 0 0 5px var(--score-win); transform: scale(1.02); z-index: 5; }
-        .slot.matched::after { content: '✓'; position: absolute; bottom: 5px; right: 5px; background: var(--score-win); color: black; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 18px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
-
-        .actions-footer { padding: 15px; width: 100%; box-sizing: border-box; display: flex; gap: 10px; justify-content: space-between; align-items: center; }
-        .btn-action { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-weight: 900; font-size: 12px; text-transform: uppercase; cursor: pointer; transition: 0.2s; }
-        .btn-lock { background: #22c55e; color: white; border-color: #16a34a; display: none; } 
-        .btn-lock:hover { background: #16a34a; }
-        .btn-unlock { background: #e10600; color: white; border-color: #b91c1c; display: none; }
-        .btn-strat { background: #333; color: white; border: none; flex: 1; }
-        .btn-strat:hover { background: #555; }
-
-        .right-content { flex: 1; overflow-y: auto; padding: 15px; display: none; }
-        .right-content.active { display: block; }
-        .score-box { text-align: center; margin-bottom: 20px; padding: 20px; background: #fafafa; border-radius: 8px; border: 1px solid #eee; }
-        .score-val { font-size: 36px; font-weight: 900; color: var(--brand-dark); line-height: 1; }
-        .score-lbl { font-size: 12px; font-weight: 700; color: #888; text-transform: uppercase; margin-top: 5px; }
-        .bonus-pill { display: inline-block; padding: 4px 8px; background: var(--score-win); color: #000; border-radius: 12px; font-size: 10px; font-weight: 900; margin: 2px; }
-        .rules-block { margin-bottom: 20px; }
-        .rules-title { font-weight: 800; font-size: 14px; margin-bottom: 8px; text-transform: uppercase; color: var(--brand-red); border-bottom: 1px solid #eee; padding-bottom: 5px; }
-        .rules-text { font-size: 12px; line-height: 1.5; color: #555; }
-        .rules-list { padding-left: 20px; margin: 5px 0; font-size: 12px; color: #555; }
-        .rules-list li { margin-bottom: 6px; }
-
-        /* VISUAL LOGIN SELECTION STYLES */
-        .view-login { width: 100%; display: flex; flex-direction: column; align-items: center; padding: 20px; box-sizing: border-box; overflow-y: auto; height: 100%; }
-        .login-input { padding: 12px; width: 100%; text-align: center; border: 2px solid #eee; border-radius: 8px; font-weight: bold; font-size: 16px; max-width: 400px; margin-bottom: 20px; }
-        .login-btn { padding: 15px; width: 100%; margin-top: 15px; background: var(--brand-red); color: white; border: none; font-weight: 900; cursor: pointer; border-radius: 8px; font-size: 16px; max-width: 400px; }
+        /* Right Side: Checkered Flag Pattern */
+        .slot-text-container { 
+            flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 5px 10px; 
+            background-color: #f9f9f9; 
+            /* The Checkered Pattern */
+            background-image: linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee), linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee); 
+            background-size: 16px 16px; background-position: 0 0, 8px 8px; 
+        }
+        .slot-sub { font-size: 9px; text-transform: uppercase; font-weight: 900; color: var(--cat-text-color); margin-bottom: 2px; letter-spacing: 0.5px; }
+        .slot-main { font-size: 13px; font-weight: 800; line-height: 1.1; word-wrap: break-word; color: #111; }
         
-        .section-header { font-size: 12px; font-weight: 800; color: #888; text-transform: uppercase; margin-bottom: 10px; width: 100%; max-width: 600px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        @media (max-width: 400px) { .slot-main { font-size: 10px; } }
+
+        /* --- MARKET / LEFT PANEL --- */
+        .tab-header { display: flex; border-bottom: 1px solid #eee; background: #f9f9f9; flex-shrink: 0; height: 45px; }
+        .tab-btn { flex: 1; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px; cursor: pointer; color: #888; border-bottom: 3px solid transparent; transition: 0.2s; }
+        .tab-btn.active { background: white; color: #000; }
+        #tabBtn-drivers.active { border-bottom-color: var(--c-driver); color: var(--c-driver); }
+        #tabBtn-teams.active { border-bottom-color: var(--c-team); color: var(--c-team); }
+        #tabBtn-fia.active { border-bottom-color: var(--c-fia); color: var(--c-fia); }
+
+        .side-content { flex: 1; overflow-y: auto; background: #f4f4f8; display: none; }
+        .side-content.active { display: block; }
+
+        .driver-row { background: white; border-bottom: 1px solid #eee; margin-bottom: 0; }
+        .driver-header { padding: 12px 15px; display: flex; align-items: center; gap: 12px; cursor: pointer; background: white; }
+        .driver-header:hover { background: #f9f9f9; }
+        .driver-face { width: 36px; height: 36px; object-fit: cover; border-radius: 6px; background: #eee; border: 2px solid var(--team-color); }
+        .driver-info { display: flex; flex-direction: column; }
+        .d-name { font-weight: 800; font-size: 13px; color: #333; }
+        .d-team { font-size: 10px; color: #999; text-transform: uppercase; }
+
+        .driver-content { display: none; padding: 10px; background: #fafafa; border-top: 1px solid #eee; }
+        .driver-row.open .driver-content { display: block; }
+        .driver-row.open .driver-header { background: #eee; }
         
-        .selection-grid { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; max-width: 700px; margin-bottom: 20px; width: 100%; }
+        .chip { 
+            padding: 10px 12px; background: white; border: 1px solid #ddd; 
+            border-left-width: 5px; border-radius: 6px; margin-bottom: 8px; 
+            font-size: 11px; font-weight: 700; display: flex; justify-content: space-between; 
+            align-items: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+        }
+        .chip:active { transform: scale(0.98); background: #f0f0f0; }
+        .chip.driver { border-left-color: var(--c-driver); }
+        .chip.team { border-left-color: var(--c-team); }
+        .chip.fia { border-left-color: var(--c-fia); }
+        .chip-cost { background: #eee; padding: 3px 8px; border-radius: 12px; font-size: 10px; font-weight: 900; color: #555; }
+
+        /* --- LOGIN & SELECTION GRIDS --- */
+        .view-login { width: 100%; display: flex; flex-direction: column; align-items: center; padding: 25px; box-sizing: border-box; overflow-y: auto; height: 100%; }
+        .login-input { padding: 15px; width: 100%; text-align: center; border: 2px solid #eee; border-radius: 10px; font-weight: bold; font-size: 18px; max-width: 400px; margin-bottom: 25px; background: #fff; }
+        
+        .section-header { font-size: 11px; font-weight: 900; color: #999; text-transform: uppercase; margin: 15px 0 10px 0; width: 100%; max-width: 600px; border-bottom: 1px solid #eee; padding-bottom: 5px; letter-spacing: 1px; }
+        
+        .selection-grid { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; max-width: 600px; margin-bottom: 20px; width: 100%; }
         .selection-card { 
-            width: 100px; height: 100px; 
-            border: 2px solid #eee; border-radius: 8px; 
+            width: 90px; height: 90px; 
+            border: 2px solid #eee; border-radius: 10px; 
             display: flex; flex-direction: column; align-items: center; justify-content: center; 
             cursor: pointer; transition: 0.2s; background: white; 
             position: relative;
         }
-        .selection-card:hover { transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .selection-card.selected { border-width: 3px; background: #f0fdf4; box-shadow: 0 4px 15px rgba(0,0,0,0.15); transform: scale(1.05); z-index: 2; }
+        .selection-card.selected { border-width: 3px; background: #f0fdf4; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transform: scale(1.05); z-index: 2; }
         .selection-card.selected::after { content: '✓'; position: absolute; top: 5px; right: 5px; background: #22c55e; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; }
         
-        .selection-img { width: 60%; height: 60%; object-fit: contain; margin-bottom: 5px; pointer-events: none; }
-        .selection-name { font-size: 9px; font-weight: 800; text-align: center; line-height: 1.1; pointer-events: none; padding: 0 4px; }
+        .selection-img { width: 60%; height: 50%; object-fit: contain; margin-bottom: 6px; pointer-events: none; }
+        .selection-name { font-size: 9px; font-weight: 800; text-align: center; line-height: 1.1; pointer-events: none; padding: 0 4px; text-transform: uppercase; }
+        
+        .login-btn { padding: 16px; width: 100%; max-width: 400px; margin-top: 20px; background: var(--brand-red); color: white; border: none; font-weight: 900; cursor: pointer; border-radius: 10px; font-size: 16px; box-shadow: 0 4px 10px rgba(225, 6, 0, 0.2); }
 
-        .view-strategy { text-align: center; width: 100%; display: flex; flex-direction: column; align-items: center; height: 100%; }
+        /* --- STRATEGY CARDS --- */
+        .view-strategy { text-align: center; width: 100%; display: flex; flex-direction: column; align-items: center; height: 100%; padding: 20px; overflow-y: auto; }
         .strategy-header-container { margin-top: 20px; margin-bottom: 30px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
         .big-flag { width: 100px; height: auto; border-radius: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         .strategy-title { font-size: 32px; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 1; }
 
-        .strat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-width: 600px; width: 100%; }
-        .strat-card { background: #f9f9f9; border: 2px solid #eee; border-radius: 12px; padding: 20px; cursor: pointer; display: flex; flex-direction: column; align-items: center; transition: 0.2s; }
-        .strat-card:hover { border-color: var(--brand-red); background: white; transform: translateY(-3px); }
-        .mini-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; width: 60px; height: 60px; margin-bottom: 10px; opacity: 0.6; }
-        .mg-c { background: #ddd; border-radius: 1px; }
+        .strat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-width: 500px; width: 100%; }
+        .strat-card { background: #fff; border: 2px solid #eee; border-radius: 12px; padding: 20px; cursor: pointer; display: flex; flex-direction: column; align-items: center; transition: 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .strat-card:hover { border-color: var(--brand-red); transform: translateY(-3px); }
+        .mini-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; width: 60px; height: 60px; margin-bottom: 10px; opacity: 0.8; }
+        .mg-c { border-radius: 1px; }
 
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 5000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
-        .modal-box { background: white; padding: 30px; border-radius: 12px; width: 400px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.5); border: 2px solid #eee; }
-        .modal-title { font-size: 20px; font-weight: 900; color: var(--brand-red); text-transform: uppercase; margin-bottom: 10px; font-style: italic; }
-        .modal-text { color: #555; font-size: 14px; margin-bottom: 25px; line-height: 1.5; }
-        .modal-actions { display: flex; gap: 10px; justify-content: center; }
-        .btn-modal { padding: 10px 20px; border-radius: 6px; font-weight: 800; cursor: pointer; border: none; flex: 1; }
-        .btn-cancel { background: #eee; color: #333; }
-        .btn-cancel:hover { background: #ddd; }
+        /* --- MODAL --- */
+        #customModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 5000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
+        .modal-box { background: white; padding: 25px; border-radius: 15px; width: 85%; max-width: 320px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .btn-modal { padding: 12px 24px; border-radius: 8px; font-weight: 800; cursor: pointer; border: none; margin: 5px; font-size: 14px; }
         .btn-confirm { background: var(--brand-red); color: white; }
-        .btn-confirm:hover { background: #b00; }
+        .btn-cancel { background: #eee; color: #333; }
 
-        #adminPanel { position: fixed; top: 60px; left: 50%; transform: translateX(-50%); background: #222; color: white; padding: 20px; border-radius: 12px; z-index: 3000; display: none; flex-direction: column; width: 500px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-        .admin-toggle-list { max-height: 400px; overflow-y: auto; display: flex; flex-direction: column; gap: 5px; margin-top: 10px; }
-        .admin-item { padding: 10px; background: #333; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 10px; border-radius: 4px; }
-        .admin-item.checked { background: var(--brand-red); font-weight: bold; }
+        /* --- STANDINGS & RULES --- */
+        .score-box { text-align: center; margin-bottom: 20px; padding: 25px; background: #fff; border-radius: 12px; border: 1px solid #eee; box-shadow: var(--card-shadow); }
+        .score-val { font-size: 42px; font-weight: 900; color: var(--brand-dark); line-height: 1; }
+        .score-lbl { font-size: 12px; font-weight: 700; color: #888; text-transform: uppercase; margin-top: 5px; letter-spacing: 1px; }
         
-        .strategy-footer { width: 100%; margin-top: 10px; padding-top: 10px; border-top: 1px solid #eee; display: flex; justify-content: center; }
-        .btn-change-strat { background: transparent; color: #888; border: 1px solid #ddd; padding: 8px 20px; font-size: 10px; font-weight: 800; text-transform: uppercase; border-radius: 4px; cursor: pointer; }
-        .btn-change-strat:hover { color: #000; border-color: #000; }
+        .rules-block { background: white; padding: 20px; border-radius: 12px; border: 1px solid #eee; margin-bottom: 15px; }
+        .rules-title { font-weight: 900; font-size: 14px; margin-bottom: 10px; text-transform: uppercase; color: var(--brand-red); border-bottom: 2px solid #f5f5f5; padding-bottom: 8px; }
+        .rules-text { font-size: 13px; line-height: 1.6; color: #555; margin: 0; }
+        .rules-list { padding-left: 20px; margin: 5px 0; font-size: 13px; color: #555; }
+        .rules-list li { margin-bottom: 8px; }
 
-        @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+        .strategy-footer { width: 100%; margin-top: 10px; padding-top: 15px; border-top: 1px solid #eee; display: flex; justify-content: center; }
+        .btn-change-strat { background: white; color: #888; border: 2px solid #eee; padding: 10px 25px; font-size: 11px; font-weight: 800; text-transform: uppercase; border-radius: 6px; cursor: pointer; transition: 0.2s; }
+        .btn-change-strat:hover { border-color: #333; color: #333; }
+
     </style>
 </head>
 <body>
 
-<div id="customModal" class="modal-overlay hidden">
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js')
+      .then(() => console.log('Service Worker Registered'));
+  }
+</script>
+
+<div id="customModal" class="hidden">
     <div class="modal-box">
-        <div class="modal-title" id="modalTitle">Race Control</div>
-        <div class="modal-text" id="modalText">Message here...</div>
-        <div class="modal-actions" id="modalActions"></div>
+        <h3 id="modalTitle" style="margin-top:0; color:#e10600; font-style:italic; font-size:20px;">RACE CONTROL</h3>
+        <p id="modalText" style="font-size:14px; color:#555; margin-bottom:20px; line-height:1.4;">Text</p>
+        <div id="modalActions"></div>
     </div>
 </div>
 
 <header>
-    <div class="logo-area" ondblclick="toggleAdmin()">
+    <div class="logo-area" onclick="location.reload()">
         <img src="images/logotop.png" class="header-logo" alt="F1 Pick Em">
     </div>
-    
     <div class="race-scroll-area" id="raceBar"></div>
-
-    <div class="user-area">
-        <span id="displayTeamName">GUEST</span>
-    </div>
+    <div class="user-area" id="displayTeamName">GUEST</div>
 </header>
-
-<div id="adminPanel">
-    <h3>RACE CONTROL <span onclick="toggleAdmin()" style="float:right; cursor:pointer;">&times;</span></h3>
-    <div class="admin-toggle-list" id="adminList"></div>
-    <button onclick="publishResults()" style="width:100%; margin-top:10px; padding:10px; background:var(--score-win); border:none; font-weight:bold; cursor:pointer;">PUBLISH</button>
-</div>
 
 <div class="main-stage">
     
-    <div class="panel">
+    <div class="panel" id="marketPanel">
+        <div class="mobile-close-btn" onclick="closeMobileMarket()">CLOSE MARKET ×</div>
         <div class="tab-header">
-            <div class="tab-btn active" id="tabBtn-drivers" onclick="showSideTab('drivers', this)">DRIVERS</div>
-            <div class="tab-btn" id="tabBtn-teams" onclick="showSideTab('teams', this)">TEAMS</div>
-            <div class="tab-btn" id="tabBtn-fia" onclick="showSideTab('fia', this)">FIA</div>
+            <div class="tab-btn active" id="tabBtn-drivers" onclick="showTab('drivers')">DRIVERS</div>
+            <div class="tab-btn" id="tabBtn-teams" onclick="showTab('teams')">TEAMS</div>
+            <div class="tab-btn" id="tabBtn-fia" onclick="showTab('fia')">FIA</div>
         </div>
-        
-        <div id="panel-drivers" class="side-content active">
-            <div id="driverList"></div>
-        </div>
-        
-        <div id="panel-teams" class="side-content">
-            <div id="teamList"></div>
-        </div>
-
-        <div id="panel-fia" class="side-content">
-            <div id="fiaList"></div>
-        </div>
+        <div id="panel-drivers" class="side-content active"><div id="driverList"></div></div>
+        <div id="panel-teams" class="side-content"><div id="teamList"></div></div>
+        <div id="panel-fia" class="side-content"><div id="fiaList"></div></div>
     </div>
 
     <div class="active-panel" id="mainPanel">
+        
         <div id="view-login" class="view-login">
-            <h1 style="font-style:italic; font-size:28px;">TEAM PRINCIPAL LOGIN</h1>
+            <h2 style="font-style:italic; font-size:24px; margin-bottom:20px;">TEAM PRINCIPAL LOGIN</h2>
             <input type="text" id="teamNameInput" class="login-input" placeholder="Enter Team Name">
             
             <div class="section-header">Select Favorite Driver</div>
@@ -334,8 +304,8 @@
         <div id="view-strategy" class="view-strategy hidden">
             <div class="strategy-header-container">
                 <img id="stratFlag" src="" class="big-flag">
-                <div id="stratRaceTitle" class="strategy-title">RACE STRATEGY</div>
-                <div style="color:#888; font-size:12px; font-weight:700;">SELECT YOUR GRID SETUP</div>
+                <div id="stratRaceTitle" class="strategy-title">STRATEGY</div>
+                <div style="color:#888; font-size:12px; font-weight:700;">SELECT GRID FORMATION</div>
             </div>
             
             <div class="strat-grid">
@@ -349,38 +319,28 @@
                 </div>
                 <div class="strat-card" onclick="confirmStrategy('chaos')">
                     <div class="mini-grid"><div class="mg-c" style="background:var(--c-fia)"></div><div class="mg-c" style="background:var(--c-fia)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-fia)"></div><div class="mg-c" style="background:var(--c-fia)"></div><div class="mg-c" style="background:var(--c-fia)"></div><div class="mg-c" style="background:var(--c-team)"></div><div class="mg-c" style="background:var(--c-fia)"></div><div class="mg-c" style="background:var(--c-driver)"></div></div>
-                    <strong>FIA</strong>
+                    <strong>FIA / Chaos</strong>
                 </div>
                 <div class="strat-card" onclick="confirmStrategy('driver')">
                     <div class="mini-grid"><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-team)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-fia)"></div><div class="mg-c" style="background:var(--c-driver)"></div><div class="mg-c" style="background:var(--c-team)"></div></div>
-                    <strong>Driver</strong>
+                    <strong>Driver Focus</strong>
                 </div>
             </div>
         </div>
 
-        <div id="view-game" class="view-game hidden" style="width:100%;">
+        <div id="view-game" class="view-game hidden" style="width:100%; height:100%; display:flex; flex-direction:column;">
             <div id="raceHeader">
                 <div class="rh-left">
                     <img id="rhFlag" src="" class="rh-flag">
-                    <div class="rh-info">
-                        <div id="rhTitle" class="rh-title">RACE NAME</div>
+                    <div>
+                        <div id="rhTitle" class="rh-title">RACE</div>
                         <div id="rhDate" class="rh-date">DATE</div>
                     </div>
                 </div>
-                
-                <div class="rh-right">
-                    <div class="budget-hud">
-                        <span class="budget-hud-label">CAP SPACE</span>
-                        <div class="budget-hud-val" id="hudBudgetVal">$100M</div>
-                        <div class="budget-hud-bar-bg">
-                            <div class="budget-hud-bar-fill" id="hudBudgetBar"></div>
-                        </div>
-                    </div>
-
-                    <div class="lock-container">
-                        <div id="rhStatus" class="status-badge status-open">OPEN</div>
-                        <div id="rhTimer" class="lock-timer">LOCKS IN: --</div>
-                    </div>
+                <div class="budget-hud">
+                    <span style="font-size:9px; font-weight:800; color:#888; margin-bottom:2px;">CAP SPACE</span>
+                    <div class="budget-hud-val" id="hudBudgetVal">$100M</div>
+                    <div class="budget-hud-bar-bg"><div class="budget-hud-bar-fill" id="hudBudgetBar"></div></div>
                 </div>
             </div>
 
@@ -388,77 +348,111 @@
                 <div id="grid" class="bingo-grid"></div>
             </div>
             
-            <div class="actions-footer">
-                <button id="lockBtn" class="btn-action btn-lock" onclick="toggleUserLock()">LOCK</button>
-                <button id="unlockBtn" class="btn-action btn-unlock" onclick="toggleUserLock()">UNLOCK</button>
-            </div>
-            
-            <div class="strategy-footer">
-                 <button class="btn-change-strat" onclick="changeStrategy()">Change Grid Setup</button>
+            <div style="padding:15px; border-top:1px solid #eee; text-align:center;">
+                <div class="actions-footer" style="margin-bottom:10px;">
+                    <button id="lockBtn" class="btn-action btn-lock" onclick="toggleUserLock()" style="background:#22c55e; color:white; border:none; display:none;">LOCK CARD</button>
+                    <button id="unlockBtn" class="btn-action btn-unlock" onclick="toggleUserLock()" style="background:#e10600; color:white; border:none; display:none;">UNLOCK CARD</button>
+                </div>
+                <button class="btn-change-strat" onclick="changeStrategy()">CHANGE GRID SETUP</button>
             </div>
         </div>
-    </div>
-
-    <div class="panel">
-        <div class="tab-header">
-            <div class="tab-btn active" onclick="switchRightTab('standings', this)">STANDINGS</div>
-            <div class="tab-btn" onclick="switchRightTab('rules', this)">RULES & SCORING</div>
-        </div>
-
-        <div id="tab-standings" class="right-content active">
+        
+        <div id="view-standings" class="hidden" style="padding:20px; overflow-y:auto; height:100%;">
             <div class="score-box">
                 <div class="score-val" id="scoreDisplay">0</div>
                 <div class="score-lbl">Total Points</div>
-                <div id="bonusDisplay" style="margin-top:10px;"></div>
+                <div id="bonusDisplay" style="margin-top:15px;"></div>
             </div>
-            <div class="leaderboard" id="leaderboardList"></div>
+            <div style="text-align:center; color:#888; font-size:12px; margin-top:20px;">Leaderboard updating...</div>
         </div>
 
-        <div id="tab-rules" class="right-content">
+        <div id="view-rules" class="hidden" style="padding:20px; overflow-y:auto; height:100%;">
             <div class="rules-block">
                 <div class="rules-title">HOW TO PLAY</div>
-                <div class="rules-text">
-                    1. Select a <strong>Race Strategy</strong> to generate your 3x3 grid.<br><br>
-                    2. Drag <strong>My Picks</strong> from left menu onto matching colored slots.<br><br>
-                    3. <strong>Budget Cap:</strong> You have <strong>$100M</strong>. Manage it wisely!<br><br>
-                    4. <strong>Limit:</strong> 1 pick per category per driver.<br><br>
-                    5. <strong>Lock:</strong> Lock your card before the deadline.
-                </div>
+                <p class="rules-text">1. Choose a Grid Strategy.<br>2. Tap a slot to open the market.<br>3. Select a prediction.<br>4. Stay under the $100M Cap.</p>
             </div>
             <div class="rules-block">
                 <div class="rules-title">SCORING</div>
                 <ul class="rules-list">
-                    <li><strong>10 PTS</strong> - Each Correct Tile</li>
-                    <li><strong>+30 PTS</strong> - Straight Line Bonus</li>
-                    <li><strong>+50 PTS</strong> - 4 Corners Bonus</li>
-                    <li><strong>+100 PTS</strong> - Full Card Bonus</li>
+                    <li><strong>10 PTS</strong> - Correct Tile</li>
+                    <li><strong>+30 PTS</strong> - Bingo Line (Horizontal/Vertical)</li>
+                    <li><strong>+50 PTS</strong> - 4 Corners</li>
+                    <li><strong>+100 PTS</strong> - Full Card (Blackout)</li>
                 </ul>
             </div>
             <div class="rules-block">
-                <div class="rules-title">COLOR GUIDE</div>
+                <div class="rules-title">LEGEND</div>
                 <ul class="rules-list">
-                    <li style="color:var(--c-driver)">● <strong>ORANGE:</strong> Driver Picks</li>
-                    <li style="color:var(--c-team)">● <strong>TEAL:</strong> Constructor Picks</li>
-                    <li style="color:var(--c-fia)">● <strong>RED:</strong> FIA Picks</li>
+                    <li style="color:var(--c-driver)">● ORANGE: Driver Event</li>
+                    <li style="color:var(--c-team)">● TEAL: Constructor Event</li>
+                    <li style="color:var(--c-fia)">● RED: FIA / Track Event</li>
                 </ul>
             </div>
         </div>
+
+    </div>
+
+    <div class="panel" id="desktopRightPanel">
+        <div class="tab-header">
+            <div class="tab-btn active">STANDINGS</div>
+        </div>
+        <div style="padding:20px;">
+            <div class="score-box">
+                <div class="score-val" id="deskScoreDisplay">0</div>
+                <div class="score-lbl">POINTS</div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="mobile-nav">
+    <div class="nav-item active" onclick="switchMobileView('game', this)">
+        <div class="nav-icon">⊞</div>
+        GRID
+    </div>
+    <div class="nav-item" onclick="switchMobileView('standings', this)">
+        <div class="nav-icon">🏆</div>
+        SCORE
+    </div>
+    <div class="nav-item" onclick="switchMobileView('rules', this)">
+        <div class="nav-icon">ℹ</div>
+        RULES
     </div>
 </div>
 
 <script>
+    // --- DATABASE MOCKUP ---
+    // In production, replace 'local' with 'cloud' and implement fetch() calls
+    class DataManager {
+        constructor() { this.type = 'local'; }
+        
+        save(key, data) {
+            if(this.type === 'local') localStorage.setItem(key, JSON.stringify(data));
+        }
+        
+        load(key) {
+            if(this.type === 'local') {
+                const d = localStorage.getItem(key);
+                return d ? JSON.parse(d) : null;
+            }
+        }
+    }
+    const db = new DataManager();
+
+    // --- STATE ---
     let activeRace = 'aus';
-    let currentGrid = Array(9).fill(null); // 3x3 - All slots playable
+    let currentGrid = Array(9).fill(null);
     let verifiedResults = [];
     let modalCallback = null;
     let isGridLocked = false;
     let isUserLocked = false;
     const BUDGET_CAP = 100;
     
-    // Login selections
-    let selectedDriverFav = null;
-    let selectedTeamFav = null;
+    let favDriver = null;
+    let favTeam = null;
 
+    // --- TEMPLATES ---
     const templates = {
         balanced: ['driver','team','driver', 'team','driver','fia', 'driver','fia','team'],
         team:     ['team','team','driver', 'team','team','team', 'driver','team','fia'],
@@ -466,27 +460,25 @@
         driver:   ['driver','driver','team', 'driver','driver','driver', 'fia','driver','team']
     };
 
+    // --- INITIALIZATION ---
     window.onload = () => {
-        if(typeof BINGO_CONFIG === 'undefined') return alert("Error: bingo_data.js not loaded.");
+        if(typeof BINGO_CONFIG === 'undefined') return alert("Error: bingo_data.js missing.");
         
+        // Load Race
         const savedRace = localStorage.getItem('current_race_id');
         if(savedRace) activeRace = savedRace;
 
+        // Build UI Components
         buildLoginSelectionGrids();
         renderRaces();
-        buildDriverMarket();
-        buildTeamMarket();
-        buildFIAMarket();
+        buildLists();
         
+        // Auto Login?
         const savedName = localStorage.getItem('f1_team_name');
+        const savedGrid = db.load(`grid_${activeRace}`);
+        
         if(savedName) document.getElementById('teamNameInput').value = savedName;
         
-        const savedGrid = localStorage.getItem(`grid_${activeRace}`);
-        const savedUserLock = localStorage.getItem(`userLock_${activeRace}`);
-        
-        if(savedUserLock === 'true') isUserLocked = true;
-
-        // Auto login if data present
         if(savedName && savedGrid) {
             login(true);
         }
@@ -495,6 +487,28 @@
         updateBudgetUI();
     };
 
+    // --- NAVIGATION ---
+    function switchMobileView(viewName, btn) {
+        document.getElementById('view-game').classList.add('hidden');
+        document.getElementById('view-standings').classList.add('hidden');
+        document.getElementById('view-rules').classList.add('hidden');
+        document.getElementById('view-strategy').classList.add('hidden');
+        
+        document.getElementById(`view-${viewName}`).classList.remove('hidden');
+        
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        if(btn) btn.classList.add('active');
+    }
+
+    function showTab(tabName) {
+        document.querySelectorAll('.side-content').forEach(el => el.classList.remove('active'));
+        document.getElementById(`panel-${tabName}`).classList.add('active');
+        
+        document.querySelectorAll('#marketPanel .tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(`tabBtn-${tabName}`).classList.add('active');
+    }
+
+    // --- LOGIN LOGIC ---
     function buildLoginSelectionGrids() {
         // Driver Grid
         const dGrid = document.getElementById('favDriverGrid');
@@ -502,11 +516,12 @@
             const card = document.createElement('div');
             card.className = 'selection-card';
             card.style.borderColor = d.color;
-            card.onclick = () => selectFav(card, 'driver', d.name);
-            card.innerHTML = `
-                <img src="${d.img}" class="selection-img">
-                <div class="selection-name">${d.name}</div>
-            `;
+            card.onclick = () => {
+                dGrid.querySelectorAll('.selection-card').forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+                favDriver = d.name;
+            };
+            card.innerHTML = `<img src="${d.img}" class="selection-img"><div class="selection-name">${d.name}</div>`;
             dGrid.appendChild(card);
         });
 
@@ -516,668 +531,66 @@
             const card = document.createElement('div');
             card.className = 'selection-card';
             card.style.borderColor = t.color;
-            card.onclick = () => selectFav(card, 'team', t.name);
-            card.innerHTML = `
-                <img src="${t.img}" class="selection-img">
-                <div class="selection-name">${t.name}</div>
-            `;
+            card.onclick = () => {
+                tGrid.querySelectorAll('.selection-card').forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+                favTeam = t.name;
+            };
+            card.innerHTML = `<img src="${t.img}" class="selection-img"><div class="selection-name">${t.name}</div>`;
             tGrid.appendChild(card);
         });
     }
 
-    function selectFav(cardElement, type, value) {
-        const container = type === 'driver' ? document.getElementById('favDriverGrid') : document.getElementById('favTeamGrid');
-        container.querySelectorAll('.selection-card').forEach(c => c.classList.remove('selected'));
-        cardElement.classList.add('selected');
-        
-        if(type === 'driver') selectedDriverFav = value;
-        if(type === 'team') selectedTeamFav = value;
-    }
-
-    function showSideTab(tabName, btn) {
-        document.querySelectorAll('.side-content').forEach(el => el.classList.remove('active'));
-        document.getElementById(`panel-${tabName}`).classList.add('active');
-        
-        const header = document.querySelector('.panel .tab-header');
-        header.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        
-        if(btn) {
-            btn.classList.add('active');
+    function login(auto = false) {
+        const name = document.getElementById('teamNameInput').value;
+        if(!auto) {
+            if(!name || !favDriver || !favTeam) return alert("Please enter name and select favorites.");
+            localStorage.setItem('f1_team_name', name);
+            localStorage.setItem('f1_fav_driver', favDriver);
+            localStorage.setItem('f1_fav_team', favTeam);
         } else {
-            const autoBtn = document.getElementById(`tabBtn-${tabName}`);
-            if(autoBtn) autoBtn.classList.add('active');
+            favDriver = localStorage.getItem('f1_fav_driver');
+            favTeam = localStorage.getItem('f1_fav_team');
         }
-    }
-
-    function checkLockStatus() {
-        const r = BINGO_CONFIG.races.find(x => x.id === activeRace);
-        if(!r || !r.lockTime) return;
-
-        const now = new Date();
-        const lockTime = new Date(r.lockTime);
-        const diff = lockTime - now;
-
-        const statusBadge = document.getElementById('rhStatus');
-        const timerDisplay = document.getElementById('rhTimer');
-        const grid = document.getElementById('grid');
         
-        if (diff <= 0) {
-            isGridLocked = true;
-            if(statusBadge) { statusBadge.innerText = "LOCKED"; statusBadge.className = "status-badge status-locked"; }
-            if(timerDisplay) timerDisplay.innerText = "Picks Closed";
-            updateActionButtons(); 
-            return;
-        } 
+        document.getElementById('displayTeamName').innerText = name.toUpperCase();
         
-        isGridLocked = false;
-        const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        if(timerDisplay) timerDisplay.innerText = `LOCKS IN: ${d}D ${h}H`;
+        const savedGrid = db.load(`grid_${activeRace}`);
+        const userLock = localStorage.getItem(`userLock_${activeRace}`);
+        if(userLock === 'true') isUserLocked = true;
 
-        if(isUserLocked) {
-            if(statusBadge) { statusBadge.innerText = "READY"; statusBadge.className = "status-badge status-locked"; }
+        if(savedGrid) {
+            currentGrid = savedGrid;
+            document.getElementById('view-login').classList.add('hidden');
+            document.getElementById('view-game').classList.remove('hidden');
+            renderRaceHeader();
+            renderGrid();
         } else {
-            if(statusBadge) { statusBadge.innerText = "OPEN"; statusBadge.className = "status-badge status-open"; }
+            document.getElementById('view-login').classList.add('hidden');
+            document.getElementById('view-strategy').classList.remove('hidden');
+            const r = BINGO_CONFIG.races.find(r=>r.id===activeRace);
+            document.getElementById('stratFlag').src = `https://flagcdn.com/w160/${r.c}.png`;
         }
         updateActionButtons();
     }
 
-    function updateActionButtons() {
-        const lockBtn = document.getElementById('lockBtn');
-        const unlockBtn = document.getElementById('unlockBtn');
-        const grid = document.getElementById('grid');
-        const changeStratBtn = document.querySelector('.btn-change-strat');
-
-        const isFull = currentGrid.every(slot => slot !== null);
-
-        if(isGridLocked) {
-            grid.classList.add('grid-locked');
-            lockBtn.style.display = 'none';
-            unlockBtn.style.display = 'none';
-            if(changeStratBtn) changeStratBtn.style.display = 'none';
-        } else if(isUserLocked) {
-            grid.classList.add('grid-locked');
-            lockBtn.style.display = 'none';
-            unlockBtn.style.display = 'block';
-            if(changeStratBtn) changeStratBtn.style.display = 'none';
-        } else {
-            grid.classList.remove('grid-locked');
-            unlockBtn.style.display = 'none';
-            if(changeStratBtn) changeStratBtn.style.display = 'block';
-            
-            if(isFull) lockBtn.style.display = 'block';
-            else lockBtn.style.display = 'none';
-        }
+    // --- GAMEPLAY ---
+    function confirmStrategy(type) {
+        currentGrid = templates[type].map(t => null);
+        renderGridStructure(templates[type]);
+        document.getElementById('view-strategy').classList.add('hidden');
+        document.getElementById('view-game').classList.remove('hidden');
+        renderRaceHeader();
+        db.save(`grid_${activeRace}`, currentGrid);
     }
 
-    function toggleUserLock() {
-        isUserLocked = !isUserLocked;
-        localStorage.setItem(`userLock_${activeRace}`, isUserLocked);
-        checkLockStatus();
-    }
-
-    function renderRaceHeader() {
-        const r = BINGO_CONFIG.races.find(x => x.id === activeRace);
-        if(!r) return;
-        document.getElementById('rhFlag').src = `https://flagcdn.com/w160/${r.c}.png`;
-        document.getElementById('rhTitle').innerText = r.n.toUpperCase();
-        document.getElementById('rhDate').innerText = r.d.toUpperCase();
-        checkLockStatus(); 
-    }
-
-    function calculateTotalCost() {
-        let total = 0;
-        currentGrid.forEach(item => {
-            if(item && item.cost) total += item.cost;
-        });
-        return total;
-    }
-
-    function updateBudgetUI() {
-        const spent = calculateTotalCost();
-        const remaining = BUDGET_CAP - spent;
-        const pct = (remaining / BUDGET_CAP) * 100;
-        
-        const val = document.getElementById('hudBudgetVal');
-        const bar = document.getElementById('hudBudgetBar');
-        
-        if(val) val.innerText = `$${remaining}M`;
-        if(bar) {
-            bar.style.width = `${pct}%`;
-            if(remaining < 10) { bar.style.backgroundColor = '#e10600'; val.style.color = '#e10600'; }
-            else { bar.style.backgroundColor = '#22c55e'; val.style.color = '#22c55e'; }
-        }
-    }
-
-    function getChipCost(driverName, type, templateText) {
-        let basePrice = 0;
-        let tier = 2; // Default tier
-
-        if (type === 'team') {
-             const constr = BINGO_CONFIG.constructors.find(c => c.name === driverName);
-             basePrice = constr ? (constr.price || 0) : 0;
-             if(constr) tier = constr.tier;
-        } else if (type === 'fia') {
-             basePrice = 0; 
-             tier = 0;
-        } else {
-             const drv = BINGO_CONFIG.drivers.find(d => d.name === driverName);
-             basePrice = drv ? (drv.price || 0) : 0;
-             if(drv) tier = drv.tier;
-        }
-
-        let eventCost = 0;
-        let foundTemplate = null;
-        for (const cat in BINGO_CONFIG.templates) {
-            const match = BINGO_CONFIG.templates[cat].find(t => t.t === templateText);
-            if (match) {
-                eventCost = match.c;
-                foundTemplate = match.t;
-                break;
-            }
-        }
-        
-        let cost = basePrice + eventCost;
-
-        if (type === 'driver') {
-            if (tier === 1) {
-                if (foundTemplate === "Points Finish") cost += 25; 
-                if (foundTemplate === "Podium Finish") cost += 15; 
-                if (foundTemplate === "Q3 Appearance") cost += 10;
-            }
-            if (tier === 3) {
-                if (foundTemplate === "11th-20th Finish") cost += 10;
-            }
-        }
-
-        if (type === 'team') {
-             if (tier === 1) {
-                 if (foundTemplate === "Double Points") cost += 15;
-             }
-        }
-
-        return cost;
-    }
-
-    function showModal(title, text, isConfirm, callback) {
-        document.getElementById('modalTitle').innerText = title;
-        document.getElementById('modalText').innerText = text;
-        const actions = document.getElementById('modalActions');
-        actions.innerHTML = '';
-
-        if(isConfirm) {
-            modalCallback = callback;
-            actions.innerHTML = `
-                <button class="btn-modal btn-cancel" onclick="closeModal()">Cancel</button>
-                <button class="btn-modal btn-confirm" onclick="execCallback()">Confirm</button>
-            `;
-        } else {
-            actions.innerHTML = `<button class="btn-modal btn-confirm" onclick="closeModal()">OK</button>`;
-        }
-        document.getElementById('customModal').classList.remove('hidden');
-    }
-
-    function closeModal() {
-        document.getElementById('customModal').classList.add('hidden');
-        modalCallback = null;
-    }
-
-    function execCallback() {
-        if(modalCallback) modalCallback();
-        closeModal();
-    }
-    
     function changeStrategy() {
         if(isGridLocked || isUserLocked) return;
-        showModal("Change Strategy", "Changing strategy will RESET your current grid. Continue?", true, performReset);
-    }
-
-    function performReset() {
-        localStorage.removeItem(`grid_${activeRace}`);
-        localStorage.removeItem(`userLock_${activeRace}`);
-        currentGrid = Array(9).fill(null);
-        isUserLocked = false;
-        updateBudgetUI();
-        
-        const r = BINGO_CONFIG.races.find(r=>r.id===activeRace);
-        if(r) {
-            document.getElementById('stratRaceTitle').innerText = r.n.toUpperCase() + " STRATEGY";
-            document.getElementById('stratFlag').src = `https://flagcdn.com/w160/${r.c}.png`;
-        }
-        switchState('strategy');
-    }
-
-    function switchRightTab(tabName, btn) {
-        document.querySelectorAll('.right-content').forEach(el => el.classList.remove('active'));
-        document.getElementById(`tab-${tabName}`).classList.add('active');
-        const btns = btn.parentElement.querySelectorAll('.tab-btn');
-        btns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-    }
-
-    // --- TAB 1: DRIVERS ---
-    function buildDriverMarket() {
-        const container = document.getElementById('driverList');
-        if(!container) return;
-        container.innerHTML = ''; 
-        const realDrivers = BINGO_CONFIG.drivers.filter(d => d.team !== 'FIA');
-        
-        realDrivers.forEach(d => {
-            const row = document.createElement('div');
-            row.className = 'driver-row';
-            row.dataset.driverName = d.name; // For finding
-            
-            row.innerHTML = `
-                <div class="driver-header" onclick="toggleDriver(this)" data-team="${d.team}" style="--team-color:${d.color}">
-                    <img src="${d.img}" class="driver-face" onerror="this.style.display='none'">
-                    <div>
-                        <div class="driver-name">${d.name}</div>
-                        <div class="driver-team">${d.team}</div>
-                    </div>
-                </div>
-                <div class="driver-content"></div>
-            `;
-            
-            const content = row.querySelector('.driver-content');
-            
-            const qpBtn = document.createElement('div'); qpBtn.className = 'qp-red-btn'; qpBtn.innerText = 'DRIVER QUICK PICKS';
-            qpBtn.onclick = (e) => { e.stopPropagation(); applyQuickPicks(d.name, d.team, 'maximize_driver'); };
-            content.appendChild(qpBtn);
-
-            const label = document.createElement('div'); label.className = 'menu-label'; label.innerText = 'SELECT PREDICTION';
-            content.appendChild(label);
-
-            // Combine all templates
-            const allTemplates = [
-                ...BINGO_CONFIG.templates.quali.map(t=>({...t, sub:'quali'})),
-                ...BINGO_CONFIG.templates.race.map(t=>({...t, sub:'race'})),
-                ...BINGO_CONFIG.templates.bonus.map(t=>({...t, sub:'bonus'}))
-            ];
-            
-            allTemplates.forEach(t => {
-                 createChip(content, `${d.name} ${t.t}`, 'driver', t.sub, d.name, '', t.c, t.t);
-            });
-            
-            container.appendChild(row);
+        showModal("CHANGE SETUP?", "This will wipe your current grid.", true, () => {
+            db.save(`grid_${activeRace}`, null);
+            localStorage.removeItem(`userLock_${activeRace}`);
+            location.reload();
         });
-    }
-
-    // --- TAB 2: TEAMS ---
-    function buildTeamMarket() {
-        const container = document.getElementById('teamList');
-        if(!container) return;
-        container.innerHTML = '';
-        const realTeams = BINGO_CONFIG.constructors.filter(c => c.type === 'Team');
-
-        realTeams.forEach(t => {
-             const row = document.createElement('div');
-            row.className = 'driver-row';
-            row.dataset.teamName = t.name;
-            row.innerHTML = `
-                <div class="driver-header" onclick="toggleDriver(this)" style="--team-color:${t.color}">
-                    <img src="${t.img}" class="driver-face car-face" onerror="this.style.display='none'">
-                    <div>
-                        <div class="driver-name">${t.name}</div>
-                        <div class="driver-team">CONSTRUCTOR</div>
-                    </div>
-                </div>
-                <div class="driver-content"></div>
-            `;
-            const content = row.querySelector('.driver-content');
-
-            const qpBtn = document.createElement('div'); qpBtn.className = 'qp-red-btn'; qpBtn.innerText = 'TEAM QUICK PICKS';
-            qpBtn.onclick = (e) => { e.stopPropagation(); applyQuickPicks(t.name, null, 'maximize_team'); };
-            content.appendChild(qpBtn);
-
-            const label = document.createElement('div'); label.className = 'menu-label'; label.innerText = 'SELECT PREDICTION';
-            content.appendChild(label);
-
-            BINGO_CONFIG.templates.team.forEach(tp => {
-                createChip(content, `${t.name} ${tp.t}`, 'team', 'team', t.name, '', tp.c, tp.t);
-            });
-            
-            container.appendChild(row);
-        });
-    }
-
-    // --- TAB 3: FIA ---
-    function buildFIAMarket() {
-        const container = document.getElementById('fiaList');
-        if(!container) return;
-        container.innerHTML = '';
-        
-        const row = document.createElement('div');
-        row.className = 'driver-row open'; 
-        row.dataset.driverName = 'Race Control';
-        row.innerHTML = `
-            <div class="driver-header" style="--team-color:#333">
-                <img src="images/fia.png" class="driver-face" style="filter:invert(1)">
-                <div>
-                    <div class="driver-name">RACE CONTROL</div>
-                    <div class="driver-team">FIA</div>
-                </div>
-            </div>
-            <div class="driver-content" style="display:flex"></div>
-        `;
-        
-        const content = row.querySelector('.driver-content');
-        
-        const qpBtn = document.createElement('div'); qpBtn.className = 'qp-red-btn'; qpBtn.innerText = 'FIA QUICK PICKS';
-        qpBtn.onclick = (e) => { e.stopPropagation(); applyQuickPicks(null, null, 'random_fia'); };
-        content.appendChild(qpBtn);
-
-        const label = document.createElement('div'); label.className = 'menu-label'; label.innerText = 'SELECT EVENT';
-        content.appendChild(label);
-
-        BINGO_CONFIG.templates.fia.forEach(tp => {
-            createChip(content, tp.t, 'fia', 'fia', 'Race Control', '', tp.c, tp.t);
-        });
-        
-        container.appendChild(row);
-    }
-
-    function toggleDriver(header) {
-        header.parentElement.classList.toggle('open');
-    }
-
-    function createChip(container, text, type, subType = '', driverName = null, forceCost = '', eventCost = 0, rawTemplateText = '') {
-        const chip = document.createElement('div');
-        chip.className = `chip ${type}`; 
-        
-        const dName = driverName || 'Race Control';
-        const cost = getChipCost(dName, type, rawTemplateText || text.replace(dName + ' ', ''));
-
-        chip.innerHTML = `<span>${text}</span> <span class="chip-cost">$${cost}M</span>`;
-        chip.draggable = true;
-        
-        // CLICK TO FILL
-        chip.onclick = () => attemptAutoFill(text, type, cost, driverName, subType);
-
-        chip.ondragstart = e => {
-            if(isGridLocked || isUserLocked) {
-                e.preventDefault();
-                return false;
-            }
-            e.dataTransfer.setData('text', text);
-            e.dataTransfer.setData('type', type);
-            e.dataTransfer.setData('cost', cost);
-            if(driverName) e.dataTransfer.setData('exclusive_driver', driverName);
-            if(subType) e.dataTransfer.setData('subtype', subType);
-        };
-        container.appendChild(chip);
-    }
-
-    function attemptAutoFill(text, type, cost, driverName, subType) {
-        if(isGridLocked || isUserLocked) {
-            showModal("Card Locked", "Unlock your card to make changes.", false);
-            return;
-        }
-
-        // 1. Find the first empty slot that requires 'type'
-        let targetIndex = -1;
-        const slots = document.querySelectorAll('.slot');
-        for(let i=0; i<slots.length; i++) {
-            if(currentGrid[i] === null && slots[i].dataset.req === type) {
-                targetIndex = i;
-                break;
-            }
-        }
-
-        if(targetIndex === -1) {
-            showModal("No Open Slot", `There are no empty ${type.toUpperCase()} slots available.`, false);
-            return;
-        }
-
-        // 2. Validation Checks (Budget, Conflicts)
-        const currentSpent = calculateTotalCost();
-        if ((currentSpent + cost) > BUDGET_CAP) {
-            showModal("Budget Cap Exceeded", "You cannot afford this pick.", false);
-            return;
-        }
-
-        if (driverName && subType && subType !== 'fia') {
-            const hasConflict = currentGrid.some((item, i) => 
-                item && item.driver === driverName && item.subtype === subType
-            );
-            if (hasConflict) {
-                showModal("Rule Violation", `Cannot add: ${driverName} already has a ${subType.toUpperCase()} prediction.`, false);
-                return;
-            }
-        }
-
-        // 3. Fill
-        currentGrid[targetIndex] = { text, type, driver: driverName, subtype: subType, cost: cost };
-        renderGrid();
-        saveLocal();
-        checkLockStatus();
-        updateBudgetUI();
-    }
-
-    function handleSlotClick(slot) {
-        const idx = parseInt(slot.dataset.index);
-        if(currentGrid[idx]) return; // Already filled
-
-        const req = slot.dataset.req;
-        
-        if(req === 'driver') {
-            const fav = localStorage.getItem('f1_fav_driver');
-            openTabAndExpand('drivers', fav);
-        }
-        if(req === 'team') {
-            const fav = localStorage.getItem('f1_fav_team');
-            openTabAndExpand('teams', fav);
-        }
-        if(req === 'fia') openTabAndExpand('fia', null);
-    }
-
-    function openTabAndExpand(tabName, specificName) {
-        showSideTab(tabName);
-        const panel = document.getElementById(`panel-${tabName}`);
-        if(panel) {
-            let targetRow = null;
-            
-            if(specificName) {
-                // Try to find specific favorite
-                if(tabName === 'drivers') targetRow = panel.querySelector(`.driver-row[data-driver-name="${specificName}"]`);
-                if(tabName === 'teams') targetRow = panel.querySelector(`.driver-row[data-team-name="${specificName}"]`);
-            }
-            
-            // Fallback to first row if not found or no fav
-            if(!targetRow) targetRow = panel.querySelector('.driver-row');
-
-            if(targetRow) {
-                panel.querySelectorAll('.driver-row').forEach(r => r.classList.remove('open'));
-                targetRow.classList.add('open');
-                targetRow.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-        }
-    }
-
-    function handleDrop(e, index, reqType) {
-        e.preventDefault();
-        
-        if(isGridLocked || isUserLocked) {
-            showModal("Card Locked", "Unlock your card to make changes.", false);
-            return;
-        }
-
-        const text = e.dataTransfer.getData('text');
-        const type = e.dataTransfer.getData('type');
-        const cost = parseInt(e.dataTransfer.getData('cost'));
-        const driverName = e.dataTransfer.getData('exclusive_driver');
-        const subType = e.dataTransfer.getData('subtype'); 
-
-        if(type !== reqType) return; 
-
-        const currentSpent = calculateTotalCost();
-        const oldItem = currentGrid[index];
-        const oldCost = oldItem ? oldItem.cost : 0;
-        
-        if ((currentSpent - oldCost + cost) > BUDGET_CAP) {
-            showModal("Budget Cap Exceeded", "You cannot afford this pick.", false);
-            return;
-        }
-
-        if (driverName && subType && subType !== 'fia') {
-            const hasConflict = currentGrid.some((item, i) => 
-                i !== index && item && item.driver === driverName && item.subtype === subType
-            );
-            if (hasConflict) {
-                showModal("Rule Violation", `Cannot add: ${driverName} already has a ${subType.toUpperCase()} prediction.`, false);
-                return;
-            }
-        }
-        
-        currentGrid[index] = { text, type, driver: driverName, subtype: subType, cost: cost };
-        renderGrid();
-        saveLocal();
-        checkLockStatus();
-        updateBudgetUI();
-    }
-
-    function applyQuickPicks(driverName, teamName, mode) {
-        if(isGridLocked || isUserLocked) { showModal("Card Locked", "Unlock your card to make changes.", false); return; }
-
-        let targetTier = 1; // Default
-        if (mode === 'maximize_driver') {
-            const d = BINGO_CONFIG.drivers.find(x => x.name === driverName);
-            if(d) targetTier = d.tier || 1;
-        } else if (mode === 'maximize_team') {
-            const t = BINGO_CONFIG.constructors.find(x => x.name === driverName);
-            if(t) targetTier = t.tier || 1;
-        }
-
-        let allOptions = [];
-        if (mode === 'maximize_driver') {
-            allOptions = [
-                ...BINGO_CONFIG.templates.quali.map(x=>({...x, type:'driver', st:'quali'})),
-                ...BINGO_CONFIG.templates.race.map(x=>({...x, type:'driver', st:'race'})),
-                ...BINGO_CONFIG.templates.bonus.map(x=>({...x, type:'driver', st:'bonus'}))
-            ];
-        } else if (mode === 'maximize_team') {
-            allOptions = BINGO_CONFIG.templates.team.map(x=>({...x, type:'team', st:'team'}));
-        } else if (mode === 'random_fia') {
-             const allFia = BINGO_CONFIG.templates.fia;
-             let shuffled = [...allFia].sort(() => 0.5 - Math.random());
-             allOptions = shuffled.map(x=>({...x, type:'fia', st:'fia'}));
-        }
-
-        let priorities = [];
-        if (mode !== 'random_fia') {
-            priorities = allOptions.filter(opt => opt.tiers && opt.tiers.includes(targetTier));
-            priorities.sort((a,b) => b.c - a.c);
-        } else {
-            priorities = allOptions.slice(0, 9);
-        }
-
-        let tempGrid = [...currentGrid];
-        let tempCost = calculateTotalCost(); 
-        let addedCount = 0;
-
-        for (let i = 0; i < 9; i++) {
-            if (tempGrid[i] !== null) continue; 
-
-            const slotEl = document.querySelector(`.slot[data-index="${i}"]`);
-            if (!slotEl) continue;
-            const reqType = slotEl.dataset.req;
-
-            for (let p of priorities) {
-                if (p.type !== reqType) continue; 
-
-                let fullText = p.t;
-                let dName = 'Race Control';
-                let st = p.st;
-
-                if (p.type === 'driver') { fullText = `${driverName} ${p.t}`; dName = driverName; }
-                if (p.type === 'team') { fullText = `${driverName} ${p.t}`; dName = driverName; } 
-
-                let conflict = false;
-                if (p.type === 'driver' || p.type === 'team') {
-                     conflict = tempGrid.some(x => x && x.driver === dName && x.subtype === st);
-                }
-                
-                const alreadyExists = tempGrid.some(x => x && x.text === fullText);
-
-                if (!conflict && !alreadyExists) {
-                    const cost = getChipCost(dName, p.type, p.t);
-                    
-                    if (tempCost + cost <= BUDGET_CAP) {
-                        tempGrid[i] = { text: fullText, type: p.type, driver: dName, subtype: st, cost: cost };
-                        tempCost += cost;
-                        addedCount++;
-                        break; 
-                    }
-                }
-            }
-        }
-
-        if (addedCount > 0) {
-            currentGrid = tempGrid;
-            renderGrid();
-            saveLocal();
-            checkLockStatus();
-            updateBudgetUI();
-        } else {
-            showModal("Fill Failed", "Could not add any picks. Check budget or open slots.", false);
-        }
-    }
-
-    function removePick(index) {
-        if(isGridLocked || isUserLocked) return;
-        currentGrid[index] = null;
-        renderGrid();
-        saveLocal();
-        checkLockStatus();
-        updateBudgetUI();
-    }
-
-    function login(auto = false) {
-        const name = document.getElementById('teamNameInput').value || localStorage.getItem('f1_team_name');
-        
-        if(!auto) {
-            if(!name) return alert("Enter Name");
-            if(!selectedDriverFav) return alert("Select Favorite Driver");
-            if(!selectedTeamFav) return alert("Select Favorite Team");
-            
-            localStorage.setItem('f1_team_name', name);
-            localStorage.setItem('f1_fav_driver', selectedDriverFav);
-            localStorage.setItem('f1_fav_team', selectedTeamFav);
-        }
-        
-        document.getElementById('displayTeamName').innerText = name.toUpperCase();
-        checkLocalGrid();
-    }
-
-    function checkLocalGrid() {
-        const savedGrid = localStorage.getItem(`grid_${activeRace}`);
-        const savedRes = localStorage.getItem(`results_${activeRace}`);
-        verifiedResults = savedRes ? JSON.parse(savedRes) : [];
-
-        if(savedGrid) {
-            currentGrid = JSON.parse(savedGrid);
-            switchState('game');
-            renderGrid();
-        } else {
-            const r = BINGO_CONFIG.races.find(r=>r.id===activeRace);
-            if(r) {
-                document.getElementById('stratRaceTitle').innerText = r.n.toUpperCase() + " STRATEGY";
-                document.getElementById('stratFlag').src = `https://flagcdn.com/w160/${r.c}.png`;
-            }
-            switchState('strategy');
-        }
-    }
-
-    function switchState(view) {
-        document.querySelectorAll('.view-login, .view-strategy, .view-game').forEach(e => e.classList.add('hidden'));
-        document.getElementById(`view-${view}`).classList.remove('hidden');
-        if(view === 'game') renderRaceHeader();
-    }
-
-    function confirmStrategy(type) {
-        currentGrid = templates[type].map(t => null); 
-        renderGridStructure(templates[type]);
-        switchState('game');
-        saveLocal();
     }
 
     function renderGridStructure(pattern) {
@@ -1189,168 +602,324 @@
             slot.className = 'slot'; 
             slot.dataset.req = type; 
             slot.innerText = type === 'fia' ? "FIA" : type.toUpperCase();
-            
-            // Interaction:
-            slot.onclick = () => handleSlotClick(slot);
-            slot.ondragover = e => e.preventDefault();
-            slot.ondrop = e => handleDrop(e, i, type);
-            
+            slot.onclick = () => handleSlotClick(i, type);
             grid.appendChild(slot);
         });
     }
 
+    // --- CORE RENDERING (Complex Card Logic) ---
     function renderGrid() {
         const slots = document.querySelectorAll('.slot');
         slots.forEach(s => {
             const idx = parseInt(s.dataset.index);
             const data = currentGrid[idx];
             if(data) {
+                // Find entity
                 let drv = BINGO_CONFIG.drivers.find(d => d.name === data.driver);
-                if (!drv) drv = BINGO_CONFIG.constructors.find(c => c.name === data.driver);
-                if (!drv && data.type === 'fia') drv = {name:'Race Control', color:'#333', img:'images/fia.png'};
+                if(!drv) drv = BINGO_CONFIG.constructors.find(c => c.name === data.driver);
+                if(!drv && data.type === 'fia') drv = {name:'RC', color:'#333', img:'images/fia.png'};
 
-                const imgSrc = drv ? drv.img : '';
-                const teamColor = drv ? drv.color : '#333';
+                const color = drv ? drv.color : '#333';
+                const img = drv ? drv.img : '';
                 
-                let mainText = data.text;
-                if(drv && mainText.startsWith(drv.name)) {
-                    mainText = mainText.replace(drv.name, '').trim();
-                } 
-
-                let subText = data.subtype ? data.subtype.toUpperCase() : "EVENT";
-                if(subText === 'FIA') subText = 'TRACK';
-
-                s.style.setProperty('--team-color-hex', teamColor);
+                // Set CSS Variables for specific slot
+                s.style.setProperty('--team-color-hex', color);
                 
-                let catColor = '#ff9500'; 
-                if(data.type === 'team') catColor = '#00d2be'; 
-                if(data.type === 'fia') catColor = '#e10600'; 
+                let catColor = '#ff9500';
+                if(data.type === 'team') catColor = '#00d2be';
+                if(data.type === 'fia') catColor = '#e10600';
                 s.style.setProperty('--cat-text-color', catColor);
 
+                s.className = `slot filled`;
+                s.dataset.type = data.type;
+                s.onclick = null; // Remove click to open market
+
+                // HTML Structure for the "Complex" Card
                 s.innerHTML = `
                     <div class="remove-pick-btn" onclick="removePick(${idx}); event.stopPropagation();">×</div>
                     <div class="slot-img-container">
-                        <img src="${imgSrc}" class="slot-img" onerror="this.style.display='none'">
+                        <img src="${img}" class="slot-img" onerror="this.style.display='none'">
                         <div class="slot-price-tag">$${data.cost}M</div>
                     </div>
                     <div class="slot-text-container">
-                        <div class="slot-sub" style="color:${catColor}">${subText}</div>
-                        <div class="slot-main">${mainText}</div>
+                        <div class="slot-sub">${data.subtype}</div>
+                        <div class="slot-main">${data.text.replace(data.driver, '').trim()}</div>
                     </div>
                 `;
-                s.className = `slot filled`;
-                s.dataset.type = data.type; 
-                s.onclick = null; // Remove click to open market if filled
                 
                 if(verifiedResults.includes(data.text)) s.classList.add('matched');
                 else s.classList.remove('matched');
+
             } else {
-                const req = s.dataset.req;
-                s.innerHTML = req === 'fia' ? "FIA" : req.toUpperCase();
                 s.className = 'slot';
                 s.removeAttribute('style');
                 delete s.dataset.type;
                 s.classList.remove('matched');
-                // Re-add listener if cleared
-                s.onclick = () => handleSlotClick(s);
+                
+                const req = s.dataset.req;
+                s.innerText = req === 'fia' ? "FIA" : req.toUpperCase();
+                s.onclick = () => handleSlotClick(idx, req);
             }
         });
         updateScore();
+        updateBudgetUI();
+        updateActionButtons();
     }
 
+    // --- MARKET INTERACTIONS ---
+    function handleSlotClick(idx, type) {
+        if(currentGrid[idx] || isGridLocked || isUserLocked) return;
+        
+        // Open Modal/Panel
+        const panel = document.getElementById('marketPanel');
+        if(window.innerWidth <= 1024) {
+            panel.classList.add('mobile-modal');
+        }
+        
+        // Switch Tab
+        showTab(type === 'driver' ? 'drivers' : (type === 'team' ? 'teams' : 'fia'));
+        
+        // Smart Expand Logic
+        if(type === 'driver' && favDriver) expandRow(favDriver, 'drivers');
+        if(type === 'team' && favTeam) expandRow(favTeam, 'teams');
+        
+        // Set context
+        panel.dataset.targetIndex = idx;
+    }
+
+    function closeMobileMarket() {
+        document.getElementById('marketPanel').classList.remove('mobile-modal');
+    }
+
+    function fillSlot(text, type, cost, driverName, subType) {
+        const panel = document.getElementById('marketPanel');
+        let targetIdx = parseInt(panel.dataset.targetIndex);
+        
+        if(isNaN(targetIdx)) {
+            // Click-to-fill fallback logic (find first empty slot)
+            const slots = document.querySelectorAll('.slot');
+            for(let i=0; i<slots.length; i++) {
+                if(currentGrid[i] === null && slots[i].dataset.req === type) {
+                    targetIdx = i;
+                    break;
+                }
+            }
+            if(targetIdx === undefined || targetIdx === -1) return alert("No available slot for " + type);
+        }
+
+        // Budget Check
+        const currentSpent = calculateTotalCost();
+        if(currentSpent + cost > BUDGET_CAP) return showModal("OVER BUDGET", "You cannot afford this pick.", false);
+        
+        // Duplicate Check
+        if(driverName && subType && subType !== 'fia') {
+            const conflict = currentGrid.some(x => x && x.driver === driverName && x.subtype === subType);
+            if(conflict) return showModal("RULE VIOLATION", "One pick per category per driver.", false);
+        }
+
+        // Save
+        currentGrid[targetIdx] = { text, type, driver: driverName, subtype: subType, cost };
+        db.save(`grid_${activeRace}`, currentGrid);
+        renderGrid();
+        closeMobileMarket();
+        
+        // Reset target
+        delete panel.dataset.targetIndex;
+    }
+
+    function removePick(idx) {
+        if(isGridLocked || isUserLocked) return;
+        currentGrid[idx] = null;
+        db.save(`grid_${activeRace}`, currentGrid);
+        renderGrid();
+    }
+
+    // --- MARKET BUILDERS ---
+    function buildLists() {
+        // Drivers
+        const dList = document.getElementById('driverList');
+        BINGO_CONFIG.drivers.filter(d=>d.team!=='FIA').forEach(d => {
+            const row = createRow(d, 'driver');
+            const opts = [
+                ...BINGO_CONFIG.templates.quali.map(t=>({...t, s:'QUALI'})),
+                ...BINGO_CONFIG.templates.race.map(t=>({...t, s:'RACE'})),
+                ...BINGO_CONFIG.templates.bonus.map(t=>({...t, s:'BONUS'}))
+            ];
+            opts.forEach(o => {
+                const cost = getCost(d, o);
+                row.querySelector('.driver-content').appendChild(createChip(d.name + ' ' + o.t, cost, 'driver', d.name, o.s));
+            });
+            dList.appendChild(row);
+        });
+
+        // Teams
+        const tList = document.getElementById('teamList');
+        BINGO_CONFIG.constructors.filter(t=>t.type==='Team').forEach(t => {
+            const row = createRow(t, 'team');
+            BINGO_CONFIG.templates.team.forEach(o => {
+                const cost = getCost(t, o);
+                row.querySelector('.driver-content').appendChild(createChip(t.name + ' ' + o.t, cost, 'team', t.name, 'TEAM'));
+            });
+            tList.appendChild(row);
+        });
+
+        // FIA
+        const fList = document.getElementById('fiaList');
+        const fRow = createRow({name:'Race Control', team:'FIA', color:'#333', img:'images/fia.png'}, 'fia');
+        fRow.classList.add('open'); // Always open
+        BINGO_CONFIG.templates.fia.forEach(o => {
+            fRow.querySelector('.driver-content').appendChild(createChip(o.t, o.c, 'fia', 'Race Control', 'FIA'));
+        });
+        fList.appendChild(fRow);
+    }
+
+    function createRow(entity, type) {
+        const div = document.createElement('div');
+        div.className = 'driver-row';
+        div.dataset.name = entity.name;
+        div.innerHTML = `
+            <div class="driver-header" onclick="this.parentElement.classList.toggle('open')" style="--team-color:${entity.color}">
+                <img src="${entity.img}" class="driver-face" onerror="this.style.display='none'">
+                <div class="driver-info">
+                    <div class="d-name">${entity.name}</div>
+                    <div class="d-team">${entity.team || 'CONSTRUCTOR'}</div>
+                </div>
+            </div>
+            <div class="driver-content"></div>
+        `;
+        return div;
+    }
+
+    function createChip(text, cost, type, dName, sub) {
+        const el = document.createElement('div');
+        el.className = `chip ${type}`;
+        // Clean text for display (Remove driver name if redundant)
+        const dispText = text.replace(dName, '').trim() || text;
+        el.innerHTML = `<span>${dispText}</span> <span class="chip-cost">$${cost}M</span>`;
+        el.onclick = () => fillSlot(text, type, cost, dName, sub);
+        return el;
+    }
+
+    function expandRow(name, tab) {
+        const list = document.getElementById(tab === 'drivers' ? 'driverList' : 'teamList');
+        const rows = list.querySelectorAll('.driver-row');
+        rows.forEach(r => {
+            r.classList.remove('open');
+            if(r.dataset.name === name) {
+                r.classList.add('open');
+                setTimeout(() => r.scrollIntoView({behavior:'smooth', block:'start'}), 100);
+            }
+        });
+    }
+
+    function getCost(entity, template) {
+        let cost = (entity.price || 0) + template.c;
+        if(entity.tier === 1 && (template.t.includes('Points') || template.t.includes('Podium'))) cost += 20; // Tax
+        if(entity.tier === 3 && template.t.includes('11th')) cost += 10;
+        return cost;
+    }
+
+    function calculateTotalCost() {
+        return currentGrid.reduce((sum, item) => sum + (item ? item.cost : 0), 0);
+    }
+
+    // --- UI UTILS ---
     function renderRaces() {
         const bar = document.getElementById('raceBar');
         bar.innerHTML = '';
         BINGO_CONFIG.races.forEach(r => {
             const d = document.createElement('div');
-            d.className = `race-card ${r.id === activeRace ? 'active':''}`;
-            d.onclick = () => { 
-                activeRace = r.id; 
-                localStorage.setItem('current_race_id', activeRace);
-                renderRaces(); 
-                checkLocalGrid(); 
-            };
+            d.className = `race-card ${r.id===activeRace ? 'active':''}`;
+            d.onclick = () => { activeRace = r.id; localStorage.setItem('current_race_id', activeRace); location.reload(); };
             d.innerHTML = `<img src="https://flagcdn.com/w40/${r.c}.png" class="race-flag-img"><span class="race-name">${r.n}</span>`;
             bar.appendChild(d);
         });
+        renderRaceHeader();
     }
 
-    function saveLocal() {
-        localStorage.setItem(`grid_${activeRace}`, JSON.stringify(currentGrid));
+    function renderRaceHeader() {
+        const r = BINGO_CONFIG.races.find(x => x.id === activeRace);
+        document.getElementById('rhFlag').src = `https://flagcdn.com/w160/${r.c}.png`;
+        document.getElementById('rhTitle').innerText = r.n;
+        document.getElementById('rhDate').innerText = r.d;
     }
-    
-    function toggleAdmin() {
-        const p = document.getElementById('adminPanel');
-        p.style.display = p.style.display === 'flex' ? 'none' : 'flex';
-        if(p.style.display === 'flex') {
-            const list = document.getElementById('adminList');
-            list.innerHTML = '';
-            let items = currentGrid.filter(x => x).map(x => x.text);
-            items = [...new Set(items)];
-            if(items.length === 0) list.innerHTML = "<div style='color:#aaa'>Grid empty.</div>";
-            items.forEach(text => {
-                const item = document.createElement('div');
-                const isChecked = verifiedResults.includes(text);
-                item.className = `admin-item ${isChecked ? 'checked' : ''}`;
-                item.innerText = text;
-                item.onclick = () => item.classList.toggle('checked');
-                list.appendChild(item);
-            });
+
+    function checkLockStatus() {
+        const r = BINGO_CONFIG.races.find(x => x.id === activeRace);
+        if(!r.lockTime) return;
+        
+        const diff = new Date(r.lockTime) - new Date();
+        if(diff <= 0) isGridLocked = true;
+        
+        updateActionButtons();
+    }
+
+    function updateActionButtons() {
+        const lock = document.getElementById('lockBtn');
+        const unlock = document.getElementById('unlockBtn');
+        const isFull = currentGrid.every(x => x !== null);
+
+        if(isGridLocked) {
+            lock.style.display = 'none'; unlock.style.display = 'none';
+            document.getElementById('grid').classList.add('grid-locked');
+        } else if(isUserLocked) {
+            lock.style.display = 'none'; unlock.style.display = 'inline-block';
+            document.getElementById('grid').classList.add('grid-locked');
+        } else {
+            document.getElementById('grid').classList.remove('grid-locked');
+            unlock.style.display = 'none';
+            if(isFull) lock.style.display = 'inline-block';
+            else lock.style.display = 'none';
         }
     }
 
-    function publishResults() {
-        const checked = document.querySelectorAll('.admin-item.checked');
-        verifiedResults = Array.from(checked).map(el => el.innerText);
-        localStorage.setItem(`results_${activeRace}`, JSON.stringify(verifiedResults));
-        renderGrid();
-        document.getElementById('adminPanel').style.display = 'none';
-        alert("Results Published!");
+    function toggleUserLock() {
+        isUserLocked = !isUserLocked;
+        localStorage.setItem(`userLock_${activeRace}`, isUserLocked);
+        updateActionButtons();
     }
 
     function updateScore() {
         let score = 0;
-        let matches = Array(9).fill(false);
-
-        currentGrid.forEach((item, i) => {
-            if(!item) return;
-            if(verifiedResults.includes(item.text)) {
-                score += 10;
-                matches[i] = true;
-            }
-        });
-
-        const bonuses = [];
-        let lineCount = 0;
-
-        for(let r=0; r<3; r++) {
-            let isLine = true;
-            for(let c=0; c<3; c++) { if(!matches[r*3 + c]) isLine = false; }
-            if(isLine) { score += 30; lineCount++; }
-        }
-        for(let c=0; c<3; c++) {
-            let isLine = true;
-            for(let r=0; r<3; r++) { if(!matches[r*3 + c]) isLine = false; }
-            if(isLine) { score += 30; lineCount++; }
-        }
-        if(lineCount > 0) bonuses.push(`${lineCount} LINE BONUS (+${lineCount*30})`);
-
-        if(matches[0] && matches[2] && matches[6] && matches[8]) {
-            score += 50;
-            bonuses.push("4 CORNERS BONUS (+50)");
-        }
-
-        const allMatched = matches.every(m => m === true);
-        if(allMatched) {
-            score += 100;
-            bonuses.push("FULL CARD BONUS (+100)");
-        }
-
+        currentGrid.forEach(x => { if(x && verifiedResults.includes(x.text)) score+=10; });
         document.getElementById('scoreDisplay').innerText = score;
-        document.getElementById('bonusDisplay').innerHTML = bonuses.map(b => `<div class="bonus-pill">${b}</div>`).join('');
+        document.getElementById('deskScoreDisplay').innerText = score;
     }
+
+    function updateBudgetUI() {
+        const spent = calculateTotalCost();
+        const rem = BUDGET_CAP - spent;
+        const hudVal = document.getElementById('hudBudgetVal');
+        const hudBar = document.getElementById('hudBudgetBar');
+        
+        hudVal.innerText = `$${rem}M`;
+        hudBar.style.width = `${(rem/BUDGET_CAP)*100}%`;
+        
+        if(rem < 0) { hudVal.style.color = 'red'; hudBar.style.backgroundColor = 'red'; }
+        else { hudVal.style.color = '#22c55e'; hudBar.style.backgroundColor = '#22c55e'; }
+    }
+
+    function showModal(title, text, isConfirm, callback) {
+        document.getElementById('modalTitle').innerText = title;
+        document.getElementById('modalText').innerText = text;
+        const acts = document.getElementById('modalActions');
+        acts.innerHTML = '';
+        
+        if(isConfirm) {
+            modalCallback = callback;
+            acts.innerHTML = `
+                <button class="btn-modal btn-cancel" onclick="closeModal()">CANCEL</button>
+                <button class="btn-modal btn-confirm" onclick="execCallback()">CONFIRM</button>
+            `;
+        } else {
+            acts.innerHTML = `<button class="btn-modal btn-confirm" onclick="closeModal()">OK</button>`;
+        }
+        document.getElementById('customModal').classList.remove('hidden');
+    }
+
+    function closeModal() { document.getElementById('customModal').classList.add('hidden'); modalCallback = null; }
+    function execCallback() { if(modalCallback) modalCallback(); closeModal(); }
+
 </script>
-
 </body>
-
 </html>
