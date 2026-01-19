@@ -83,14 +83,14 @@
 
         .slot-img-container { width: 40%; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: var(--team-color-hex); position: relative; border-right: 1px solid rgba(255,255,255,0.2); }
         .slot-img { width: 85%; height: 85%; object-fit: contain; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.3)); z-index: 2; }
+        .slot.filled[data-type="team"] .slot-img { width: 95%; height: auto; }
+        .slot.filled[data-type="fia"] .slot-img { filter: brightness(0) invert(1); }
         .slot-price-tag { background: rgba(0,0,0,0.7); color: white; font-size: 10px; font-weight: 900; padding: 2px 6px; border-radius: 4px; position: absolute; bottom: 5px; z-index: 3; }
         .slot-text-container { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 5px 10px; background-color: #f9f9f9; background-image: linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee), linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee); background-size: 16px 16px; background-position: 0 0, 8px 8px; }
         .slot-sub { font-size: 9px; text-transform: uppercase; font-weight: 900; color: var(--cat-text-color); margin-bottom: 2px; letter-spacing: 0.5px; }
         .slot-main { font-size: 13px; font-weight: 800; line-height: 1.1; word-wrap: break-word; color: #111; }
         .remove-pick-btn { position: absolute; top: 0; right: 0; width: 24px; height: 24px; background: rgba(0,0,0,0.8); color: #fff; display: flex; align-items: center; justify-content: center; z-index: 10; border-bottom-left-radius: 6px; font-size: 14px; font-weight: bold; cursor: pointer; }
         .slot.matched::after { content: '✓'; position: absolute; bottom: 5px; right: 5px; background: var(--score-win); color: black; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 18px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
-        .slot.filled[data-type="team"] .slot-img { width: 95%; height: auto; }
-        .slot.filled[data-type="fia"] .slot-img { filter: brightness(0) invert(1); }
 
         /* MARKET STYLES */
         .tab-header { display: flex; border-bottom: 1px solid #eee; background: #f9f9f9; flex-shrink: 0; height: 45px; }
@@ -126,42 +126,21 @@
         .pb-text { font-size: 12px; font-weight: 800; color: #333; text-transform: uppercase; }
         .pb-cost { background: #333; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 900; }
 
-        /* IMPROVED LOGIN SLIDER CARDS */
+        /* LOGIN SLIDER */
         .selection-slider { display: flex; overflow-x: auto; gap: 12px; padding: 10px 5px; width: 100%; max-width: 600px; scroll-snap-type: x mandatory; margin-bottom: 20px; scrollbar-width: none; }
-        
-        .selection-card { 
-            flex: 0 0 100px; height: 110px; 
-            border: 1px solid #eee; border-radius: 12px; 
-            display: flex; flex-direction: column; justify-content: flex-end; align-items: center;
-            cursor: pointer; transition: 0.2s; background: white; 
-            position: relative; scroll-snap-align: start; overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        }
+        .selection-card { flex: 0 0 100px; height: 110px; border: 1px solid #eee; border-radius: 12px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; cursor: pointer; transition: 0.2s; background: white; position: relative; scroll-snap-align: start; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .selection-card.selected { border: 3px solid #22c55e; box-shadow: 0 4px 15px rgba(34, 197, 94, 0.2); transform: scale(1.02); z-index: 2; }
         .selection-card.selected::after { content: '✓'; position: absolute; top: 5px; right: 5px; background: #22c55e; color: white; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; }
-        
-        /* The Color Bar at Top */
         .selection-card-color { position: absolute; top: 0; left: 0; width: 100%; height: 6px; background: var(--team-color); }
-        
         .selection-img { width: 90%; height: 65%; object-fit: contain; object-position: bottom; margin-bottom: 0; z-index: 1; }
         .selection-name { width: 100%; background: #f9f9f9; font-size: 9px; font-weight: 800; text-align: center; padding: 6px 2px; text-transform: uppercase; color: #333; border-top: 1px solid #eee; z-index: 2; }
-
-        /* SCROLL TRACK HINT */
         .scroll-hint { height: 4px; width: 50px; background: #eee; border-radius: 2px; margin: -10px auto 20px auto; position: relative; }
         .scroll-hint::after { content:''; position: absolute; top:0; left:0; height:100%; width: 20px; background:#ccc; border-radius: 2px; animation: scrollAnim 2s infinite; }
         @keyframes scrollAnim { 0% { left: 0; } 50% { left: 30px; } 100% { left: 0; } }
 
         /* FOOTER ACTIONS */
         .actions-footer { padding: 15px; display: flex; gap: 10px; align-items: center; justify-content: center; width: 100%; }
-        
-        .btn-action { 
-            flex: 1; padding: 12px; border-radius: 8px; font-weight: 900; 
-            font-size: 11px; text-transform: uppercase; cursor: pointer; border: none; 
-            display: flex; align-items: center; justify-content: center; gap: 6px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: 0.2s;
-        }
-        .btn-action:active { transform: translateY(2px); }
-        
+        .btn-action { flex: 1; padding: 12px; border-radius: 8px; font-weight: 900; font-size: 11px; text-transform: uppercase; cursor: pointer; border: none; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: 0.2s; }
         .btn-lock { background: #22c55e; color: white; }
         .btn-unlock { background: #ef4444; color: white; }
         .btn-change-strat { background: white; color: #555; border: 2px solid #ddd; }
@@ -190,7 +169,7 @@
         .step-title { font-weight: 900; font-size: 14px; margin-bottom: 5px; text-transform: uppercase; color: #333; }
         .step-desc { font-size: 13px; color: #666; line-height: 1.4; margin: 0; }
         .chip-example { display: flex; align-items: center; gap: 10px; margin-top: 5px; background: #f9f9f9; padding: 8px; border-radius: 6px; border: 1px solid #eee; }
-        .ce-text { font-size: 11px; font-weight: 800; color: #333; }
+        .ce-text { font-size: 11px; font-weight: 800; color: #333; text-transform: uppercase; }
 
     </style>
 </head>
@@ -433,7 +412,7 @@
     function login(auto) {
         const name = document.getElementById('teamNameInput').value;
         if(!auto) {
-            if(!name || !favDriver || !favTeam) return alert("Complete all selections.");
+            if(!name || !favDriver || !favTeam) return showModal("MISSING INFO", "Please enter a team name and select your favorites.", false);
             localStorage.setItem('f1_team_name', name);
             localStorage.setItem('f1_fav_driver', favDriver);
             localStorage.setItem('f1_fav_team', favTeam);
