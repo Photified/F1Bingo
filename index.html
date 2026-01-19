@@ -168,7 +168,7 @@
         .slot.matched { opacity: 1; box-shadow: inset 0 0 0 3px var(--score-win); transform: scale(1.02); z-index: 5; }
         .slot.matched::after { content: '✓'; position: absolute; top: 4px; right: 4px; background: var(--score-win); color: black; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); z-index: 20; }
 
-        /* --- MARKET STYLES --- */
+        /* MARKET STYLES */
         .tab-header { display: flex; border-bottom: 1px solid #eee; background: #f9f9f9; flex-shrink: 0; height: 45px; }
         .tab-btn { flex: 1; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px; cursor: pointer; color: #888; border-bottom: 3px solid transparent; transition: 0.2s; }
         .tab-btn.active { background: white; color: #000; }
@@ -240,6 +240,13 @@
         .strat-card { background: #fff; border: 2px solid #eee; border-radius: 12px; padding: 20px; cursor: pointer; display: flex; flex-direction: column; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .mini-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; width: 60px; height: 60px; margin-bottom: 10px; opacity: 0.8; } .mg-c { border-radius: 1px; }
         
+        /* FOOTER ACTIONS */
+        .actions-footer { padding: 15px; display: flex; gap: 10px; align-items: center; justify-content: center; width: 100%; flex-shrink: 0; border-top: 1px solid #eee; background: white; }
+        .btn-action { flex: 1; padding: 14px; border-radius: 8px; font-weight: 900; font-size: 12px; text-transform: uppercase; cursor: pointer; border: none; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: 0.2s; }
+        .btn-lock { background: #22c55e; color: white; border: 1px solid #16a34a; }
+        .btn-unlock { background: #ef4444; color: white; border: 1px solid #b91c1c; }
+        .btn-change-strat { background: white; color: #555; border: 2px solid #ddd; box-shadow: none; }
+
         /* MODAL */
         #customModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 5000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
         .modal-box { background: white; padding: 25px; border-radius: 15px; width: 85%; max-width: 320px; text-align: center; }
@@ -332,27 +339,15 @@
 
         <div id="view-game" class="view-game hidden" style="width:100%; height:100%; display:flex; flex-direction:column;">
             <div id="raceHeader">
-                <div class="rh-left">
-                    <img id="rhFlag" src="" class="rh-flag">
-                    <div>
-                        <div id="rhTitle" class="rh-title">RACE</div>
-                        <div id="rhDate" class="rh-date">DATE</div>
-                    </div>
-                </div>
-                <div class="rh-right-group">
-                    <button id="lockBtn" class="header-btn hb-lock" onclick="toggleUserLock()">🔒</button>
-                    <button id="unlockBtn" class="header-btn hb-unlock" onclick="toggleUserLock()">🔓</button>
-                    <button id="setupBtn" class="header-btn hb-setup" onclick="changeStrategy()">⚙</button>
-                    
-                    <div class="budget-hud">
-                        <span style="font-size:9px; font-weight:800; color:#888;">CAP</span>
-                        <div class="budget-hud-val" id="hudBudgetVal">$100M</div>
-                        <div class="budget-hud-bar-bg"><div class="budget-hud-bar-fill" id="hudBudgetBar"></div></div>
-                    </div>
-                </div>
+                <div class="rh-left"><img id="rhFlag" src="" class="rh-flag"><div><div id="rhTitle" class="rh-title">RACE</div><div id="rhDate" class="rh-date">DATE</div></div></div>
+                <div class="budget-hud"><span style="font-size:9px; font-weight:800; color:#888;">CAP SPACE</span><div class="budget-hud-val" id="hudBudgetVal">$100M</div><div class="budget-hud-bar-bg"><div class="budget-hud-bar-fill" id="hudBudgetBar"></div></div></div>
             </div>
-            
             <div class="grid-container"><div id="grid" class="bingo-grid"></div></div>
+            <div class="actions-footer">
+                <button id="lockBtn" class="btn-action btn-lock" onclick="toggleUserLock()">🔒 LOCK CARD</button>
+                <button id="unlockBtn" class="btn-action btn-unlock" onclick="toggleUserLock()">🔓 UNLOCK CARD</button>
+                <button class="btn-action btn-change-strat" onclick="changeStrategy()">⚙ SETUP</button>
+            </div>
         </div>
         
         <div id="view-standings" class="hidden" style="padding:20px; overflow-y:auto; height:100%;">
@@ -542,7 +537,11 @@
             });
         } else {
             BINGO_CONFIG.templates.team.forEach(o => {
-                const cost = (entity.price||0) + o.c + (entity.tier===1 && o.t.includes('Double')?15:0);
+                let cost = (entity.price||0) + o.c;
+                // ** LOGIC FIX FOR TEAM TIER 1 TAX **
+                if(entity.tier === 1 && o.t.includes('One Driver')) cost += 28; // Special case for "One Driver in Points"
+                else if(entity.tier === 1 && o.t.includes('Double')) cost += 15;
+                
                 const isExpensive = cost > remaining;
                 list.appendChild(createPredictionBtn(entity.name, o.t, cost, 'team', entity.name, 'TEAM', entity, isExpensive));
             });
@@ -705,24 +704,15 @@
 
     function updateActionButtons() {
         const l = document.getElementById('lockBtn'), u = document.getElementById('unlockBtn');
-        const setup = document.getElementById('setupBtn');
-        
-        // Default Visibility
-        l.style.display = 'none';
-        u.style.display = 'none';
-        setup.style.display = 'flex';
-
-        if(isGridLocked) {
+        const full = currentGrid.every(x=>x);
+        if(isGridLocked || isUserLocked) {
+            l.style.display = 'none';
+            u.style.display = isUserLocked && !isGridLocked ? 'flex' : 'none';
             document.getElementById('grid').classList.add('grid-locked');
-            setup.style.display = 'none'; // Cant change setup if race started
-        } else if(isUserLocked) {
-            document.getElementById('grid').classList.add('grid-locked');
-            u.style.display = 'flex';
-            setup.style.display = 'none'; // Must unlock first
         } else {
             document.getElementById('grid').classList.remove('grid-locked');
-            const isFull = currentGrid.every(x => x !== null);
-            if(isFull) l.style.display = 'flex';
+            u.style.display = 'none';
+            l.style.display = full ? 'flex' : 'none';
         }
     }
 
