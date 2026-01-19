@@ -89,8 +89,10 @@
         .slot-main { font-size: 13px; font-weight: 800; line-height: 1.1; word-wrap: break-word; color: #111; }
         .remove-pick-btn { position: absolute; top: 0; right: 0; width: 24px; height: 24px; background: rgba(0,0,0,0.8); color: #fff; display: flex; align-items: center; justify-content: center; z-index: 10; border-bottom-left-radius: 6px; font-size: 14px; font-weight: bold; cursor: pointer; }
         .slot.matched::after { content: '✓'; position: absolute; bottom: 5px; right: 5px; background: var(--score-win); color: black; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 18px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        .slot.filled[data-type="team"] .slot-img { width: 95%; height: auto; }
+        .slot.filled[data-type="fia"] .slot-img { filter: brightness(0) invert(1); }
 
-        /* --- NEW MARKET STYLES (Drill Down) --- */
+        /* --- NEW MARKET STYLES --- */
         .tab-header { display: flex; border-bottom: 1px solid #eee; background: #f9f9f9; flex-shrink: 0; height: 45px; }
         .tab-btn { flex: 1; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px; cursor: pointer; color: #888; border-bottom: 3px solid transparent; transition: 0.2s; }
         .tab-btn.active { background: white; color: #000; }
@@ -98,46 +100,61 @@
         #tabBtn-teams.active { border-bottom-color: var(--c-team); color: var(--c-team); }
         #tabBtn-fia.active { border-bottom-color: var(--c-fia); color: var(--c-fia); }
 
-        /* The Grid of Buttons (Drivers/Teams) */
-        .market-grid { padding: 15px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        @media(min-width: 600px) { .market-grid { grid-template-columns: repeat(3, 1fr); } }
-
-        .market-item-card { 
-            background: white; border: 1px solid #eee; border-radius: 8px; 
-            display: flex; flex-direction: column; align-items: center; padding: 15px 5px; 
-            cursor: pointer; transition: 0.2s; position: relative; 
-            border-bottom: 4px solid var(--team-color);
+        /* DRIVER GRID STYLE */
+        .market-grid-drivers { padding: 15px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .driver-card-market { 
+            background: var(--team-color); border-radius: 12px; overflow: hidden;
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+            height: 140px; cursor: pointer; position: relative;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
         }
-        .market-item-card:active { transform: scale(0.97); background: #f5f5f5; }
-        .mic-img { width: 50px; height: 50px; object-fit: contain; margin-bottom: 5px; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.1)); }
-        .mic-name { font-size: 11px; font-weight: 800; text-align: center; line-height: 1.1; color: #333; }
-        
-        /* The Drill Down Detail View */
+        .driver-card-market:active { transform: scale(0.97); }
+        .dcm-img { height: 110%; object-fit: contain; margin-bottom: -5px; z-index: 1; transition: 0.2s; filter: drop-shadow(0 0 10px rgba(0,0,0,0.3)); }
+        .dcm-name { 
+            width: 100%; background: rgba(20,20,30,0.9); color: white; 
+            font-size: 11px; font-weight: 800; text-align: center; 
+            padding: 8px 4px; z-index: 2; text-transform: uppercase;
+        }
+
+        /* TEAM LIST STYLE (Wide & Thin) */
+        .market-list-teams { padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+        .team-card-market { 
+            width: 100%; height: 70px; background: white; 
+            border-radius: 8px; border: 1px solid #eee; border-left: 8px solid var(--team-color);
+            display: flex; align-items: center; justify-content: space-between; 
+            padding: 0 15px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .team-card-market:active { transform: scale(0.98); background: #f9f9f9; }
+        .tcm-name { font-size: 14px; font-weight: 900; text-transform: uppercase; color: #333; }
+        .tcm-img { height: 90%; width: 60%; object-fit: contain; object-position: right center; }
+
+        /* DRILL DOWN VIEW */
         .market-detail-view { display: none; flex-direction: column; height: 100%; background: #f4f4f8; }
         .market-detail-view.active { display: flex; }
-        
         .market-detail-header { 
-            background: white; padding: 10px; display: flex; align-items: center; gap: 10px; 
-            border-bottom: 1px solid #eee; font-weight: 800; font-size: 14px; 
+            background: white; padding: 15px; display: flex; align-items: center; gap: 15px; 
+            border-bottom: 1px solid #eee; font-weight: 900; font-size: 16px; 
             color: #333; position: sticky; top: 0; z-index: 10;
         }
-        .back-btn { font-size: 18px; padding: 5px 10px; cursor: pointer; color: #888; }
+        .back-btn { font-size: 20px; cursor: pointer; color: #888; }
         
-        /* The "Cool Icon" Prediction Buttons */
-        .prediction-list { padding: 10px; overflow-y: auto; }
+        .prediction-list { padding: 15px; overflow-y: auto; }
         .prediction-btn { 
             background: white; border-radius: 8px; overflow: hidden; 
-            display: flex; height: 50px; margin-bottom: 8px; cursor: pointer;
+            display: flex; height: 55px; margin-bottom: 10px; cursor: pointer;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid #ddd;
         }
         .prediction-btn:active { transform: scale(0.98); }
         
-        .pb-left { width: 50px; background: var(--team-color); display: flex; align-items: center; justify-content: center; }
-        .pb-img { width: 35px; height: 35px; object-fit: contain; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2)); }
+        .pb-left { width: 55px; background: var(--team-color); display: flex; align-items: center; justify-content: center; }
+        .pb-img { width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2)); }
         
+        /* FIA White Logo Fix */
+        .pb-left.fia-bg .pb-img { filter: brightness(0) invert(1); }
+
         .pb-right { flex: 1; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; background: linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff), linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff); background-size: 10px 10px; background-color: #fafafa; }
-        .pb-text { font-size: 11px; font-weight: 800; color: #333; }
-        .pb-cost { background: #eee; padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 900; color: #555; }
+        .pb-text { font-size: 12px; font-weight: 800; color: #333; text-transform: uppercase; }
+        .pb-cost { background: #333; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 900; }
 
         /* LOGIN SLIDER */
         .selection-slider { display: flex; overflow-x: auto; gap: 12px; padding: 5px; width: 100%; max-width: 600px; scroll-snap-type: x mandatory; margin-bottom: 20px; scrollbar-width: none; }
@@ -162,6 +179,19 @@
         .score-val { font-size: 42px; font-weight: 900; color: var(--brand-dark); line-height: 1; }
         .login-btn { padding: 16px; width: 100%; max-width: 400px; margin-top: 20px; background: var(--brand-red); color: white; border: none; font-weight: 900; cursor: pointer; border-radius: 10px; font-size: 16px; box-shadow: 0 4px 10px rgba(225, 6, 0, 0.2); margin-bottom: 50px; }
         .login-input { padding: 15px; width: 100%; text-align: center; border: 2px solid #eee; border-radius: 10px; font-weight: bold; font-size: 18px; max-width: 400px; margin-bottom: 25px; background: #fff; }
+
+        /* NEW RULES STYLE */
+        .rules-card { background: white; border: 1px solid #eee; border-radius: 12px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .rule-step { display: flex; gap: 15px; margin-bottom: 20px; align-items: flex-start; }
+        .step-num { flex: 0 0 30px; height: 30px; background: var(--brand-red); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px; }
+        .step-content { flex: 1; }
+        .step-title { font-weight: 900; font-size: 14px; margin-bottom: 5px; text-transform: uppercase; color: #333; }
+        .step-desc { font-size: 13px; color: #666; line-height: 1.4; margin: 0; }
+        
+        .chip-example { display: flex; align-items: center; gap: 10px; margin-top: 5px; background: #f9f9f9; padding: 8px; border-radius: 6px; border: 1px solid #eee; }
+        .ce-icon { width: 30px; height: 30px; border-radius: 4px; object-fit: contain; }
+        .ce-text { font-size: 11px; font-weight: 800; color: #333; }
+
     </style>
 </head>
 <body>
@@ -197,8 +227,8 @@
 
         <div id="marketContent" style="flex:1; overflow-y:auto; position:relative;">
             
-            <div id="drivers-root" class="market-grid"></div>
-            <div id="teams-root" class="market-grid" style="display:none;"></div>
+            <div id="drivers-root" class="market-grid-drivers"></div>
+            <div id="teams-root" class="market-list-teams" style="display:none;"></div>
             <div id="fia-root" class="prediction-list" style="display:none;"></div>
 
             <div id="market-detail" class="market-detail-view">
@@ -259,8 +289,41 @@
         </div>
 
         <div id="view-rules" class="hidden" style="padding:20px; overflow-y:auto; height:100%;">
-            <div class="rules-block"><div class="rules-title">HOW TO PLAY</div><p class="rules-text">1. Choose Strategy. 2. Tap slot to fill. 3. Manage Cap.</p></div>
-            <div class="rules-block"><div class="rules-title">SCORING</div><ul class="rules-list"><li>10 PTS Correct</li><li>30 PTS Line</li><li>50 PTS 4-Corners</li><li>100 PTS Full Card</li></ul></div>
+            <div class="rules-card">
+                <div class="rule-step">
+                    <div class="step-num">1</div>
+                    <div class="step-content">
+                        <div class="step-title">Select Strategy</div>
+                        <div class="step-desc">Choose a grid layout that fits your style (Balanced, Driver Focus, etc).</div>
+                    </div>
+                </div>
+                <div class="rule-step">
+                    <div class="step-num">2</div>
+                    <div class="step-content">
+                        <div class="step-title">Fill The Grid</div>
+                        <div class="step-desc">Tap a slot to open the market and pick a prediction.</div>
+                        <div class="chip-example">
+                            <img src="images/max.png" class="ce-icon" style="background:#3671C6">
+                            <div class="ce-text">Max Verstappen • Pole Position</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="rule-step">
+                    <div class="step-num">3</div>
+                    <div class="step-content">
+                        <div class="step-title">Manage Budget</div>
+                        <div class="step-desc">You have <strong>$100M</strong>. High probability events cost more!</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="rules-card">
+                <div class="step-title" style="margin-bottom:15px; border-bottom:none;">SCORING</div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;"><span>Correct Tile</span><b>10 PTS</b></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;"><span>Line Bonus</span><b>+30 PTS</b></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;"><span>4 Corners</span><b>+50 PTS</b></div>
+                <div style="display:flex; justify-content:space-between; font-size:13px;"><span>Full Card</span><b>+100 PTS</b></div>
+            </div>
         </div>
     </div>
 
@@ -331,18 +394,15 @@
         document.querySelectorAll('#marketTabs .tab-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(`tabBtn-${tab}`).classList.add('active');
         
-        // Hide all roots
         document.getElementById('drivers-root').style.display = 'none';
         document.getElementById('teams-root').style.display = 'none';
         document.getElementById('fia-root').style.display = 'none';
         document.getElementById('market-detail').classList.remove('active');
 
-        // Show active root
-        document.getElementById(`${tab}-root`).style.display = (tab === 'fia') ? 'block' : 'grid';
+        document.getElementById(`${tab}-root`).style.display = (tab === 'fia') ? 'block' : (tab === 'teams' ? 'flex' : 'grid');
     }
 
     function buildLoginSelectionGrids() {
-        // ... (Same logic as before, just rendering into horizontal slider) ...
         const dGrid = document.getElementById('favDriverGrid');
         BINGO_CONFIG.drivers.filter(d=>d.team!=='FIA').sort((a,b)=>a.name.localeCompare(b.name)).forEach(d => {
             const c = createSelectionCard(d, 'driver');
@@ -395,12 +455,12 @@
     function buildMarketGrids() {
         const dRoot = document.getElementById('drivers-root');
         BINGO_CONFIG.drivers.filter(d=>d.team!=='FIA').forEach(d => {
-            dRoot.appendChild(createMarketItem(d, 'driver'));
+            dRoot.appendChild(createDriverCard(d));
         });
 
         const tRoot = document.getElementById('teams-root');
         BINGO_CONFIG.constructors.filter(c=>c.type==='Team').forEach(t => {
-            tRoot.appendChild(createMarketItem(t, 'team'));
+            tRoot.appendChild(createTeamCard(t));
         });
 
         const fRoot = document.getElementById('fia-root');
@@ -409,12 +469,21 @@
         });
     }
 
-    function createMarketItem(entity, type) {
+    function createDriverCard(d) {
         const div = document.createElement('div');
-        div.className = 'market-item-card';
-        div.style.setProperty('--team-color', entity.color);
-        div.innerHTML = `<img src="${entity.img}" class="mic-img"><div class="mic-name">${entity.name}</div>`;
-        div.onclick = () => openDrillDown(entity, type);
+        div.className = 'driver-card-market';
+        div.style.setProperty('--team-color', d.color);
+        div.innerHTML = `<img src="${d.img}" class="dcm-img"><div class="dcm-name">${d.name}</div>`;
+        div.onclick = () => openDrillDown(d, 'driver');
+        return div;
+    }
+
+    function createTeamCard(t) {
+        const div = document.createElement('div');
+        div.className = 'team-card-market';
+        div.style.setProperty('--team-color', t.color);
+        div.innerHTML = `<div class="tcm-name">${t.name}</div><img src="${t.img}" class="tcm-img">`;
+        div.onclick = () => openDrillDown(t, 'team');
         return div;
     }
 
@@ -427,9 +496,8 @@
         document.getElementById('detail-title').innerText = entity.name.toUpperCase();
         
         const list = document.getElementById('detail-list');
-        list.innerHTML = ''; // clear previous
+        list.innerHTML = ''; 
 
-        // Generate Buttons
         if(type === 'driver') {
             const opts = [...BINGO_CONFIG.templates.quali.map(t=>({...t,s:'QUALI'})), ...BINGO_CONFIG.templates.race.map(t=>({...t,s:'RACE'})), ...BINGO_CONFIG.templates.bonus.map(t=>({...t,s:'BONUS'}))];
             opts.forEach(o => {
@@ -453,13 +521,14 @@
         const div = document.createElement('div');
         div.className = 'prediction-btn';
         
-        // Find image for FIA if needed
         let img = 'images/fia.png';
         let col = '#333';
+        let isFia = false;
         if(entity) { img = entity.img; col = entity.color; }
+        else { isFia = true; } // FIA condition
 
         div.innerHTML = `
-            <div class="pb-left" style="background:${col}"><img src="${img}" class="pb-img"></div>
+            <div class="pb-left ${isFia?'fia-bg':''}" style="background:${col}"><img src="${img}" class="pb-img"></div>
             <div class="pb-right"><div class="pb-text">${text}</div><div class="pb-cost">$${cost}M</div></div>
         `;
         div.onclick = () => fillSlot(`${displayOwner} ${text}`, type, cost, dName, sub);
@@ -528,7 +597,6 @@
         if(window.innerWidth <= 1024) panel.classList.add('mobile-modal');
         panel.dataset.targetIndex = idx;
         
-        // Smart nav: Open specific driver/team if favorite matches slot type
         if(type === 'driver' && favDriver) { showMarketTab('drivers'); openDrillDown(BINGO_CONFIG.drivers.find(d=>d.name===favDriver), 'driver'); }
         else if(type === 'team' && favTeam) { showMarketTab('teams'); openDrillDown(BINGO_CONFIG.constructors.find(c=>c.name===favTeam), 'team'); }
         else showMarketTab(type === 'driver' ? 'drivers' : (type === 'team' ? 'teams' : 'fia'));
@@ -539,7 +607,7 @@
     function fillSlot(text, type, cost, dName, sub) {
         const panel = document.getElementById('marketPanel');
         let tIdx = parseInt(panel.dataset.targetIndex);
-        if(isNaN(tIdx)) { // Find first empty
+        if(isNaN(tIdx)) { 
              const slots = document.querySelectorAll('.slot');
              for(let i=0; i<slots.length; i++) { if(!currentGrid[i] && slots[i].dataset.req === type) { tIdx = i; break; } }
              if(tIdx === undefined) return alert("No slot");
