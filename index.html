@@ -229,12 +229,17 @@
       return (window.matchMedia('(display-mode: standalone)').matches) || (window.navigator.standalone === true);
   }
 
+  // Check if Mobile Browser
+  function isMobile() {
+      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  }
+
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
     
-    // Only show popup if not dismissed before AND not in PWA
-    if (!localStorage.getItem('installDismissed') && !isPWA()) {
+    // Only show popup if not dismissed before AND not in PWA AND is Mobile
+    if (!localStorage.getItem('installDismissed') && !isPWA() && isMobile()) {
         document.getElementById('installModal').classList.remove('hidden');
     }
     
@@ -264,7 +269,8 @@
 
       // Install Modal Logic
       setTimeout(() => {
-          if (!isPWA() && !localStorage.getItem('installDismissed')) {
+          // Fallback check ensuring it's Mobile and not PWA
+          if (!isPWA() && !localStorage.getItem('installDismissed') && isMobile()) {
               if (!deferredPrompt) {
                   // Optional: Show modal anyway for iOS/Manual instructions
                   // document.getElementById('installModal').classList.remove('hidden');
