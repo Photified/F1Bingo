@@ -152,19 +152,17 @@
         .budget-hud-bar-bg { width: 100%; height: 4px; background: #e0e0e0; margin-top: 4px; border-radius: 3px; }
         .budget-hud-bar-fill { height: 100%; background: #22c55e; width: 50%; border-radius: 3px; transition: 0.3s; }
 
-        /* GRID CONTAINER - The layout engine */
+        /* GRID CONTAINER */
         .grid-container { 
             flex: 1; 
             padding: 10px; 
             display: flex; 
             flex-direction: column; 
-            /* NO justify-content: center - this causes overflow issues on resize */
             overflow-y: auto; 
             height: 100%; 
-            min-height: 0; /* Critical */
+            min-height: 0; 
         }
         
-        /* THE ACTUAL GRID */
         .bingo-grid { 
             display: grid; 
             grid-template-columns: repeat(3, 1fr); 
@@ -173,8 +171,8 @@
             width: 100%; 
             max-width: 600px; 
             margin: 0 auto; 
-            flex-shrink: 0; /* Don't shrink smaller than content */
-            min-height: 400px; /* Ensure at least some height */
+            flex-shrink: 0; 
+            min-height: 400px; 
         }
         
         .slot { background: #fafafa; border: 2px dashed #ddd; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; position: relative; cursor: pointer; user-select: none; transition: 0.2s; text-transform: uppercase; color: #aaa; width: 100%; aspect-ratio: 3/4; }
@@ -192,16 +190,16 @@
         .slot-img-container { width: 100%; height: 60%; display: flex; align-items: flex-end; justify-content: center; background-color: var(--team-color-hex); position: relative; overflow: hidden; }
         .slot-img { z-index: 2; transition: 0.2s; }
         
-        /* UPDATED DRIVER IMAGE CSS FOR TALL IMAGES */
+        /* GRID: Driver Images (Cropped, Top Focus) */
         .slot.filled[data-type="driver"] .slot-img { 
             width: 100%; 
             height: 100%; 
             object-fit: cover; 
-            object-position: top center; /* Focus on face */
+            object-position: top center; 
             margin-bottom: 0; 
         }
         
-        /* UPDATED TEAM IMAGE CSS FOR LOGOS */
+        /* GRID: Team Images (Logos contained) */
         .slot.filled[data-type="team"] .slot-img { 
             width: 80%; 
             height: auto; 
@@ -233,7 +231,7 @@
 
         .market-grid-drivers { padding: 15px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; box-sizing: border-box; }
         
-        /* UPDATED MARKET CARD: Moved image down with padding/sizing */
+        /* MARKET CARD: REVERTED TO COVER/CROP + MARGIN TOP */
         .driver-card-market { 
             background: var(--team-color); 
             border-radius: 12px; 
@@ -249,13 +247,13 @@
         }
         .dcm-img { 
             width: 100%; 
-            height: 85%; /* Reduced height to sit lower */
-            object-fit: contain; /* Shows full body cleanly */
-            object-position: bottom center; /* Anchors to bottom */
+            height: 90%; 
+            object-fit: cover; /* Back to crop */
+            object-position: top center; /* Focus on face */
             margin-bottom: 0; 
             z-index: 1; 
             filter: drop-shadow(0 0 5px rgba(0,0,0,0.2)); 
-            margin-top: 15px; /* Physical push down */
+            margin-top: 15px; /* Pushed down as requested */
         }
         .dcm-name { width: 100%; background: rgba(20,20,30,0.9); color: white; font-size: 9px; font-weight: 800; text-align: center; padding: 5px 2px; z-index: 2; text-transform: uppercase; line-height: 1; }
 
