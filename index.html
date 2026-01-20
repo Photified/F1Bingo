@@ -25,117 +25,62 @@
         }
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         
-        /* LAYOUT ROOT */
-        body { 
-            font-family: 'Titillium Web', sans-serif; 
-            background: var(--bg-body); 
-            color: var(--brand-dark); 
-            margin: 0; 
-            height: 100dvh; 
-            width: 100vw;
-            display: flex; 
-            flex-direction: column; 
-            overflow: hidden; 
-        }
+        body { font-family: 'Titillium Web', sans-serif; background: var(--bg-body); color: var(--brand-dark); margin: 0; height: 100dvh; width: 100vw; display: flex; flex-direction: column; overflow: hidden; }
         .hidden { display: none !important; }
 
-        /* LOADING SPINNER */
+        /* LOADING */
         #loadingOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .spinner { width: 40px; height: 40px; border: 4px solid #eee; border-top: 4px solid var(--brand-red); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         /* HEADER */
-        header { 
-            background: white; 
-            border-bottom: 3px solid var(--brand-red); 
-            height: 60px; 
-            flex: 0 0 60px; /* Rigid height */
-            display: flex; 
-            align-items: center; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
-            z-index: 20; 
-        }
+        header { background: white; border-bottom: 3px solid var(--brand-red); height: 60px; flex: 0 0 60px; display: flex; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); z-index: 20; }
         .logo-area { padding: 0 15px; height: 100%; display: flex; align-items: center; border-right: 1px solid #eee; cursor: pointer; }
         .header-logo { max-height: 28px; width: auto; }
-        
-        .race-scroll-area { 
-            flex: 1; display: flex; flex-direction: row; align-items: center; 
-            overflow-x: auto; height: 100%; scrollbar-width: none; 
-            -webkit-overflow-scrolling: touch;
-        }
-        
-        .race-card { 
-            flex: 0 0 auto; min-width: 70px; padding: 0 12px;
-            height: 100%; display: inline-flex; flex-direction: column; 
-            align-items: center; justify-content: center; 
-            border-right: 1px solid #f5f5f5; cursor: pointer; 
-            opacity: 0.5; transition: 0.2s; 
-        }
+        .race-scroll-area { flex: 1; display: flex; flex-direction: row; align-items: center; overflow-x: auto; height: 100%; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+        .race-card { flex: 0 0 auto; min-width: 70px; padding: 0 12px; height: 100%; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; border-right: 1px solid #f5f5f5; cursor: pointer; opacity: 0.5; transition: 0.2s; }
         .race-card.active { opacity: 1; background: #fff; border-bottom: 4px solid var(--brand-red); }
         .race-flag-img { width: 24px; height: 16px; object-fit: cover; border-radius: 2px; margin-bottom: 4px; }
         .race-name { font-size: 9px; font-weight: 800; text-transform: uppercase; white-space: nowrap; }
         .user-area { padding: 0 15px; font-weight: 800; font-size: 12px; border-left: 1px solid #eee; height: 100%; display: flex; align-items: center; background: #fff; z-index: 25; cursor:pointer; }
 
-        /* MAIN STAGE */
-        .main-stage { 
-            flex: 1; 
-            display: grid; 
-            grid-template-columns: 320px 1fr 300px; 
-            padding: 20px; 
-            gap: 20px; 
-            overflow: hidden; 
-            min-height: 0; /* Critical for Flex scrolling */
-        }
-
-        /* PANELS */
+        /* LAYOUT */
+        .main-stage { flex: 1; display: grid; grid-template-columns: 320px 1fr 300px; padding: 20px; gap: 20px; overflow: hidden; min-height: 0; }
         .panel { background: white; border-radius: 12px; box-shadow: var(--card-shadow); overflow: hidden; display: flex; flex-direction: column; border: 1px solid #e0e0e0; height: 100%; }
-        
-        .active-panel { 
-            background: white; 
-            border-radius: 12px; 
-            border: 1px solid #e0e0e0; 
-            padding: 0; 
-            display: flex; 
-            flex-direction: column; 
-            overflow: hidden; 
-            height: 100%; 
-            min-height: 0; /* Critical for Flex scrolling */
-            position: relative; 
-        }
+        .active-panel { background: white; border-radius: 12px; border: 1px solid #e0e0e0; padding: 0; display: flex; flex-direction: column; overflow: hidden; height: 100%; min-height: 0; position: relative; }
+        .view-scrollable { height: 100%; overflow-y: auto; -webkit-overflow-scrolling: touch; }
 
-        /* SCROLLABLE VIEWS */
-        .view-scrollable { 
-            height: 100%; 
-            overflow-y: auto; 
-            -webkit-overflow-scrolling: touch;
-        }
-
-        /* LOGIN SCREEN */
+        /* LOGIN / BUTTONS */
         .view-login { width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 25px; height: 100%; overflow-y: auto; }
         .login-btn-google { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px 24px; background: white; color: #333; border: 1px solid #ccc; font-weight: 700; cursor: pointer; border-radius: 8px; font-size: 16px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); width: 100%; max-width: 300px; transition: 0.2s; }
         .login-btn-google:active { transform: scale(0.98); background: #f5f5f5; }
         .google-icon { width: 20px; height: 20px; }
+        .primary-btn { width: 100%; padding: 14px; background: var(--brand-red); color: white; border: none; font-weight: 900; cursor: pointer; border-radius: 8px; font-size: 16px; box-shadow: 0 4px 10px rgba(225, 6, 0, 0.2); margin-top: 20px; }
 
-        /* PROFILE CARD */
-        .profile-card { background: white; padding: 30px; border-radius: 15px; text-align: center; box-shadow: var(--card-shadow); width: 100%; max-width: 350px; border:1px solid #eee; }
-        .profile-avatar { width: 80px; height: 80px; background: #eee; border-radius: 50%; margin: 0 auto 15px auto; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 900; color: #888; text-transform: uppercase; }
-        .logout-btn { margin-top: 20px; background: var(--brand-red); color: white; border: none; padding: 12px 30px; font-weight: 900; border-radius: 8px; cursor: pointer; width: 100%; box-shadow: 0 4px 10px rgba(225,6,0,0.2); }
+        /* SETUP & PROFILE */
+        .setup-input { width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 8px; font-size: 16px; margin-bottom: 15px; font-weight: bold; }
+        .setup-label { width: 100%; text-align: left; font-size: 11px; font-weight: 900; color: #888; text-transform: uppercase; margin-bottom: 5px; }
+        
+        .profile-card { background: white; padding: 25px; border-radius: 15px; text-align: center; box-shadow: var(--card-shadow); width: 100%; max-width: 350px; border: 1px solid #eee; }
+        .profile-avatar { width: 80px; height: 80px; background: #eee; border-radius: 50%; margin: 0 auto 15px auto; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 900; color: #888; text-transform: uppercase; overflow: hidden; }
+        .profile-favs { display: flex; gap: 10px; justify-content: center; margin: 20px 0; }
+        .fav-item { width: 50px; height: 50px; background: #f9f9f9; border-radius: 8px; display: flex; align-items: center; justify-content: center; border: 1px solid #eee; padding: 5px; }
+        .fav-item img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+        /* LEADERBOARD */
+        .leaderboard-row { display: flex; align-items: center; padding: 12px; border-bottom: 1px solid #eee; background: white; }
+        .leaderboard-row:first-child { background: #f9f9f9; border-top: 1px solid #eee; border-radius: 8px 8px 0 0; }
+        .lb-rank { width: 30px; font-weight: 900; color: #888; font-style: italic; }
+        .lb-user { flex: 1; display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 14px; text-transform: uppercase; }
+        .lb-pts { font-weight: 900; color: var(--brand-red); width: 60px; text-align: right; }
+        .lb-avatar { width: 24px; height: 24px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #555; }
 
         /* MOBILE OVERRIDES */
         @media (max-width: 1024px) {
-            .main-stage { 
-                grid-template-columns: 1fr; 
-                padding: 10px; 
-                padding-bottom: 0 !important; /* Reset padding, handle inside views */
-            }
+            .main-stage { grid-template-columns: 1fr; padding: 10px; padding-bottom: 0 !important; }
             .panel { display: none; } 
-            
-            /* ADD PADDING TO BOTTOM OF LISTS TO CLEAR FOOTER */
             .view-scrollable { padding-bottom: 120px !important; }
-            
-            /* Specific fix for Grid padding */
             .bingo-grid { padding-bottom: 120px !important; }
-
             .panel.mobile-modal { display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; border-radius: 0; animation: slideUp 0.25s ease-out; }
             .mobile-close-btn { display: block !important; }
         }
@@ -155,85 +100,40 @@
         .rh-flag { width: 45px; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .rh-title { font-size: 18px; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 1; }
         .rh-date { font-size: 11px; color: #888; font-weight: 700; margin-top: 2px; }
-        
         .rh-right-group { display: flex; align-items: center; gap: 8px; }
         .header-btn { width: 38px; height: 38px; border-radius: 8px; border: none; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: 0.2s; }
         .header-btn:active { transform: scale(0.95); }
         .hb-setup { background: white; border: 1px solid #ddd; color: #555; }
         .hb-lock { background: #22c55e; color: white; display: none; } 
         .hb-unlock { background: #ef4444; color: white; display: none; } 
-
         .budget-hud { background: #f4f4f8; padding: 6px 12px; border-radius: 6px; border: 1px solid #ddd; border-left: 4px solid #22c55e; display: flex; flex-direction: column; align-items: flex-end; min-width: 70px; height: 38px; justify-content: center; }
         .budget-hud-val { font-size: 14px; font-weight: 900; color: #22c55e; line-height: 1; }
         .budget-hud-bar-bg { width: 100%; height: 4px; background: #e0e0e0; margin-top: 4px; border-radius: 3px; }
         .budget-hud-bar-fill { height: 100%; background: #22c55e; width: 50%; border-radius: 3px; transition: 0.3s; }
 
-        /* GRID CONTAINER - The layout engine */
-        .grid-container { 
-            flex: 1; 
-            padding: 10px; 
-            display: flex; 
-            flex-direction: column; 
-            overflow-y: auto; 
-            height: 100%; 
-            min-height: 0; /* Critical */
-        }
-        
-        /* THE ACTUAL GRID */
-        .bingo-grid { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            grid-template-rows: repeat(3, 1fr); 
-            gap: 8px; 
-            width: 100%; 
-            max-width: 600px; 
-            margin: 0 auto; 
-            flex-shrink: 0; /* Don't shrink smaller than content */
-            min-height: 400px; /* Ensure at least some height */
-        }
-        
+        /* GRID */
+        .grid-container { flex: 1; padding: 10px; display: flex; flex-direction: column; overflow-y: auto; height: 100%; min-height: 0; }
+        .bingo-grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); gap: 8px; width: 100%; max-width: 600px; margin: 0 auto; flex-shrink: 0; min-height: 400px; }
         .slot { background: #fafafa; border: 2px dashed #ddd; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; position: relative; cursor: pointer; user-select: none; transition: 0.2s; text-transform: uppercase; color: #aaa; width: 100%; aspect-ratio: 3/4; }
         .slot:active { transform: scale(0.98); background: #eee; }
         .slot[data-req="driver"] { background: #fff8e6; border-color: var(--c-driver); color: var(--c-driver); }
         .slot[data-req="team"] { background: #e0fbf8; border-color: var(--c-team); color: var(--c-team); }
         .slot[data-req="fia"] { background: #fff2f2; border-color: var(--c-fia); color: var(--c-fia); }
-
         .slot.filled { background: white !important; border: 1px solid #ddd !important; padding: 0; overflow: hidden; display: flex; flex-direction: column; text-align: left; box-shadow: 0 4px 10px rgba(0,0,0,0.08); border-radius: 8px; }
         .slot.filled::before { content: ''; position: absolute; top: 0; left: 0; width: 0; height: 0; border-style: solid; border-width: 24px 24px 0 0; z-index: 5; }
         .slot.filled[data-type="driver"]::before { border-color: var(--c-driver) transparent transparent transparent; }
         .slot.filled[data-type="team"]::before { border-color: var(--c-team) transparent transparent transparent; }
         .slot.filled[data-type="fia"]::before { border-color: var(--c-fia) transparent transparent transparent; }
-
         .slot-img-container { width: 100%; height: 60%; display: flex; align-items: flex-end; justify-content: center; background-color: var(--team-color-hex); position: relative; overflow: hidden; }
         .slot-img { z-index: 2; transition: 0.2s; }
-        
-        /* GRID: Driver Images (Cropped, Top Focus) */
-        .slot.filled[data-type="driver"] .slot-img { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover; 
-            object-position: top center; 
-            margin-bottom: 0; 
-        }
-        
-        /* GRID: Team Images (Logos contained) */
-        .slot.filled[data-type="team"] .slot-img { 
-            width: 80%; 
-            height: auto; 
-            max-height: 80%; 
-            object-fit: contain; 
-            margin-bottom: 5px; 
-            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2)); 
-        }
-
+        .slot.filled[data-type="driver"] .slot-img { width: 100%; height: 100%; object-fit: cover; object-position: top center; margin-bottom: 0; }
+        .slot.filled[data-type="team"] .slot-img { width: 80%; height: auto; max-height: 80%; object-fit: contain; margin-bottom: 5px; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2)); }
         .slot.filled[data-type="fia"] .slot-img { width: 50%; height: auto; margin-bottom: 20px; filter: brightness(0) invert(1); opacity: 0.8; }
         .slot-price-tag { background: rgba(0,0,0,0.8); color: white; font-size: 9px; font-weight: 900; padding: 2px 6px; border-radius: 12px; position: absolute; bottom: 4px; right: 4px; z-index: 10; border: 1px solid rgba(255,255,255,0.2); }
-
         .slot-text-container { width: 100%; height: 40%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 2px 4px; background: white; border-top: 1px solid rgba(0,0,0,0.05); }
         .slot-sub { font-size: 7px; text-transform: uppercase; font-weight: 900; color: var(--cat-text-color); margin-bottom: 2px; letter-spacing: 0.5px; opacity: 0.7; }
         .slot-main { font-size: 10px; font-weight: 900; line-height: 1.1; color: #222; text-transform: uppercase; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         @media (min-width: 380px) { .slot-main { font-size: 11px; } }
-
         .remove-pick-btn { position: absolute; top: 4px; left: 4px; width: 22px; height: 22px; background: rgba(0,0,0,0.3); color: #fff; display: flex; align-items: center; justify-content: center; z-index: 15; border-radius: 50%; font-size: 12px; font-weight: bold; cursor: pointer; backdrop-filter: blur(2px); }
         .slot.matched { opacity: 1; box-shadow: inset 0 0 0 3px var(--score-win); transform: scale(1.02); z-index: 5; }
         .slot.matched::after { content: '✓'; position: absolute; top: 4px; right: 4px; background: var(--score-win); color: black; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); z-index: 20; }
@@ -245,57 +145,26 @@
         #tabBtn-drivers.active { border-bottom-color: var(--c-driver); color: var(--c-driver); }
         #tabBtn-teams.active { border-bottom-color: var(--c-team); color: var(--c-team); }
         #tabBtn-fia.active { border-bottom-color: var(--c-fia); color: var(--c-fia); }
-
         .market-grid-drivers { padding: 15px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; box-sizing: border-box; }
-        
-        /* MARKET CARD */
-        .driver-card-market { 
-            background: var(--team-color); 
-            border-radius: 12px; 
-            overflow: hidden; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: flex-end; 
-            height: 140px; 
-            cursor: pointer; 
-            position: relative; 
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15); 
-        }
-        .dcm-img { 
-            width: 100%; 
-            height: 80%; /* Reduced from 90% to fit head */
-            object-fit: cover; /* Keeps the zoom */
-            object-position: top center; /* Focus on face */
-            margin-bottom: 0; 
-            z-index: 1; 
-            filter: drop-shadow(0 0 5px rgba(0,0,0,0.2)); 
-            margin-top: 30px; /* Pushed down from top edge */
-        }
+        .driver-card-market { background: var(--team-color); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 140px; cursor: pointer; position: relative; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+        .dcm-img { width: 100%; height: 80%; object-fit: cover; object-position: top center; margin-bottom: 0; z-index: 1; filter: drop-shadow(0 0 5px rgba(0,0,0,0.2)); margin-top: 30px; }
         .dcm-name { width: 100%; background: rgba(20,20,30,0.9); color: white; font-size: 9px; font-weight: 800; text-align: center; padding: 5px 2px; z-index: 2; text-transform: uppercase; line-height: 1; }
-
         .market-list-teams { padding: 15px; display: flex; flex-direction: column; gap: 10px; }
         .team-card-market { width: 100%; height: 70px; background: white; border-radius: 8px; border: 1px solid #eee; border-left: 8px solid var(--team-color); display: flex; align-items: center; justify-content: space-between; padding: 0 15px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .tcm-name { font-size: 14px; font-weight: 900; text-transform: uppercase; color: #333; }
         .tcm-img { height: 90%; width: 60%; object-fit: contain; object-position: right center; }
-
         .market-detail-view { display: none; flex-direction: column; height: 100%; background: #f4f4f8; }
         .market-detail-view.active { display: flex; }
         .market-detail-header { background: white; padding: 15px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #eee; font-weight: 900; font-size: 16px; color: #333; position: sticky; top: 0; z-index: 10; }
         .back-btn { font-size: 20px; cursor: pointer; color: #888; }
         .prediction-list { padding: 15px; overflow-y: auto; }
-        
         .prediction-btn { background: white; border-radius: 8px; overflow: hidden; display: flex; height: 55px; margin-bottom: 10px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid #ddd; transition: 0.2s; }
         .prediction-btn:active { transform: scale(0.98); }
         .prediction-btn.unaffordable { opacity: 0.7; filter: grayscale(0.8); }
-        
-        /* Updated Prediction Button Images */
         .pb-left { width: 55px; background: var(--team-color); display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .pb-img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
-        
         .prediction-btn.team-mode .pb-left { width: 80px; } 
         .prediction-btn.team-mode .pb-img { width: 90%; height: 90%; object-fit: contain; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3)); }
-        
         .pb-left.fia-bg .pb-img { filter: brightness(0) invert(1); width: 50%; object-fit: contain; } 
         .pb-right { flex: 1; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; background: linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff), linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff); background-size: 10px 10px; background-color: #fafafa; }
         .pb-text { font-size: 12px; font-weight: 800; color: #333; text-transform: uppercase; }
@@ -401,16 +270,37 @@
         <div id="view-login" class="view-login">
             <h2 style="font-style:italic; font-size:24px; margin-bottom:20px;">TEAM PRINCIPAL LOGIN</h2>
             <button class="login-btn-google" onclick="loginWithGoogle()">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" class="google-icon">
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCI+PHBhdGggZmlsbD0iI0ZGRiIgZD0iTTIzIDIzaDIydjIySDIzWiIvPjxwYXRoIGZpbGw9IiNFQTQzMzUiIGQ9Ik0yNCA5LjVjMy41NCAwIDYuNzEgMS4yMiA5LjIxIDMuNjhMMzguNiA4LjE1QzM0LjY3IDQuMzIgMjkuNjMgMiAyNCAyIDE0Ljk1IDIgNy4zMiA3LjIxIDMuNTggMTQuOTZMMTMuNjUgMjIuNzdDMTEuNDMgMTYuMTYgMTcuMDUgOS41IDI0IDkuNVoiLz48cGF0aCBmaWxsPSIjNDI4NUY0IiBkPSJNNDYuOTggMjQuNTVjMCAxLjU3LS4xNSAzLjA5LS4zOCA0LjU1SDI0djkuMDJoMTIuOTRjLS41OCAyLjk2LTIuMjYgNS40OC00Ljc4IDcuMThsNy43MyA2YzQuNTEtNC4xOCA3LjA5LTEwLjM2IDcuMDktMTcuMjVaIi8+PHBhdGggZmlsbD0iI0ZCQkMwNSIgZD0iTTEwLjUzIDI4LjU5YzAgMi42OC44IDUuMTYgMi4xMyA3LjMybC02LjE5IDUuMjNDMi44NSAzNC42NCAwIDI5LjU3IDAgMjRzMi44NS0xMC42NCA2LjQ3LTE3LjE0bDEwLjE4IDcuOTJjLS45IDEuNzItMS4xMiA0LjE5LTEuMTIgNy44MVoiLz48cGF0aCBmaWxsPSIjMzRBODUzIiBkPSJNMjQgNDZjNS45NCAwIDEwLjkzLTEuOTcgMTQuNTctNS4zM2wtNy43My02Yy0xLjk3IDEuMzItNC40NiAyLjEyLTcuMjIgMi4xMi01LjcxIDAtMTAuNTgtMy44NC0xMi4zMS05LjEyTDQuMDUgMzUuMTNDOC4xMyA0MS41NyAxNS41MSA0NiAyNCA0NloiLz48cGF0aCBmaWxsPSJub25lIiBkPSJNMCAwaDQ4djQ4SDBaIi8+PC9zdmc+" class="google-icon">
                 Sign in with Google
             </button>
+        </div>
+
+        <div id="view-setup" class="view-login hidden" style="justify-content:flex-start; padding-top:40px;">
+            <h2 style="font-style:italic; font-size:24px; margin-bottom:20px;">CREATE YOUR TEAM</h2>
+            
+            <div class="setup-label">Team Name</div>
+            <input type="text" id="setupTeamName" class="setup-input" placeholder="e.g. Red Bull Racing">
+            
+            <div class="setup-label">Favorite Team</div>
+            <select id="setupFavTeam" class="setup-input"></select>
+            
+            <div class="setup-label">Favorite Driver</div>
+            <select id="setupFavDriver" class="setup-input"></select>
+            
+            <button class="primary-btn" onclick="completeSetup()">COMPLETE REGISTRATION</button>
         </div>
 
         <div id="view-profile" class="view-login hidden">
             <div class="profile-card">
                 <div class="profile-avatar" id="profileAvatar">P</div>
-                <h2 style="font-style:italic; margin-bottom:5px;" id="profileName">PLAYER NAME</h2>
-                <div style="font-size:12px; color:#888; font-weight:700;" id="profileEmail">player@email.com</div>
+                <h2 style="font-style:italic; margin-bottom:5px; text-transform:uppercase;" id="profileName">PLAYER NAME</h2>
+                <div style="font-size:12px; color:#888; font-weight:700; margin-bottom:20px;" id="profileEmail">player@email.com</div>
+                
+                <div class="profile-favs">
+                    <div class="fav-item"><img id="profFavTeam" src=""></div>
+                    <div class="fav-item"><img id="profFavDriver" src="" style="object-fit:cover; width:100%; height:100%; border-radius:4px;"></div>
+                </div>
+
                 <button class="logout-btn" onclick="signOut()">LOG OUT</button>
             </div>
         </div>
@@ -444,8 +334,13 @@
         </div>
         
         <div id="view-standings" class="view-scrollable hidden">
-            <div class="score-box"><div class="score-val" id="scoreDisplay">0</div><div class="score-lbl">Total Points</div></div>
-            <div style="text-align:center; color:#888; font-size:12px;">Leaderboard updating...</div>
+            <div style="padding:20px;">
+                <div class="score-box"><div class="score-val" id="myTotalScore">0</div><div class="score-lbl">My Total Points</div></div>
+                <h3 style="margin:20px 0 10px 0; font-style:italic;">SEASON STANDINGS</h3>
+                <div id="leaderboardList" style="background:white; border-radius:12px; overflow:hidden; border:1px solid #eee; box-shadow:var(--card-shadow);">
+                    <div style="padding:20px; text-align:center; color:#888;">Loading standings...</div>
+                </div>
+            </div>
         </div>
 
         <div id="view-rules" class="view-scrollable hidden">
@@ -460,8 +355,11 @@
             <div class="tab-btn" id="dtTab-rules" onclick="showDesktopTab('rules')">RULES</div>
         </div>
         
-        <div id="dt-standings" style="padding:20px;">
-            <div class="score-box"><div class="score-val" id="deskScoreDisplay">0</div><div class="score-lbl">POINTS</div></div>
+        <div id="dt-standings" class="view-scrollable">
+            <div style="padding:20px;">
+                <div class="score-box"><div class="score-val" id="deskScoreDisplay">0</div><div class="score-lbl">POINTS</div></div>
+                <div id="deskLeaderboardList" style="margin-top:20px; background:white; border-radius:12px; overflow:hidden; border:1px solid #eee;"></div>
+            </div>
         </div>
         
         <div id="dt-rules" style="padding:20px; display:none; overflow-y:auto; height:100%;">
@@ -495,6 +393,7 @@
   let db = null;
   let auth = null;
   let currentUser = null;
+  let userProfile = null; // Store full user profile data
 
   try {
       firebase.initializeApp(firebaseConfig);
@@ -528,29 +427,21 @@
       renderRaces();
       buildMarketGrids(); 
       renderDesktopRules();
+      initSetupDropdowns();
 
       // AUTH STATE LISTENER (Auto-login)
       auth.onAuthStateChanged(async (user) => {
           if (user) {
-              // User is signed in.
               currentUser = user;
-              const dName = (user.displayName || "Racer").toUpperCase();
-              document.getElementById('displayTeamName').innerText = dName;
-              
-              // Populate Profile View
-              document.getElementById('profileAvatar').innerText = dName.charAt(0);
-              document.getElementById('profileName').innerText = dName;
-              document.getElementById('profileEmail').innerText = user.email;
-
               await loadUserData(user.uid);
           } else {
-              // No user is signed in. Show login screen.
               document.getElementById('loadingOverlay').classList.add('hidden');
               switchMobileView('login');
           }
       });
 
       setInterval(checkLockStatus, 1000);
+      loadStandings(); // Load leaderboard
       
       setTimeout(() => {
           if (!isPWA() && !localStorage.getItem('installDismissed') && isMobile()) {
@@ -560,6 +451,26 @@
           }
       }, 2000);
   };
+
+  /* INIT DROPDOWNS FOR SETUP */
+  function initSetupDropdowns() {
+      const dSel = document.getElementById('setupFavDriver');
+      const tSel = document.getElementById('setupFavTeam');
+      
+      BINGO_CONFIG.drivers.forEach(d => {
+          const opt = document.createElement('option');
+          opt.value = d.name;
+          opt.innerText = d.name;
+          dSel.appendChild(opt);
+      });
+      
+      BINGO_CONFIG.constructors.forEach(t => {
+          const opt = document.createElement('option');
+          opt.value = t.name;
+          opt.innerText = t.name;
+          tSel.appendChild(opt);
+      });
+  }
 
   async function triggerInstall() {
     if (deferredPrompt) {
@@ -581,12 +492,12 @@
   /* APP LOGIC */
   let activeRace = 'aus';
   let currentGrid = Array(9).fill(null);
-  let currentStrategy = null; // Track strategy type
+  let currentStrategy = null; 
   let isGridLocked = false;
   let isUserLocked = false;
   const BUDGET_CAP = 100;
   let activeMarketTab = 'drivers';
-  
+
   const templates = {
         balanced: ['driver','team','driver', 'team','driver','fia', 'driver','fia','team'],
         team:     ['team','team','driver', 'team','team','team', 'driver','team','fia'],
@@ -595,10 +506,11 @@
   };
 
   function switchMobileView(view, btn) {
-        ['game','standings','rules','strategy','login', 'profile'].forEach(v => document.getElementById(`view-${v}`).classList.add('hidden'));
+        ['game','standings','rules','strategy','login', 'profile', 'setup'].forEach(v => document.getElementById(`view-${v}`).classList.add('hidden'));
         document.getElementById(`view-${view}`).classList.remove('hidden');
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         if(btn) btn.classList.add('active');
+        if(view === 'standings') loadStandings(); // Refresh when tab clicked
   }
 
   function showDesktopTab(tab) {
@@ -673,33 +585,36 @@
             
             if(doc.exists) {
                 const data = doc.data();
-                currentGrid = data[`grid_${activeRace}`] || null;
-                currentStrategy = data[`strat_${activeRace}`] || 'balanced'; // FIX: Default to 'balanced' if missing
+                userProfile = data; // Save full profile
                 
-                // If user has a saved grid, show game
+                // Update Profile View UI
+                document.getElementById('displayTeamName').innerText = (data.teamName || "RACER").toUpperCase();
+                document.getElementById('profileName').innerText = (data.teamName || "RACER").toUpperCase();
+                document.getElementById('profileEmail').innerText = currentUser.email;
+                document.getElementById('profileAvatar').innerText = (data.teamName || "R").charAt(0).toUpperCase();
+                
+                // Set fav icons
+                const favD = BINGO_CONFIG.drivers.find(d => d.name === data.favDriver);
+                const favT = BINGO_CONFIG.constructors.find(c => c.name === data.favTeam);
+                if(favD) document.getElementById('profFavDriver').src = favD.img;
+                if(favT) document.getElementById('profFavTeam').src = favT.img;
+
+                currentGrid = data[`grid_${activeRace}`] || null;
+                currentStrategy = data[`strat_${activeRace}`] || 'balanced'; 
+                
                 if(currentGrid) {
                     switchMobileView('game');
                     renderRaceHeader();
-                    // FIX: Rebuild the DOM structure based on strategy BEFORE filling
-                    // If no strategy was saved (old data), it defaults to 'balanced'
                     renderGridStructure(templates[currentStrategy] || templates['balanced']);
                     renderGrid();
                 } else {
-                    // No grid for this race yet -> Strategy
                     switchMobileView('strategy');
                     renderStrategyHeader();
                 }
             } else {
-                // First time user -> Strategy
-                currentGrid = null;
-                switchMobileView('strategy');
-                renderStrategyHeader();
-                // Create initial doc
-                await docRef.set({ 
-                    email: currentUser.email,
-                    displayName: currentUser.displayName,
-                    createdAt: new Date()
-                });
+                // NEW USER -> GOTO SETUP
+                switchMobileView('setup');
+                document.getElementById('setupTeamName').value = currentUser.displayName;
             }
         } catch(e) {
             console.error("Load Data Error:", e);
@@ -709,16 +624,89 @@
         updateActionButtons();
   }
 
+  async function completeSetup() {
+      const tName = document.getElementById('setupTeamName').value;
+      const fTeam = document.getElementById('setupFavTeam').value;
+      const fDriver = document.getElementById('setupFavDriver').value;
+      
+      if(!tName) return alert("Please enter a Team Name");
+
+      document.getElementById('loadingOverlay').classList.remove('hidden');
+      
+      try {
+          await db.collection('users').doc(currentUser.uid).set({
+              email: currentUser.email,
+              displayName: currentUser.displayName,
+              teamName: tName,
+              favTeam: fTeam,
+              favDriver: fDriver,
+              totalPoints: 0,
+              createdAt: new Date()
+          });
+          // Reload to fetch new profile
+          await loadUserData(currentUser.uid);
+      } catch(e) {
+          console.error("Setup Error", e);
+          alert("Error saving profile.");
+          document.getElementById('loadingOverlay').classList.add('hidden');
+      }
+  }
+
   async function saveGrid() {
       if(!currentUser) return;
       try {
           await db.collection('users').doc(currentUser.uid).set({
               [`grid_${activeRace}`]: currentGrid,
-              [`strat_${activeRace}`]: currentStrategy, // SAVE STRATEGY TYPE
+              [`strat_${activeRace}`]: currentStrategy, 
               last_updated: new Date()
           }, { merge: true });
       } catch(e) { console.error("Save error", e); }
   }
+
+  // --- LEADERBOARD LOGIC ---
+  async function loadStandings() {
+      if(!db) return;
+      
+      const listMobile = document.getElementById('leaderboardList');
+      const listDesk = document.getElementById('deskLeaderboardList');
+      
+      try {
+          const snapshot = await db.collection('users').orderBy('totalPoints', 'desc').limit(50).get();
+          let html = '';
+          let rank = 1;
+          
+          snapshot.forEach(doc => {
+              const u = doc.data();
+              html += `
+                <div class="leaderboard-row">
+                    <div class="lb-rank">${rank}</div>
+                    <div class="lb-user">
+                        <div class="lb-avatar" style="background:${u.favTeam ? getTeamColor(u.favTeam) : '#eee'}">${(u.teamName||"?").charAt(0)}</div>
+                        ${u.teamName || "Racer"}
+                    </div>
+                    <div class="lb-pts">${u.totalPoints || 0}</div>
+                </div>
+              `;
+              rank++;
+              
+              if(currentUser && doc.id === currentUser.uid) {
+                  document.getElementById('myTotalScore').innerText = u.totalPoints || 0;
+                  document.getElementById('deskScoreDisplay').innerText = u.totalPoints || 0;
+              }
+          });
+          
+          listMobile.innerHTML = html;
+          listDesk.innerHTML = html;
+      } catch(e) {
+          console.error("Leaderboard Error", e);
+      }
+  }
+
+  function getTeamColor(name) {
+      const t = BINGO_CONFIG.constructors.find(c => c.name === name);
+      return t ? t.color : '#eee';
+  }
+
   // --- END AUTH LOGIC ---
 
   function renderStrategyHeader() {
