@@ -55,7 +55,6 @@
         .login-btn-google { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px 24px; background: white; color: #333; border: 1px solid #ccc; font-weight: 700; cursor: pointer; border-radius: 8px; font-size: 16px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); width: 100%; max-width: 300px; transition: 0.2s; }
         .login-btn-google:active { transform: scale(0.98); background: #f5f5f5; }
         .google-icon { width: 20px; height: 20px; }
-        
         .primary-btn { width: 100%; padding: 14px; background: var(--brand-red); color: white; border: none; font-weight: 900; cursor: pointer; border-radius: 8px; font-size: 16px; box-shadow: 0 4px 10px rgba(225, 6, 0, 0.2); margin-top: 20px; }
 
         /* SETUP & PROFILE */
@@ -64,10 +63,7 @@
         
         .profile-card { background: white; padding: 25px; border-radius: 15px; text-align: center; box-shadow: var(--card-shadow); width: 100%; max-width: 350px; border: 1px solid #eee; }
         .profile-avatar { width: 80px; height: 80px; background: #eee; border-radius: 50%; margin: 0 auto 15px auto; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 900; color: #888; text-transform: uppercase; overflow: hidden; }
-        .profile-favs { display: flex; gap: 10px; justify-content: center; margin: 20px 0; }
-        .fav-item { width: 50px; height: 50px; background: #f9f9f9; border-radius: 8px; display: flex; align-items: center; justify-content: center; border: 1px solid #eee; padding: 5px; }
-        .fav-item img { max-width: 100%; max-height: 100%; object-fit: contain; }
-        .logout-btn { margin-top: 10px; background: #333; color: white; border: none; padding: 12px 30px; font-weight: 900; border-radius: 8px; cursor: pointer; width: 100%; }
+        .logout-btn { margin-top: 20px; background: #333; color: white; border: none; padding: 12px 30px; font-weight: 900; border-radius: 8px; cursor: pointer; width: 100%; }
 
         /* LEADERBOARD */
         .leaderboard-row { display: flex; align-items: center; padding: 12px; border-bottom: 1px solid #eee; background: white; }
@@ -128,9 +124,7 @@
         .slot.filled[data-type="fia"]::before { border-color: var(--c-fia) transparent transparent transparent; }
         .slot-img-container { width: 100%; height: 60%; display: flex; align-items: flex-end; justify-content: center; background-color: var(--team-color-hex); position: relative; overflow: hidden; }
         .slot-img { z-index: 2; transition: 0.2s; }
-        /* GRID: Driver Images (Cropped, Top Focus) */
         .slot.filled[data-type="driver"] .slot-img { width: 100%; height: 100%; object-fit: cover; object-position: top center; margin-bottom: 0; }
-        /* GRID: Team Images (Logos contained) */
         .slot.filled[data-type="team"] .slot-img { width: 80%; height: auto; max-height: 80%; object-fit: contain; margin-bottom: 5px; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2)); }
         .slot.filled[data-type="fia"] .slot-img { width: 50%; height: auto; margin-bottom: 20px; filter: brightness(0) invert(1); opacity: 0.8; }
         .slot-price-tag { background: rgba(0,0,0,0.8); color: white; font-size: 9px; font-weight: 900; padding: 2px 6px; border-radius: 12px; position: absolute; bottom: 4px; right: 4px; z-index: 10; border: 1px solid rgba(255,255,255,0.2); }
@@ -290,12 +284,6 @@
             <div class="setup-label">Team Name</div>
             <input type="text" id="setupTeamName" class="setup-input" placeholder="e.g. Red Bull Racing">
             
-            <div class="setup-label">Favorite Team</div>
-            <select id="setupFavTeam" class="setup-input"></select>
-            
-            <div class="setup-label">Favorite Driver</div>
-            <select id="setupFavDriver" class="setup-input"></select>
-            
             <button class="primary-btn" onclick="completeSetup()">COMPLETE REGISTRATION</button>
         </div>
 
@@ -304,12 +292,6 @@
                 <div class="profile-avatar" id="profileAvatar">P</div>
                 <h2 style="font-style:italic; margin-bottom:5px; text-transform:uppercase;" id="profileName">PLAYER NAME</h2>
                 <div style="font-size:12px; color:#888; font-weight:700; margin-bottom:20px;" id="profileEmail">player@email.com</div>
-                
-                <div class="profile-favs">
-                    <div class="fav-item"><img id="profFavTeam" src=""></div>
-                    <div class="fav-item"><img id="profFavDriver" src="" style="object-fit:cover; width:100%; height:100%; border-radius:4px;"></div>
-                </div>
-
                 <button class="logout-btn" onclick="signOut()">LOG OUT</button>
             </div>
         </div>
@@ -388,7 +370,7 @@
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
 
   // --- FIREBASE CONFIGURATION ---
- const firebaseConfig = {
+  const firebaseConfig = {
   apiKey: "AIzaSyA4tMo0m5HMYVUqpavy1ELkAUNsRd3c9gA",
   authDomain: "f1-pickem-25550.firebaseapp.com",
   projectId: "f1-pickem-25550",
@@ -436,7 +418,6 @@
       renderRaces();
       buildMarketGrids(); 
       renderDesktopRules();
-      initSetupDropdowns();
 
       // AUTH STATE LISTENER (Auto-login)
       auth.onAuthStateChanged(async (user) => {
@@ -460,26 +441,6 @@
           }
       }, 2000);
   };
-
-  /* INIT DROPDOWNS FOR SETUP */
-  function initSetupDropdowns() {
-      const dSel = document.getElementById('setupFavDriver');
-      const tSel = document.getElementById('setupFavTeam');
-      
-      BINGO_CONFIG.drivers.forEach(d => {
-          const opt = document.createElement('option');
-          opt.value = d.name;
-          opt.innerText = d.name;
-          dSel.appendChild(opt);
-      });
-      
-      BINGO_CONFIG.constructors.forEach(t => {
-          const opt = document.createElement('option');
-          opt.value = t.name;
-          opt.innerText = t.name;
-          tSel.appendChild(opt);
-      });
-  }
 
   async function triggerInstall() {
     if (deferredPrompt) {
@@ -601,12 +562,6 @@
                 document.getElementById('profileName').innerText = (data.teamName || "RACER").toUpperCase();
                 document.getElementById('profileEmail').innerText = currentUser.email;
                 document.getElementById('profileAvatar').innerText = (data.teamName || "R").charAt(0).toUpperCase();
-                
-                // Set fav icons
-                const favD = BINGO_CONFIG.drivers.find(d => d.name === data.favDriver);
-                const favT = BINGO_CONFIG.constructors.find(c => c.name === data.favTeam);
-                if(favD) document.getElementById('profFavDriver').src = favD.img;
-                if(favT) document.getElementById('profFavTeam').src = favT.img;
 
                 currentGrid = data[`grid_${activeRace}`] || null;
                 currentStrategy = data[`strat_${activeRace}`] || 'balanced'; 
@@ -635,8 +590,6 @@
 
   async function completeSetup() {
       const tName = document.getElementById('setupTeamName').value;
-      const fTeam = document.getElementById('setupFavTeam').value;
-      const fDriver = document.getElementById('setupFavDriver').value;
       
       if(!tName) return alert("Please enter a Team Name");
 
@@ -647,8 +600,6 @@
               email: currentUser.email,
               displayName: currentUser.displayName,
               teamName: tName,
-              favTeam: fTeam,
-              favDriver: fDriver,
               totalPoints: 0,
               createdAt: new Date()
           });
@@ -690,7 +641,7 @@
                 <div class="leaderboard-row">
                     <div class="lb-rank">${rank}</div>
                     <div class="lb-user">
-                        <div class="lb-avatar" style="background:${u.favTeam ? getTeamColor(u.favTeam) : '#eee'}">${(u.teamName||"?").charAt(0)}</div>
+                        <div class="lb-avatar">${(u.teamName||"?").charAt(0)}</div>
                         ${u.teamName || "Racer"}
                     </div>
                     <div class="lb-pts">${u.totalPoints || 0}</div>
@@ -709,11 +660,6 @@
       } catch(e) {
           console.error("Leaderboard Error", e);
       }
-  }
-
-  function getTeamColor(name) {
-      const t = BINGO_CONFIG.constructors.find(c => c.name === name);
-      return t ? t.color : '#eee';
   }
 
   // --- END AUTH LOGIC ---
