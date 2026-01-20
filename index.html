@@ -233,14 +233,33 @@
 
         .market-grid-drivers { padding: 15px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; box-sizing: border-box; }
         
-        /* Updated Market Card to handle tall images better */
-        .driver-card-market { background: var(--team-color); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 140px; cursor: pointer; position: relative; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
-        .dcm-img { width: 100%; height: 95%; object-fit: cover; object-position: top center; margin-bottom: 0; z-index: 1; filter: drop-shadow(0 0 5px rgba(0,0,0,0.2)); }
+        /* UPDATED MARKET CARD: Moved image down with padding/sizing */
+        .driver-card-market { 
+            background: var(--team-color); 
+            border-radius: 12px; 
+            overflow: hidden; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: flex-end; 
+            height: 140px; 
+            cursor: pointer; 
+            position: relative; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15); 
+        }
+        .dcm-img { 
+            width: 100%; 
+            height: 85%; /* Reduced height to sit lower */
+            object-fit: contain; /* Shows full body cleanly */
+            object-position: bottom center; /* Anchors to bottom */
+            margin-bottom: 0; 
+            z-index: 1; 
+            filter: drop-shadow(0 0 5px rgba(0,0,0,0.2)); 
+            margin-top: 15px; /* Physical push down */
+        }
         .dcm-name { width: 100%; background: rgba(20,20,30,0.9); color: white; font-size: 9px; font-weight: 800; text-align: center; padding: 5px 2px; z-index: 2; text-transform: uppercase; line-height: 1; }
 
         .market-list-teams { padding: 15px; display: flex; flex-direction: column; gap: 10px; }
-        
-        /* Updated Market Team Card */
         .team-card-market { width: 100%; height: 70px; background: white; border-radius: 8px; border: 1px solid #eee; border-left: 8px solid var(--team-color); display: flex; align-items: center; justify-content: space-between; padding: 0 15px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .tcm-name { font-size: 14px; font-weight: 900; text-transform: uppercase; color: #333; }
         .tcm-img { height: 90%; width: 60%; object-fit: contain; object-position: right center; }
