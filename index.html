@@ -10,6 +10,10 @@
     <title>F1 PICKEM</title>
     <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
     <link rel="manifest" href="manifest.json">
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
     <script src="bingo_data.js"></script>
 
     <style>
@@ -33,6 +37,11 @@
             overflow: hidden; 
         }
         .hidden { display: none !important; }
+
+        /* LOADING SPINNER */
+        #loadingOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .spinner { width: 40px; height: 40px; border: 4px solid #eee; border-top: 4px solid var(--brand-red); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         /* HEADER */
         header { 
@@ -286,7 +295,7 @@
         .pb-cost { background: #333; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 900; }
         .prediction-btn.unaffordable .pb-cost { background: #ef4444; color: white; } 
 
-        /* STRATEGY */
+        /* STRATEGY & MODALS */
         .view-strategy { text-align: center; width: 100%; display: flex; flex-direction: column; align-items: center; height: 100%; padding: 20px; overflow-y: auto; }
         .strategy-header-container { margin-top: 20px; margin-bottom: 30px; display: flex; flex-direction: column; align-items: center; gap: 5px; }
         .big-flag { width: 100px; height: auto; border-radius: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 10px; }
@@ -297,23 +306,19 @@
         .strat-card { background: #fff; border: 2px solid #eee; border-radius: 12px; padding: 20px; cursor: pointer; display: flex; flex-direction: column; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .mini-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; width: 60px; height: 60px; margin-bottom: 10px; opacity: 0.8; } .mg-c { border-radius: 1px; }
         
-        /* MODAL */
         #customModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 5000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
         .modal-box { background: white; padding: 25px; border-radius: 15px; width: 85%; max-width: 320px; text-align: center; }
         .btn-modal { padding: 12px 24px; border-radius: 8px; font-weight: 800; cursor: pointer; border: none; margin: 5px; font-size: 14px; }
         .btn-confirm { background: var(--brand-red); color: white; }
         .btn-cancel { background: #eee; color: #333; }
         
-        /* INSTALL MODAL */
         #installModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
         .install-box { background: white; width: 85%; max-width: 320px; border-radius: 16px; padding: 30px 20px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
         .install-icon { width: 60px; height: 60px; background: #e10600; border-radius: 12px; margin: 0 auto 15px auto; display: flex; align-items: center; justify-content: center; color: white; font-size: 30px; font-weight: bold; }
         .install-btn { width: 100%; padding: 14px; background: #22c55e; color: white; border: none; border-radius: 8px; font-weight: 900; font-size: 14px; margin-top: 15px; cursor: pointer; box-shadow: 0 4px 10px rgba(34, 197, 94, 0.3); }
         .install-dismiss { width: 100%; padding: 12px; background: transparent; color: #888; border: none; font-weight: 700; font-size: 12px; margin-top: 5px; cursor: pointer; }
-        /* MANUAL INSTALL BUTTON FOR RULES PAGE */
         .manual-install-btn { display: none; width: 100%; padding: 14px; background: #333; color: white; border: none; border-radius: 8px; font-weight: 900; font-size: 14px; margin-top: 20px; cursor: pointer; }
 
-        /* STANDINGS & RULES */
         .score-box { text-align: center; margin-bottom: 20px; padding: 25px; background: #fff; border-radius: 12px; border: 1px solid #eee; box-shadow: var(--card-shadow); }
         .score-val { font-size: 42px; font-weight: 900; color: var(--brand-dark); line-height: 1; }
         .score-lbl { font-size: 12px; font-weight: 700; color: #888; text-transform: uppercase; margin-top: 5px; letter-spacing: 1px; }
@@ -330,68 +335,10 @@
 </head>
 <body>
 
-<script>
-  // Service Worker
-  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
-
-  // PWA Logic
-  let deferredPrompt;
-  function isPWA() { return (window.matchMedia('(display-mode: standalone)').matches) || (window.navigator.standalone === true); }
-  function isMobile() { return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent); }
-
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    if (!localStorage.getItem('installDismissed') && !isPWA() && isMobile()) {
-        document.getElementById('installModal').classList.remove('hidden');
-    }
-    document.querySelectorAll('.manual-install-btn').forEach(b => b.style.display = 'block');
-  });
-
-  window.onload = () => {
-      if(typeof BINGO_CONFIG === 'undefined') return alert("Error: bingo_data.js missing.");
-      const savedRace = localStorage.getItem('current_race_id');
-      if(savedRace) activeRace = savedRace;
-
-      renderRaces();
-      buildMarketGrids(); 
-      
-      const savedName = localStorage.getItem('f1_team_name');
-      const savedGrid = db.load(`grid_${activeRace}`);
-      
-      if(savedName) document.getElementById('teamNameInput').value = savedName;
-      if(savedName && savedGrid) login(true);
-      
-      setInterval(checkLockStatus, 1000);
-      updateBudgetUI();
-      renderDesktopRules(); // Ensure rules are rendered for desktop too
-
-      setTimeout(() => {
-          if (!isPWA() && !localStorage.getItem('installDismissed') && isMobile()) {
-              if (!deferredPrompt) {
-                  // document.getElementById('installModal').classList.remove('hidden');
-              }
-          }
-      }, 2000);
-  };
-
-  async function triggerInstall() {
-    if (deferredPrompt) {
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        if (outcome === 'accepted') { deferredPrompt = null; document.getElementById('installModal').classList.add('hidden'); }
-    } else {
-        const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
-        alert(isIos ? "Tap Share -> Add to Home Screen" : "Menu -> Install App");
-        document.getElementById('installModal').classList.add('hidden');
-    }
-  }
-
-  function dismissInstall() {
-      document.getElementById('installModal').classList.add('hidden');
-      localStorage.setItem('installDismissed', 'true');
-  }
-</script>
+<div id="loadingOverlay">
+    <div class="spinner"></div>
+    <div style="margin-top:15px; font-weight:900; letter-spacing:1px; font-size:12px; color:#555;">STARTING ENGINE...</div>
+</div>
 
 <div id="installModal" class="hidden">
     <div class="install-box">
@@ -512,46 +459,123 @@
 </div>
 
 <script>
-    class DataManager {
-        constructor() { this.type = 'local'; }
-        save(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
-        load(key) { const d = localStorage.getItem(key); return d ? JSON.parse(d) : null; }
+  // Service Worker
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+
+  // --- FIREBASE CONFIGURATION ---
+  // Just the config object, no import statements!
+  const firebaseConfig = {
+  apiKey: "AIzaSyA4tMo0m5HMYVUqpavy1ELkAUNsRd3c9gA",
+  authDomain: "f1-pickem-25550.firebaseapp.com",
+  projectId: "f1-pickem-25550",
+  storageBucket: "f1-pickem-25550.firebasestorage.app",
+  messagingSenderId: "698392572260",
+  appId: "1:698392572260:web:0ffda4c77e17d2a4f50a71"
+  };
+  // ------------------------------
+
+  // Init Firebase (This uses the scripts we loaded in the <head>)
+  let db = null;
+  try {
+      firebase.initializeApp(firebaseConfig); // This initializes it automatically
+      db = firebase.firestore();
+      console.log("Firebase connected successfully");
+  } catch(e) {
+      console.error("Firebase Init Error:", e);
+  }
+
+  // PWA Logic
+  let deferredPrompt;
+  function isPWA() { return (window.matchMedia('(display-mode: standalone)').matches) || (window.navigator.standalone === true); }
+  function isMobile() { return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent); }
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    if (!localStorage.getItem('installDismissed') && !isPWA() && isMobile()) {
+        document.getElementById('installModal').classList.remove('hidden');
     }
-    const db = new DataManager();
+    document.querySelectorAll('.manual-install-btn').forEach(b => b.style.display = 'block');
+  });
 
-    let activeRace = 'aus';
-    let currentGrid = Array(9).fill(null);
-    let verifiedResults = [];
-    let isGridLocked = false;
-    let isUserLocked = false;
-    const BUDGET_CAP = 100;
-    let activeMarketTab = 'drivers';
+  window.onload = async () => {
+      if(typeof BINGO_CONFIG === 'undefined') return alert("Error: bingo_data.js missing.");
+      
+      const savedRace = localStorage.getItem('current_race_id');
+      if(savedRace) activeRace = savedRace;
 
-    const templates = {
+      renderRaces();
+      buildMarketGrids(); 
+      renderDesktopRules();
+
+      const savedName = localStorage.getItem('f1_team_name');
+      if(savedName) {
+          document.getElementById('teamNameInput').value = savedName;
+          await login(true); // Auto-login via Firebase
+      } else {
+          document.getElementById('loadingOverlay').classList.add('hidden');
+      }
+
+      setInterval(checkLockStatus, 1000);
+      
+      setTimeout(() => {
+          if (!isPWA() && !localStorage.getItem('installDismissed') && isMobile()) {
+              if (!deferredPrompt) {
+                  // document.getElementById('installModal').classList.remove('hidden');
+              }
+          }
+      }, 2000);
+  };
+
+  async function triggerInstall() {
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') { deferredPrompt = null; document.getElementById('installModal').classList.add('hidden'); }
+    } else {
+        const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
+        alert(isIos ? "Tap Share -> Add to Home Screen" : "Menu -> Install App");
+        document.getElementById('installModal').classList.add('hidden');
+    }
+  }
+
+  function dismissInstall() {
+      document.getElementById('installModal').classList.add('hidden');
+      localStorage.setItem('installDismissed', 'true');
+  }
+
+  /* APP LOGIC */
+  let activeRace = 'aus';
+  let currentGrid = Array(9).fill(null);
+  let isGridLocked = false;
+  let isUserLocked = false;
+  const BUDGET_CAP = 100;
+  let activeMarketTab = 'drivers';
+  let teamId = null;
+
+  const templates = {
         balanced: ['driver','team','driver', 'team','driver','fia', 'driver','fia','team'],
         team:     ['team','team','driver', 'team','team','team', 'driver','team','fia'],
         chaos:    ['fia','fia','driver',   'fia','fia','fia',    'team','fia','driver'],
         driver:   ['driver','driver','team', 'driver','driver','driver', 'fia','driver','team']
-    };
+  };
 
-    function switchMobileView(view, btn) {
+  function switchMobileView(view, btn) {
         ['game','standings','rules','strategy','login'].forEach(v => document.getElementById(`view-${v}`).classList.add('hidden'));
         document.getElementById(`view-${view}`).classList.remove('hidden');
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         if(btn) btn.classList.add('active');
-    }
+  }
 
-    // NEW: Function to switch tabs on desktop right panel
-    function showDesktopTab(tab) {
+  function showDesktopTab(tab) {
         document.querySelectorAll('#desktopRightPanel .tab-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(`dtTab-${tab}`).classList.add('active');
         document.getElementById('dt-standings').style.display = 'none';
         document.getElementById('dt-rules').style.display = 'none';
         document.getElementById(`dt-${tab}`).style.display = 'block';
-    }
+  }
 
-    function renderDesktopRules() {
-        // Shared Rules HTML for both mobile and desktop
+  function renderDesktopRules() {
         const html = `
             <div class="rules-card">
                 <div class="rule-step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Strategy</div><div class="step-desc">Pick your grid layout.</div></div></div>
@@ -568,9 +592,9 @@
         `;
         document.getElementById('rulesContentMobile').innerHTML = html;
         document.getElementById('rulesContentDesktop').innerHTML = html;
-    }
+  }
 
-    function showMarketTab(tab) {
+  function showMarketTab(tab) {
         activeMarketTab = tab;
         document.querySelectorAll('#marketTabs .tab-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(`tabBtn-${tab}`).classList.add('active');
@@ -587,31 +611,69 @@
         } else {
             document.getElementById('fia-root').style.display = 'block';
         }
-    }
+  }
 
-    function login(auto) {
-        const name = document.getElementById('teamNameInput').value;
-        if(!auto) {
-            if(!name) return showModal("MISSING INFO", "Please enter a team name.", false);
-            localStorage.setItem('f1_team_name', name);
-        }
+  // --- FIREBASE LOGIC START ---
+  async function login(auto) {
+        const name = document.getElementById('teamNameInput').value.trim();
+        if(!name) return showModal("MISSING INFO", "Please enter a team name.", false);
+        
+        document.getElementById('loadingOverlay').classList.remove('hidden');
+        teamId = name.toLowerCase().replace(/[^a-z0-9]/g, '_'); // Sanitize ID
+        localStorage.setItem('f1_team_name', name);
         document.getElementById('displayTeamName').innerText = name.toUpperCase();
-        const savedGrid = db.load(`grid_${activeRace}`);
-        const ul = localStorage.getItem(`userLock_${activeRace}`);
-        if(ul==='true') isUserLocked = true;
 
-        if(savedGrid) { currentGrid = savedGrid; switchMobileView('game'); renderRaceHeader(); renderGrid(); }
-        else { 
+        try {
+            // Load from Firebase
+            const docRef = db.collection('users').doc(teamId);
+            const doc = await docRef.get();
+            
+            if(doc.exists) {
+                const data = doc.data();
+                // Load grid for active race or null
+                currentGrid = data[`grid_${activeRace}`] || null;
+            } else {
+                // New User
+                currentGrid = null;
+            }
+        } catch(e) {
+            console.error("Login load error", e);
+            // On error, we just proceed with null grid (new user experience)
+        }
+
+        document.getElementById('loadingOverlay').classList.add('hidden');
+
+        // Route to View
+        if(currentGrid) { 
+            switchMobileView('game'); 
+            renderRaceHeader(); 
+            renderGrid(); 
+        } else { 
             switchMobileView('strategy'); 
-            const r = BINGO_CONFIG.races.find(r=>r.id===activeRace); 
-            document.getElementById('stratFlag').src = `https://flagcdn.com/w160/${r.c}.png`;
-            document.getElementById('stratRaceName').innerText = r.n.toUpperCase();
-            document.getElementById('stratRaceDate').innerText = r.d.toUpperCase();
+            renderStrategyHeader();
         }
         updateActionButtons();
-    }
+  }
 
-    function buildMarketGrids() {
+  async function saveGrid() {
+      if(!teamId || !db) return;
+      try {
+          await db.collection('users').doc(teamId).set({
+              [`grid_${activeRace}`]: currentGrid,
+              last_updated: new Date()
+          }, { merge: true });
+      } catch(e) { console.error("Save error", e); }
+  }
+  // --- FIREBASE LOGIC END ---
+
+  function renderStrategyHeader() {
+        const r = BINGO_CONFIG.races.find(r=>r.id===activeRace); 
+        document.getElementById('stratFlag').src = `https://flagcdn.com/w160/${r.c}.png`;
+        document.getElementById('stratRaceName').innerText = r.n.toUpperCase();
+        document.getElementById('stratRaceDate').innerText = r.d.toUpperCase();
+  }
+
+  function buildMarketGrids() {
         const dRoot = document.getElementById('drivers-root');
         BINGO_CONFIG.drivers.filter(d=>d.team!=='FIA').forEach(d => {
             dRoot.appendChild(createDriverCard(d));
@@ -626,27 +688,27 @@
         BINGO_CONFIG.templates.fia.forEach(f => {
             fRoot.appendChild(createPredictionBtn('Race Control', f.t, f.c, 'fia', 'Race Control', 'FIA'));
         });
-    }
+  }
 
-    function createDriverCard(d) {
+  function createDriverCard(d) {
         const div = document.createElement('div');
         div.className = 'driver-card-market';
         div.style.setProperty('--team-color', d.color);
         div.innerHTML = `<img src="${d.img}" class="dcm-img"><div class="dcm-name">${d.name}</div>`;
         div.onclick = () => openDrillDown(d, 'driver');
         return div;
-    }
+  }
 
-    function createTeamCard(t) {
+  function createTeamCard(t) {
         const div = document.createElement('div');
         div.className = 'team-card-market';
         div.style.setProperty('--team-color', t.color);
         div.innerHTML = `<div class="tcm-name">${t.name}</div><img src="${t.img}" class="tcm-img">`;
         div.onclick = () => openDrillDown(t, 'team');
         return div;
-    }
+  }
 
-    function openDrillDown(entity, type) {
+  function openDrillDown(entity, type) {
         document.getElementById('drivers-root').style.display = 'none';
         document.getElementById('teams-root').style.display = 'none';
         
@@ -657,7 +719,7 @@
         const list = document.getElementById('detail-list');
         list.innerHTML = ''; 
 
-        const currentSpent = currentGrid.reduce((sum, item) => sum + (item ? item.cost : 0), 0);
+        const currentSpent = currentGrid ? currentGrid.reduce((sum, item) => sum + (item ? item.cost : 0), 0) : 0;
         const remaining = BUDGET_CAP - currentSpent;
 
         if(type === 'driver') {
@@ -677,20 +739,20 @@
                 list.appendChild(createPredictionBtn(entity.name, o.t, cost, 'team', entity.name, 'TEAM', entity, isExpensive));
             });
         }
-    }
+  }
 
-    function backToRoot() {
+  function backToRoot() {
         document.getElementById('market-detail').classList.remove('active');
         showMarketTab(activeMarketTab);
-    }
+  }
 
-    function createPredictionBtn(displayOwner, text, cost, type, dName, sub, entity, isExpensive) {
+  function createPredictionBtn(displayOwner, text, cost, type, dName, sub, entity, isExpensive) {
         const div = document.createElement('div');
         
         let img = 'images/fia.png';
         let col = '#333';
-        let isFia = false;
         let isTeam = false;
+        let isFia = false;
 
         if(entity) { 
             img = entity.img; col = entity.color; 
@@ -705,22 +767,26 @@
         `;
         div.onclick = () => fillSlot(`${displayOwner} ${text}`, type, cost, dName, sub);
         return div;
-    }
+  }
 
-    function confirmStrategy(type) {
+  function confirmStrategy(type) {
         currentGrid = templates[type].map(t => null);
         renderGridStructure(templates[type]);
         switchMobileView('game');
         renderRaceHeader();
-        db.save(`grid_${activeRace}`, currentGrid);
-    }
+        saveGrid(); // Save empty grid structure
+  }
 
-    function changeStrategy() {
+  function changeStrategy() {
         if(isGridLocked || isUserLocked) return;
-        showModal("CHANGE SETUP?", "Wipe grid?", true, () => { db.save(`grid_${activeRace}`, null); localStorage.removeItem(`userLock_${activeRace}`); location.reload(); });
-    }
+        showModal("CHANGE SETUP?", "Wipe grid?", true, async () => { 
+            currentGrid = null;
+            await saveGrid();
+            location.reload(); 
+        });
+  }
 
-    function renderGridStructure(pattern) {
+  function renderGridStructure(pattern) {
         const grid = document.getElementById('grid');
         grid.innerHTML = '';
         pattern.forEach((type, i) => {
@@ -732,12 +798,13 @@
             slot.onclick = () => handleSlotClick(i, type);
             grid.appendChild(slot);
         });
-    }
+  }
 
-    function renderGrid() {
+  function renderGrid() {
         const slots = document.querySelectorAll('.slot');
-        slots.forEach(s => {
-            const idx = parseInt(s.dataset.index);
+        if(!currentGrid) return; 
+
+        slots.forEach((s, idx) => {
             const data = currentGrid[idx];
             if(data) {
                 let drv = BINGO_CONFIG.drivers.find(d => d.name === data.driver);
@@ -760,9 +827,9 @@
             }
         });
         updateScore(); updateBudgetUI(); updateActionButtons();
-    }
+  }
 
-    function handleSlotClick(idx, type) {
+  function handleSlotClick(idx, type) {
         if(currentGrid[idx] || isGridLocked || isUserLocked) return;
         const panel = document.getElementById('marketPanel');
         if(window.innerWidth <= 1024) panel.classList.add('mobile-modal');
@@ -773,11 +840,11 @@
         if(type === 'team') tab = 'teams';
         if(type === 'fia') tab = 'fia';
         showMarketTab(tab);
-    }
+  }
 
-    function closeMobileMarket() { document.getElementById('marketPanel').classList.remove('mobile-modal'); backToRoot(); }
+  function closeMobileMarket() { document.getElementById('marketPanel').classList.remove('mobile-modal'); backToRoot(); }
 
-    function fillSlot(text, type, cost, dName, sub) {
+  function fillSlot(text, type, cost, dName, sub) {
         const panel = document.getElementById('marketPanel');
         let tIdx = parseInt(panel.dataset.targetIndex);
         if(isNaN(tIdx)) { 
@@ -795,29 +862,35 @@
         }
 
         currentGrid[tIdx] = { text, type, driver: dName, subtype: sub, cost };
-        db.save(`grid_${activeRace}`, currentGrid);
+        saveGrid();
         renderGrid();
         closeMobileMarket();
         delete panel.dataset.targetIndex;
-    }
+  }
 
-    function removePick(idx) {
+  function removePick(idx) {
         if(isGridLocked || isUserLocked) return;
-        currentGrid[idx] = null; db.save(`grid_${activeRace}`, currentGrid); renderGrid();
-    }
+        currentGrid[idx] = null; 
+        saveGrid(); 
+        renderGrid();
+  }
 
-    function renderRaces() {
+  function renderRaces() {
         const bar = document.getElementById('raceBar');
         BINGO_CONFIG.races.forEach(r => {
             const d = document.createElement('div'); d.className = `race-card ${r.id===activeRace?'active':''}`;
-            d.onclick = () => { activeRace = r.id; localStorage.setItem('current_race_id', activeRace); location.reload(); };
+            d.onclick = () => { 
+                activeRace = r.id; 
+                localStorage.setItem('current_race_id', activeRace); 
+                login(true);
+            };
             d.innerHTML = `<img src="https://flagcdn.com/w40/${r.c}.png" class="race-flag-img"><span class="race-name">${r.n}</span>`;
             bar.appendChild(d);
         });
         renderRaceHeader();
-    }
+  }
 
-    function renderRaceHeader() {
+  function renderRaceHeader() {
         const r = BINGO_CONFIG.races.find(x => x.id === activeRace);
         document.getElementById('rhFlag').src = `https://flagcdn.com/w160/${r.c}.png`;
         document.getElementById('rhTitle').innerText = r.n;
@@ -826,18 +899,18 @@
         document.getElementById('stratFlag').src = `https://flagcdn.com/w160/${r.c}.png`;
         document.getElementById('stratRaceName').innerText = r.n.toUpperCase();
         document.getElementById('stratRaceDate').innerText = r.d.toUpperCase();
-    }
+  }
 
-    function checkLockStatus() {
+  function checkLockStatus() {
         const r = BINGO_CONFIG.races.find(x => x.id === activeRace);
         if(r.lockTime && new Date(r.lockTime)-new Date() <= 0) isGridLocked = true;
         updateActionButtons();
-    }
+  }
 
-    function updateActionButtons() {
+  function updateActionButtons() {
         const lockBtn = document.getElementById('headerLockBtn');
         const unlockBtn = document.getElementById('headerUnlockBtn');
-        const full = currentGrid.every(x=>x);
+        const full = currentGrid && currentGrid.every(x=>x);
         
         lockBtn.style.display = 'none';
         unlockBtn.style.display = 'none';
@@ -851,34 +924,34 @@
             document.getElementById('grid').classList.remove('grid-locked');
             if(full) lockBtn.style.display = 'flex'; 
         }
-    }
+  }
 
-    function toggleUserLock() {
+  function toggleUserLock() {
         isUserLocked = !isUserLocked;
         localStorage.setItem(`userLock_${activeRace}`, isUserLocked);
         updateActionButtons();
-    }
+  }
 
-    function updateScore() { /* Score logic */ }
-    function updateBudgetUI() {
-        const rem = BUDGET_CAP - currentGrid.reduce((s,i)=>s+(i?i.cost:0),0);
+  function updateScore() { /* Score logic */ }
+  function updateBudgetUI() {
+        const rem = BUDGET_CAP - (currentGrid ? currentGrid.reduce((s,i)=>s+(i?i.cost:0),0) : 0);
         document.getElementById('hudBudgetVal').innerText = `$${rem}M`;
         document.getElementById('hudBudgetBar').style.width = `${(rem/BUDGET_CAP)*100}%`;
         const c = rem < 0 ? '#e10600' : '#22c55e';
         document.getElementById('hudBudgetVal').style.color = c;
         document.getElementById('hudBudgetBar').style.backgroundColor = c;
-    }
+  }
 
-    let mCb;
-    function showModal(t, txt, conf, cb) {
+  let mCb;
+  function showModal(t, txt, conf, cb) {
         document.getElementById('modalTitle').innerText = t;
         document.getElementById('modalText').innerText = txt;
         document.getElementById('modalActions').innerHTML = conf ? `<button class="btn-modal btn-cancel" onclick="closeModal()">CANCEL</button><button class="btn-modal btn-confirm" onclick="execCallback()">CONFIRM</button>` : `<button class="btn-modal btn-confirm" onclick="closeModal()">OK</button>`;
         document.getElementById('customModal').classList.remove('hidden');
         mCb = cb;
-    }
-    function closeModal() { document.getElementById('customModal').classList.add('hidden'); mCb = null; }
-    function execCallback() { if(mCb) mCb(); closeModal(); }
+  }
+  function closeModal() { document.getElementById('customModal').classList.add('hidden'); mCb = null; }
+  function execCallback() { if(mCb) mCb(); closeModal(); }
 
 </script>
 </body>
