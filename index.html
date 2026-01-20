@@ -19,11 +19,32 @@
             --c-driver: #ff9500; --c-team: #00d2be; --c-fia: #e10600; 
         }
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-        body { font-family: 'Titillium Web', sans-serif; background: var(--bg-body); color: var(--brand-dark); margin: 0; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
+        
+        /* STRICT LAYOUT: Header fixed, Main takes rest */
+        body { 
+            font-family: 'Titillium Web', sans-serif; 
+            background: var(--bg-body); 
+            color: var(--brand-dark); 
+            margin: 0; 
+            height: 100dvh; /* Dynamic viewport height */
+            width: 100vw;
+            display: flex; 
+            flex-direction: column; 
+            overflow: hidden; 
+        }
         .hidden { display: none !important; }
 
-        /* HEADER */
-        header { background: white; border-bottom: 3px solid var(--brand-red); height: 60px; display: flex; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); z-index: 20; flex-shrink: 0; }
+        /* HEADER (Fixed 60px) */
+        header { 
+            background: white; 
+            border-bottom: 3px solid var(--brand-red); 
+            height: 60px; 
+            flex: 0 0 60px; /* Don't shrink/grow */
+            display: flex; 
+            align-items: center; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
+            z-index: 20; 
+        }
         .logo-area { padding: 0 15px; height: 100%; display: flex; align-items: center; border-right: 1px solid #eee; cursor: pointer; }
         .header-logo { max-height: 28px; width: auto; }
         
@@ -42,45 +63,51 @@
         }
         .race-card.active { opacity: 1; background: #fff; border-bottom: 4px solid var(--brand-red); }
         .race-flag-img { width: 24px; height: 16px; object-fit: cover; border-radius: 2px; margin-bottom: 4px; }
-        .race-name { 
-            font-size: 9px; font-weight: 800; text-transform: uppercase; 
-            white-space: nowrap; 
-        }
-        
+        .race-name { font-size: 9px; font-weight: 800; text-transform: uppercase; white-space: nowrap; }
         .user-area { padding: 0 15px; font-weight: 800; font-size: 12px; border-left: 1px solid #eee; height: 100%; display: flex; align-items: center; background: #fff; z-index: 25; }
 
-        /* LAYOUT & PANELS */
-        .main-stage { flex: 1; display: grid; grid-template-columns: 320px 1fr 300px; padding: 20px; gap: 20px; overflow: hidden; height: 100%; }
+        /* MAIN STAGE (Flex Grow) */
+        .main-stage { 
+            flex: 1; /* Takes remaining space */
+            display: grid; 
+            grid-template-columns: 320px 1fr 300px; 
+            padding: 20px; 
+            gap: 20px; 
+            overflow: hidden; /* Prevent body scroll */
+            position: relative;
+        }
+
+        /* PANELS */
         .panel { background: white; border-radius: 12px; box-shadow: var(--card-shadow); overflow: hidden; display: flex; flex-direction: column; border: 1px solid #e0e0e0; height: 100%; }
         .active-panel { background: white; border-radius: 12px; border: 1px solid #e0e0e0; padding: 0; display: flex; flex-direction: column; overflow: hidden; height: 100%; position: relative; }
 
-        .view-login, .view-strategy, .view-standings, .view-rules { padding-bottom: 120px !important; }
+        /* VIEWS INSIDE PANEL */
+        .view-scrollable { padding: 20px; overflow-y: auto; height: 100%; padding-bottom: 120px !important; }
         
-        /* CRITICAL MOBILE FIX:
-           Calculation: 100dvh (Screen) - 60px (Header) - 70px (Nav) = Exact Content Height.
-           This physically prevents content from going behind the tabs.
-        */
+        /* LOGIN */
+        .view-login { width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 25px; overflow-y: auto; height: 100%; }
+        .login-input { padding: 15px; width: 100%; text-align: center; border: 2px solid #eee; border-radius: 10px; font-weight: bold; font-size: 18px; max-width: 400px; margin-bottom: 25px; background: #fff; }
+        .login-btn { padding: 16px; width: 100%; max-width: 400px; margin-top: 20px; background: var(--brand-red); color: white; border: none; font-weight: 900; cursor: pointer; border-radius: 10px; font-size: 16px; box-shadow: 0 4px 10px rgba(225, 6, 0, 0.2); margin-bottom: 50px; }
+
+        /* MOBILE OVERRIDES */
         @media (max-width: 1024px) {
             .main-stage { 
                 grid-template-columns: 1fr; 
-                padding: 10px;
-                padding-bottom: 0 !important;
-                height: calc(100dvh - 130px) !important;
-                margin-top: 0; 
-                overflow-y: hidden; /* Contains the grid */
+                padding: 10px; 
+                /* VITAL FIX: Reserve space for footer */
+                padding-bottom: 85px !important; 
             }
             .panel { display: none; } 
+            
+            /* Mobile Modal for Market */
             .panel.mobile-modal { display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; border-radius: 0; animation: slideUp 0.25s ease-out; }
             .mobile-close-btn { display: block !important; }
-            
-            /* Hide desktop specific buttons on mobile */
-            .desk-only-btn { display: none !important; }
         }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         .mobile-close-btn { display: none; padding: 15px; background: #333; color: white; text-align: center; font-weight: 800; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* MOBILE NAV */
-        .mobile-nav { display: none; position: fixed; bottom: 0; left: 0; width: 100%; height: 70px; background: white; border-top: 1px solid #ddd; z-index: 1000; justify-content: space-around; align-items: center; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); padding-bottom: 10px; }
+        /* MOBILE NAV (Fixed Bottom) */
+        .mobile-nav { display: none; position: fixed; bottom: 0; left: 0; width: 100%; height: 75px; background: white; border-top: 1px solid #ddd; z-index: 1000; justify-content: space-around; align-items: center; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); padding-bottom: 15px; }
         .nav-item { flex: 1; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; color: #888; text-transform: uppercase; cursor: pointer; }
         .nav-item.active { color: var(--brand-red); background: #fff5f5; }
         .nav-icon { font-size: 20px; margin-bottom: 2px; }
@@ -94,15 +121,11 @@
         .rh-date { font-size: 11px; color: #888; font-weight: 700; margin-top: 2px; }
         
         .rh-right-group { display: flex; align-items: center; gap: 8px; }
-        
-        /* Header Buttons */
         .header-btn { width: 38px; height: 38px; border-radius: 8px; border: none; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: 0.2s; }
         .header-btn:active { transform: scale(0.95); }
-        
         .hb-setup { background: white; border: 1px solid #ddd; color: #555; }
         .hb-lock { background: #22c55e; color: white; display: none; } 
         .hb-unlock { background: #ef4444; color: white; display: none; } 
-        .desk-only-btn { margin-right: 10px; font-size: 12px; padding: 0 12px; font-weight: 800; width: auto; background: #f4f4f8; }
 
         .budget-hud { background: #f4f4f8; padding: 6px 12px; border-radius: 6px; border: 1px solid #ddd; border-left: 4px solid #22c55e; display: flex; flex-direction: column; align-items: flex-end; min-width: 70px; height: 38px; justify-content: center; }
         .budget-hud-val { font-size: 14px; font-weight: 900; color: #22c55e; line-height: 1; }
@@ -111,7 +134,6 @@
 
         /* GRID */
         .grid-container { flex: 1; padding: 10px; display: flex; flex-direction: column; justify-content: center; overflow: hidden; height: 100%; }
-        /* Grid height 100% will now respect the Main Stage height calculation */
         .bingo-grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); gap: 8px; width: 100%; height: 100%; max-width: 600px; margin: 0 auto; }
         
         .slot { background: #fafafa; border: 2px dashed #ddd; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; position: relative; cursor: pointer; user-select: none; transition: 0.2s; text-transform: uppercase; color: #aaa; width: 100%; height: 100%; }
@@ -179,11 +201,6 @@
         .pb-cost { background: #333; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 900; }
         .prediction-btn.unaffordable .pb-cost { background: #ef4444; color: white; } 
 
-        /* LOGIN */
-        .view-login { width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 25px; box-sizing: border-box; overflow-y: auto; height: 100%; }
-        .login-input { padding: 15px; width: 100%; text-align: center; border: 2px solid #eee; border-radius: 10px; font-weight: bold; font-size: 18px; max-width: 400px; margin-bottom: 25px; background: #fff; }
-        .login-btn { padding: 16px; width: 100%; max-width: 400px; margin-top: 20px; background: var(--brand-red); color: white; border: none; font-weight: 900; cursor: pointer; border-radius: 10px; font-size: 16px; box-shadow: 0 4px 10px rgba(225, 6, 0, 0.2); margin-bottom: 50px; }
-
         /* STRATEGY */
         .view-strategy { text-align: center; width: 100%; display: flex; flex-direction: column; align-items: center; height: 100%; padding: 20px; overflow-y: auto; }
         .strategy-header-container { margin-top: 20px; margin-bottom: 30px; display: flex; flex-direction: column; align-items: center; gap: 5px; }
@@ -234,35 +251,20 @@
 
   // PWA Logic
   let deferredPrompt;
-  
-  // Check if running as a PWA
-  function isPWA() {
-      return (window.matchMedia('(display-mode: standalone)').matches) || (window.navigator.standalone === true);
-  }
-
-  // Check if Mobile Browser
-  function isMobile() {
-      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  }
+  function isPWA() { return (window.matchMedia('(display-mode: standalone)').matches) || (window.navigator.standalone === true); }
+  function isMobile() { return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent); }
 
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    
-    // Only show popup if not dismissed before AND not in PWA AND is Mobile
     if (!localStorage.getItem('installDismissed') && !isPWA() && isMobile()) {
         document.getElementById('installModal').classList.remove('hidden');
     }
-    
-    // Show manual buttons if we captured the prompt
     document.querySelectorAll('.manual-install-btn').forEach(b => b.style.display = 'block');
   });
 
-  // Forced logic: if prompt never fired but we are not PWA, might be iOS
   window.onload = () => {
-      // Run normal init
       if(typeof BINGO_CONFIG === 'undefined') return alert("Error: bingo_data.js missing.");
-      
       const savedRace = localStorage.getItem('current_race_id');
       if(savedRace) activeRace = savedRace;
 
@@ -277,13 +279,11 @@
       
       setInterval(checkLockStatus, 1000);
       updateBudgetUI();
+      renderDesktopRules(); // Render static rules content
 
-      // Install Modal Logic
       setTimeout(() => {
-          // Fallback check ensuring it's Mobile and not PWA
           if (!isPWA() && !localStorage.getItem('installDismissed') && isMobile()) {
               if (!deferredPrompt) {
-                  // Optional: Show modal anyway for iOS/Manual instructions
                   // document.getElementById('installModal').classList.remove('hidden');
               }
           }
@@ -294,17 +294,10 @@
     if (deferredPrompt) {
         deferredPrompt.prompt();
         const { outcome } = await deferredPrompt.userChoice;
-        if (outcome === 'accepted') {
-            deferredPrompt = null;
-            document.getElementById('installModal').classList.add('hidden');
-        }
+        if (outcome === 'accepted') { deferredPrompt = null; document.getElementById('installModal').classList.add('hidden'); }
     } else {
         const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
-        if(isIos) {
-            alert("To install: Tap the Share Button (Square with Arrow), then scroll down to 'Add to Home Screen'.");
-        } else {
-            alert("To install: Tap the 3 dots in your browser menu -> Install App.");
-        }
+        alert(isIos ? "Tap Share -> Add to Home Screen" : "Menu -> Install App");
         document.getElementById('installModal').classList.add('hidden');
     }
   }
@@ -391,7 +384,6 @@
             <div id="raceHeader">
                 <div class="rh-left"><img id="rhFlag" src="" class="rh-flag"><div><div id="rhTitle" class="rh-title">RACE</div><div id="rhDate" class="rh-date">DATE</div></div></div>
                 <div class="rh-right-group">
-                    <button class="header-btn hb-setup desk-only-btn" onclick="switchMobileView('rules')">RULES</button>
                     <button id="headerLockBtn" class="header-btn hb-lock" onclick="toggleUserLock()">🔒</button>
                     <button id="headerUnlockBtn" class="header-btn hb-unlock" onclick="toggleUserLock()">🔓</button>
                     <button class="header-btn hb-setup" onclick="changeStrategy()">⚙</button>
@@ -399,46 +391,31 @@
                 </div>
             </div>
             <div class="grid-container"><div id="grid" class="bingo-grid"></div></div>
-            </div>
+        </div>
         
-        <div id="view-standings" class="hidden" style="padding:20px; overflow-y:auto; height:100%;">
+        <div id="view-standings" class="view-scrollable hidden">
             <div class="score-box"><div class="score-val" id="scoreDisplay">0</div><div class="score-lbl">Total Points</div></div>
             <div style="text-align:center; color:#888; font-size:12px;">Leaderboard updating...</div>
         </div>
 
-        <div id="view-rules" class="hidden" style="padding:20px; overflow-y:auto; height:100%;">
-            <div class="rules-card">
-                <div class="rule-step">
-                    <div class="step-num">1</div>
-                    <div class="step-content"><div class="step-title">Select Strategy</div><div class="step-desc">Choose a grid layout that fits your style.</div></div>
-                </div>
-                <div class="rule-step">
-                    <div class="step-num">2</div>
-                    <div class="step-content">
-                        <div class="step-title">Fill The Grid</div>
-                        <div class="step-desc">Tap a slot to open the market and pick a prediction.</div>
-                    </div>
-                </div>
-                <div class="rule-step">
-                    <div class="step-num">3</div>
-                    <div class="step-content"><div class="step-title">Manage Budget</div><div class="step-desc">You have <strong>$100M</strong>. High probability events cost more!</div></div>
-                </div>
-            </div>
-            <div class="rules-card">
-                <div class="step-title" style="margin-bottom:15px; border-bottom:none;">SCORING</div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;"><span>Correct Tile</span><b>10 PTS</b></div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;"><span>Line Bonus</span><b>+30 PTS</b></div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;"><span>4 Corners</span><b>+50 PTS</b></div>
-                <div style="display:flex; justify-content:space-between; font-size:13px;"><span>Full Card</span><b>+100 PTS</b></div>
-            </div>
-            
-            <button class="manual-install-btn" onclick="triggerInstall()">⬇ INSTALL APP</button>
+        <div id="view-rules" class="view-scrollable hidden">
+            <div id="rulesContentMobile"></div> <button class="manual-install-btn" onclick="triggerInstall()">⬇ INSTALL APP</button>
         </div>
     </div>
 
     <div class="panel" id="desktopRightPanel">
-        <div class="tab-header"><div class="tab-btn active">STANDINGS</div></div>
-        <div style="padding:20px;"><div class="score-box"><div class="score-val" id="deskScoreDisplay">0</div><div class="score-lbl">POINTS</div></div></div>
+        <div class="tab-header">
+            <div class="tab-btn active" id="dtTab-standings" onclick="showDesktopTab('standings')">STANDINGS</div>
+            <div class="tab-btn" id="dtTab-rules" onclick="showDesktopTab('rules')">RULES</div>
+        </div>
+        
+        <div id="dt-standings" style="padding:20px;">
+            <div class="score-box"><div class="score-val" id="deskScoreDisplay">0</div><div class="score-lbl">POINTS</div></div>
+        </div>
+        
+        <div id="dt-rules" style="padding:20px; display:none; overflow-y:auto; height:100%;">
+            <div id="rulesContentDesktop"></div>
+        </div>
     </div>
 </div>
 
@@ -476,6 +453,34 @@
         document.getElementById(`view-${view}`).classList.remove('hidden');
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         if(btn) btn.classList.add('active');
+    }
+
+    function showDesktopTab(tab) {
+        document.querySelectorAll('#desktopRightPanel .tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(`dtTab-${tab}`).classList.add('active');
+        document.getElementById('dt-standings').style.display = 'none';
+        document.getElementById('dt-rules').style.display = 'none';
+        document.getElementById(`dt-${tab}`).style.display = 'block';
+    }
+
+    function renderDesktopRules() {
+        // Shared Rules HTML
+        const html = `
+            <div class="rules-card">
+                <div class="rule-step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Strategy</div><div class="step-desc">Pick your grid layout.</div></div></div>
+                <div class="rule-step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Fill Grid</div><div class="step-desc">Tap slots to predict.</div></div></div>
+                <div class="rule-step"><div class="step-num">3</div><div class="step-content"><div class="step-title">$100M Cap</div><div class="step-desc">Manage your budget.</div></div></div>
+            </div>
+            <div class="rules-card">
+                <div class="step-title" style="margin-bottom:15px; border-bottom:none;">SCORING</div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;"><span>Correct Tile</span><b>10 PTS</b></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;"><span>Line Bonus</span><b>+30 PTS</b></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;"><span>4 Corners</span><b>+50 PTS</b></div>
+                <div style="display:flex; justify-content:space-between; font-size:13px;"><span>Full Card</span><b>+100 PTS</b></div>
+            </div>
+        `;
+        document.getElementById('rulesContentMobile').innerHTML = html;
+        document.getElementById('rulesContentDesktop').innerHTML = html;
     }
 
     function showMarketTab(tab) {
@@ -743,28 +748,21 @@
     }
 
     function updateActionButtons() {
-        // Targeted updated header buttons
         const lockBtn = document.getElementById('headerLockBtn');
         const unlockBtn = document.getElementById('headerUnlockBtn');
-        
         const full = currentGrid.every(x=>x);
         
-        // Default hidden
         lockBtn.style.display = 'none';
         unlockBtn.style.display = 'none';
 
         if(isGridLocked) {
-            // If globally locked by time
             document.getElementById('grid').classList.add('grid-locked');
-            // No user buttons shown, just locked state
         } else if(isUserLocked) {
-            // User manually locked it
             document.getElementById('grid').classList.add('grid-locked');
-            unlockBtn.style.display = 'flex'; // Show unlock
+            unlockBtn.style.display = 'flex'; 
         } else {
-            // Unlocked
             document.getElementById('grid').classList.remove('grid-locked');
-            if(full) lockBtn.style.display = 'flex'; // Only show lock if grid is full
+            if(full) lockBtn.style.display = 'flex'; 
         }
     }
 
