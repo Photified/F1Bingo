@@ -108,7 +108,7 @@
         .mini-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; width: 60px; height: 60px; margin-bottom: 10px; opacity: 0.8; } 
         .mg-c { border-radius: 1px; width: 100%; height: 100%; }
 
-        /* MODALS (RESTORED) */
+        /* MODALS */
         #customModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 5000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
         .modal-box { background: white; padding: 25px; border-radius: 15px; width: 85%; max-width: 320px; text-align: center; }
         .btn-modal { padding: 12px 24px; border-radius: 8px; font-weight: 800; cursor: pointer; border: none; margin: 5px; font-size: 14px; }
@@ -139,9 +139,46 @@
         .budget-hud-bar-bg { width: 100%; height: 4px; background: #e0e0e0; margin-top: 4px; border-radius: 3px; }
         .budget-hud-bar-fill { height: 100%; background: #22c55e; width: 50%; border-radius: 3px; transition: 0.3s; }
 
-        /* GRID CONTAINER */
-        .grid-container { flex: 1; padding: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; height: 100%; min-height: 0; position: relative; }
-        .bingo-grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); gap: 8px; height: 100%; max-height: 100%; width: auto; aspect-ratio: 3/4; max-width: 100%; margin: 0 auto; flex-shrink: 1; }
+        /* GRID CONTAINER - THE FIX v3 */
+        .grid-container { 
+            flex: 1; 
+            padding: 10px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            overflow: hidden; 
+            height: 100%; 
+            min-height: 0; 
+            position: relative;
+        }
+        
+        /* THE ACTUAL GRID - FIXED FOR MOBILE & DESKTOP */
+        .bingo-grid { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            grid-template-rows: repeat(3, 1fr); 
+            gap: 8px; 
+            
+            /* Desktop Default: Constrained by Height */
+            height: 100%; 
+            max-height: 100%;
+            width: auto;
+            aspect-ratio: 3/4; 
+            max-width: 100%;
+            margin: 0 auto; 
+            flex-shrink: 1;
+        }
+        
+        /* MOBILE OVERRIDE: Constrained by Width */
+        @media (max-width: 600px) {
+            .bingo-grid {
+                width: 100%;
+                height: auto; /* Allow height to adjust based on width */
+                max-height: 100%; /* prevent overflow */
+            }
+        }
+        
         .slot { background: #fafafa; border: 2px dashed #ddd; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; position: relative; cursor: pointer; user-select: none; transition: 0.2s; text-transform: uppercase; color: #aaa; width: 100%; height: 100%; overflow: hidden; }
         .slot:active { transform: scale(0.98); background: #eee; }
         .slot[data-req="driver"] { background: #fff8e6; border-color: var(--c-driver); color: var(--c-driver); }
@@ -396,7 +433,7 @@
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
 
   // --- FIREBASE CONFIGURATION ---
- const firebaseConfig = {
+  const firebaseConfig = {
   apiKey: "AIzaSyA4tMo0m5HMYVUqpavy1ELkAUNsRd3c9gA",
   authDomain: "f1-pickem-25550.firebaseapp.com",
   projectId: "f1-pickem-25550",
