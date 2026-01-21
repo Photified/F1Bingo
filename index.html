@@ -189,11 +189,16 @@
         .slot.filled[data-type="driver"]::before { border-color: var(--c-driver) transparent transparent transparent; }
         .slot.filled[data-type="team"]::before { border-color: var(--c-team) transparent transparent transparent; }
         .slot.filled[data-type="fia"]::before { border-color: var(--c-fia) transparent transparent transparent; }
+        
         .slot-img-container { width: 100%; height: 60%; display: flex; align-items: flex-end; justify-content: center; background-color: var(--team-color-hex); position: relative; overflow: hidden; }
         .slot-img { z-index: 2; transition: 0.2s; }
         .slot.filled[data-type="driver"] .slot-img { width: 100%; height: 100%; object-fit: cover; object-position: top center; margin-bottom: 0; }
         .slot.filled[data-type="team"] .slot-img { width: 80%; height: auto; max-height: 80%; object-fit: contain; margin-bottom: 5px; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2)); }
-        .slot.filled[data-type="fia"] .slot-img { width: 50%; height: auto; margin-bottom: 20px; filter: brightness(0) invert(1); opacity: 0.8; }
+        
+        /* FIA LOGO FIX: CENTERED & NO MARGIN */
+        .slot.filled[data-type="fia"] .slot-img-container { align-items: center; }
+        .slot.filled[data-type="fia"] .slot-img { width: 50%; height: auto; margin-bottom: 0; filter: brightness(0) invert(1); opacity: 0.8; }
+        
         .slot-price-tag { background: rgba(0,0,0,0.8); color: white; font-size: 9px; font-weight: 900; padding: 2px 6px; border-radius: 12px; position: absolute; bottom: 4px; right: 4px; z-index: 10; border: 1px solid rgba(255,255,255,0.2); }
         .slot-text-container { width: 100%; height: 40%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 2px 4px; background: white; border-top: 1px solid rgba(0,0,0,0.05); }
         .slot-sub { font-size: 7px; text-transform: uppercase; font-weight: 900; color: var(--cat-text-color); margin-bottom: 2px; letter-spacing: 0.5px; opacity: 0.7; }
