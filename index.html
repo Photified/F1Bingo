@@ -58,6 +58,15 @@
         .active-panel { background: white; border-radius: 12px; border: 1px solid #e0e0e0; padding: 0; display: flex; flex-direction: column; overflow: hidden; height: 100%; min-height: 0; position: relative; }
         .view-scrollable { height: 100%; overflow-y: auto; -webkit-overflow-scrolling: touch; }
 
+        /* FILTER TOGGLE (New) */
+        .filter-bar { padding: 10px 15px; background: #fff; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; font-size: 12px; font-weight: 800; color: #555; }
+        .toggle-switch { position: relative; display: inline-block; width: 34px; height: 20px; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 20px; }
+        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--brand-red); }
+        input:checked + .slider:before { transform: translateX(14px); }
+
         /* LOGIN / BUTTONS */
         .view-login { width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 25px; height: 100%; overflow-y: auto; }
         .login-btn-google { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px 24px; background: white; color: #333; border: 1px solid #ccc; font-weight: 700; cursor: pointer; border-radius: 8px; font-size: 16px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); width: 100%; max-width: 300px; transition: 0.2s; }
@@ -71,41 +80,12 @@
         .profile-card { background: white; padding: 40px 25px; border-radius: 15px; text-align: center; box-shadow: var(--card-shadow); width: 100%; max-width: 350px; border: 1px solid #eee; }
         .logout-btn { margin-top: 30px; background: #333; color: white; border: none; padding: 12px 30px; font-weight: 900; border-radius: 8px; cursor: pointer; width: 100%; }
 
-        /* LEADERBOARD (Restored) */
+        /* LEADERBOARD */
         .leaderboard-row { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #eee; background: white; }
         .leaderboard-row:first-child { background: #f9f9f9; border-top: 1px solid #eee; border-radius: 8px 8px 0 0; }
         .lb-rank { width: 40px; font-weight: 900; color: #888; font-style: italic; font-size: 16px; }
         .lb-user { flex: 1; font-weight: 800; font-size: 15px; text-transform: uppercase; color: #222; }
         .lb-pts { font-weight: 900; color: var(--brand-red); width: 60px; text-align: right; font-size: 16px; }
-
-        /* RULES CSS (Restored) */
-        .rules-card { background: white; border: 1px solid #eee; border-radius: 12px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .rule-step { display: flex; gap: 15px; margin-bottom: 20px; align-items: flex-start; }
-        .step-num { flex: 0 0 30px; height: 30px; background: var(--brand-red); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px; }
-        .step-content { flex: 1; }
-        .step-title { font-weight: 900; font-size: 14px; margin-bottom: 5px; text-transform: uppercase; color: #333; }
-        .step-desc { font-size: 13px; color: #666; line-height: 1.4; margin: 0; }
-        .chip-example { display: flex; align-items: center; gap: 10px; margin-top: 5px; background: #f9f9f9; padding: 8px; border-radius: 6px; border: 1px solid #eee; }
-        .ce-text { font-size: 11px; font-weight: 800; color: #333; text-transform: uppercase; }
-
-        /* MOBILE OVERRIDES */
-        @media (max-width: 1024px) {
-            .main-stage { grid-template-columns: 1fr; padding: 10px; padding-bottom: 0 !important; }
-            .panel { display: none; } 
-            .view-scrollable { padding-bottom: 120px !important; }
-            .bingo-grid { padding-bottom: 120px !important; }
-            .panel.mobile-modal { display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; border-radius: 0; animation: slideUp 0.25s ease-out; }
-            .mobile-close-btn { display: block !important; }
-        }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        .mobile-close-btn { display: none; padding: 15px; background: #333; color: white; text-align: center; font-weight: 800; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
-
-        /* MOBILE NAV */
-        .mobile-nav { display: none; position: fixed; bottom: 0; left: 0; width: 100%; height: 75px; background: white; border-top: 1px solid #ddd; z-index: 1000; justify-content: space-around; align-items: center; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); padding-bottom: 15px; }
-        .nav-item { flex: 1; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; color: #888; text-transform: uppercase; cursor: pointer; }
-        .nav-item.active { color: var(--brand-red); background: #fff5f5; }
-        .nav-icon { font-size: 20px; margin-bottom: 2px; }
-        @media (max-width: 1024px) { .mobile-nav { display: flex; } }
 
         /* GAME HEADER & CONTROLS */
         #raceHeader { padding: 10px 15px; background: #fff; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; height: 70px; }
@@ -124,7 +104,7 @@
         .budget-hud-bar-bg { width: 100%; height: 4px; background: #e0e0e0; margin-top: 4px; border-radius: 3px; }
         .budget-hud-bar-fill { height: 100%; background: #22c55e; width: 50%; border-radius: 3px; transition: 0.3s; }
 
-        /* GRID CONTAINER - THE FIX */
+        /* GRID CONTAINER */
         .grid-container { flex: 1; padding: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; height: 100%; min-height: 0; position: relative; }
         .bingo-grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); gap: 8px; height: 100%; max-height: 100%; width: auto; aspect-ratio: 3/4; max-width: 100%; margin: 0 auto; flex-shrink: 1; }
         .slot { background: #fafafa; border: 2px dashed #ddd; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; position: relative; cursor: pointer; user-select: none; transition: 0.2s; text-transform: uppercase; color: #aaa; width: 100%; height: 100%; overflow: hidden; }
@@ -159,11 +139,13 @@
         #tabBtn-teams.active { border-bottom-color: var(--c-team); color: var(--c-team); }
         #tabBtn-fia.active { border-bottom-color: var(--c-fia); color: var(--c-fia); }
         .market-grid-drivers { padding: 15px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; box-sizing: border-box; }
-        .driver-card-market { background: var(--team-color); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 140px; cursor: pointer; position: relative; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+        .driver-card-market { background: var(--team-color); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 140px; cursor: pointer; position: relative; box-shadow: 0 4px 8px rgba(0,0,0,0.15); transition: opacity 0.3s; }
+        .driver-card-market.dimmed { opacity: 0.4; filter: grayscale(1); pointer-events: none; }
         .dcm-img { width: 100%; height: 80%; object-fit: cover; object-position: top center; margin-bottom: 0; z-index: 1; filter: drop-shadow(0 0 5px rgba(0,0,0,0.2)); margin-top: 30px; }
         .dcm-name { width: 100%; background: rgba(20,20,30,0.9); color: white; font-size: 9px; font-weight: 800; text-align: center; padding: 5px 2px; z-index: 2; text-transform: uppercase; line-height: 1; }
         .market-list-teams { padding: 15px; display: flex; flex-direction: column; gap: 10px; }
-        .team-card-market { width: 100%; height: 90px; background: white; border-radius: 8px; border: 1px solid #eee; border-left: 8px solid var(--team-color); display: flex; align-items: center; justify-content: space-between; padding: 0 15px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .team-card-market { width: 100%; height: 90px; background: white; border-radius: 8px; border: 1px solid #eee; border-left: 8px solid var(--team-color); display: flex; align-items: center; justify-content: space-between; padding: 0 15px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: opacity 0.3s; }
+        .team-card-market.dimmed { opacity: 0.4; filter: grayscale(1); pointer-events: none; }
         .tcm-name { font-size: 16px; font-weight: 900; text-transform: uppercase; color: #333; }
         .tcm-img { height: 100%; width: 120px; object-fit: contain; object-position: center; }
         .market-detail-view { display: none; flex-direction: column; height: 100%; background: #f4f4f8; }
@@ -173,7 +155,7 @@
         .prediction-list { padding: 15px; overflow-y: auto; }
         .prediction-btn { background: white; border-radius: 8px; overflow: hidden; display: flex; height: 55px; margin-bottom: 10px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid #ddd; transition: 0.2s; }
         .prediction-btn:active { transform: scale(0.98); }
-        .prediction-btn.unaffordable { opacity: 0.7; filter: grayscale(0.8); }
+        .prediction-btn.unaffordable { opacity: 0.4; filter: grayscale(1); pointer-events: none; }
         .pb-left { width: 55px; background: var(--team-color); display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .pb-img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
         .prediction-btn.team-mode .pb-left { width: 80px; } 
@@ -184,34 +166,16 @@
         .pb-cost { background: #333; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 900; }
         .prediction-btn.unaffordable .pb-cost { background: #ef4444; color: white; } 
 
-        /* STRATEGY & MODALS */
-        .view-strategy { text-align: center; width: 100%; display: flex; flex-direction: column; align-items: center; height: 100%; padding: 20px; overflow-y: auto; }
-        .strategy-header-container { margin-top: 20px; margin-bottom: 30px; display: flex; flex-direction: column; align-items: center; gap: 5px; }
-        .big-flag { width: 100px; height: auto; border-radius: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 10px; }
-        .strat-race-name { font-size: 32px; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 1; color: var(--brand-dark); }
-        .strat-race-date { font-size: 16px; font-weight: 700; color: #888; text-transform: uppercase; margin-bottom: 10px; }
-        .strat-sub { color: #888; font-size: 11px; font-weight: 800; letter-spacing: 1px; }
-        .strat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-width: 500px; width: 100%; }
-        .strat-card { background: #fff; border: 2px solid #eee; border-radius: 12px; padding: 20px; cursor: pointer; display: flex; flex-direction: column; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .mini-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; width: 60px; height: 60px; margin-bottom: 10px; opacity: 0.8; } .mg-c { border-radius: 1px; }
-        
-        #customModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 5000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
-        .modal-box { background: white; padding: 25px; border-radius: 15px; width: 85%; max-width: 320px; text-align: center; }
-        .btn-modal { padding: 12px 24px; border-radius: 8px; font-weight: 800; cursor: pointer; border: none; margin: 5px; font-size: 14px; }
-        .btn-confirm { background: var(--brand-red); color: white; }
-        .btn-cancel { background: #eee; color: #333; }
-        
-        #installModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
-        .install-box { background: white; width: 85%; max-width: 320px; border-radius: 16px; padding: 30px 20px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
-        .install-icon { width: 60px; height: 60px; background: #e10600; border-radius: 12px; margin: 0 auto 15px auto; display: flex; align-items: center; justify-content: center; color: white; font-size: 30px; font-weight: bold; }
-        .install-btn { width: 100%; padding: 14px; background: #22c55e; color: white; border: none; border-radius: 8px; font-weight: 900; font-size: 14px; margin-top: 15px; cursor: pointer; box-shadow: 0 4px 10px rgba(34, 197, 94, 0.3); }
-        .install-dismiss { width: 100%; padding: 12px; background: transparent; color: #888; border: none; font-weight: 700; font-size: 12px; margin-top: 5px; cursor: pointer; }
-        .manual-install-btn { display: none; width: 100%; padding: 14px; background: #333; color: white; border: none; border-radius: 8px; font-weight: 900; font-size: 14px; margin-top: 20px; cursor: pointer; }
+        /* RULES & LEADERBOARD STYLES */
+        .rules-card { background: white; border: 1px solid #eee; border-radius: 12px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .rule-step { display: flex; gap: 15px; margin-bottom: 20px; align-items: flex-start; }
+        .step-num { flex: 0 0 30px; height: 30px; background: var(--brand-red); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px; }
+        .step-content { flex: 1; }
+        .step-title { font-weight: 900; font-size: 14px; margin-bottom: 5px; text-transform: uppercase; color: #333; }
+        .step-desc { font-size: 13px; color: #666; line-height: 1.4; margin: 0; }
+        .chip-example { display: flex; align-items: center; gap: 10px; margin-top: 5px; background: #f9f9f9; padding: 8px; border-radius: 6px; border: 1px solid #eee; }
+        .ce-text { font-size: 11px; font-weight: 800; color: #333; text-transform: uppercase; }
 
-        .score-box { text-align: center; margin-bottom: 20px; padding: 25px; background: #fff; border-radius: 12px; border: 1px solid #eee; box-shadow: var(--card-shadow); }
-        .score-val { font-size: 42px; font-weight: 900; color: var(--brand-dark); line-height: 1; }
-        .score-lbl { font-size: 12px; font-weight: 700; color: #888; text-transform: uppercase; margin-top: 5px; letter-spacing: 1px; }
-        
         /* MOBILE OVERRIDES */
         @media (max-width: 1024px) {
             .main-stage { grid-template-columns: 1fr; padding: 10px; padding-bottom: 0 !important; }
@@ -273,6 +237,15 @@
     
     <div class="panel" id="marketPanel">
         <div class="mobile-close-btn" onclick="closeMobileMarket()">CLOSE MARKET ×</div>
+        
+        <div class="filter-bar">
+            <span>AFFORDABLE ONLY</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="budgetFilterToggle" onchange="applyBudgetFilter()">
+                <span class="slider"></span>
+            </label>
+        </div>
+
         <div class="tab-header" id="marketTabs">
             <div class="tab-btn active" id="tabBtn-drivers" onclick="showMarketTab('drivers')">DRIVERS</div>
             <div class="tab-btn" id="tabBtn-teams" onclick="showMarketTab('teams')">TEAMS</div>
@@ -559,6 +532,7 @@
         } else {
             document.getElementById('fia-root').style.display = 'block';
         }
+        applyBudgetFilter(); // Re-apply filter when tab changes
   }
 
   // --- FIREBASE AUTH & DATA LOGIC ---
@@ -720,6 +694,7 @@
   function createDriverCard(d) {
         const div = document.createElement('div');
         div.className = 'driver-card-market';
+        div.dataset.price = d.price || 0; // Store price for filtering
         div.style.setProperty('--team-color', d.color);
         div.innerHTML = `<img src="${d.img}" class="dcm-img"><div class="dcm-name">${d.name}</div>`;
         div.onclick = () => openDrillDown(d, 'driver');
@@ -729,6 +704,7 @@
   function createTeamCard(t) {
         const div = document.createElement('div');
         div.className = 'team-card-market';
+        div.dataset.price = t.price || 0; // Store price for filtering
         div.style.setProperty('--team-color', t.color);
         // FORCE CAR IMAGE IN MARKET
         const carImg = t.img.replace('team_', 'car_');
@@ -796,6 +772,42 @@
         `;
         div.onclick = () => fillSlot(`${displayOwner} ${text}`, type, cost, dName, sub);
         return div;
+  }
+  
+  // NEW BUDGET FILTER LOGIC
+  function applyBudgetFilter() {
+      const isAffordableOnly = document.getElementById('budgetFilterToggle').checked;
+      const currentSpent = currentGrid ? currentGrid.reduce((sum, item) => sum + (item ? item.cost : 0), 0) : 0;
+      const remaining = BUDGET_CAP - currentSpent;
+
+      // Filter Drivers
+      document.querySelectorAll('.driver-card-market').forEach(card => {
+          const price = parseInt(card.dataset.price || 0);
+          // Base cost is 15M minimum for any driver bet usually, so if they have < 15M left, many drivers are out.
+          // But exact cost depends on sub-bets. Here we just grey out if base price > remaining (simple logic)
+          // Better logic: grey out if (price + 5) > remaining (cheapest bet is usually +5)
+          if (price + 5 > remaining) {
+              card.classList.add('dimmed');
+              if (isAffordableOnly) card.style.display = 'none';
+              else card.style.display = 'flex';
+          } else {
+              card.classList.remove('dimmed');
+              card.style.display = 'flex';
+          }
+      });
+      
+      // Filter Teams
+      document.querySelectorAll('.team-card-market').forEach(card => {
+          const price = parseInt(card.dataset.price || 0);
+          if (price + 5 > remaining) {
+               card.classList.add('dimmed');
+               if (isAffordableOnly) card.style.display = 'none';
+               else card.style.display = 'flex';
+          } else {
+               card.classList.remove('dimmed');
+               card.style.display = 'flex';
+          }
+      });
   }
 
   function confirmStrategy(type) {
@@ -977,6 +989,8 @@
         const c = rem < 0 ? '#e10600' : '#22c55e';
         document.getElementById('hudBudgetVal').style.color = c;
         document.getElementById('hudBudgetBar').style.backgroundColor = c;
+        
+        applyBudgetFilter(); // Update filter when budget changes
   }
 
   let mCb;
