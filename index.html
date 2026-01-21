@@ -448,7 +448,7 @@
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
 
   // --- FIREBASE CONFIGURATION ---
- const firebaseConfig = {
+  const firebaseConfig = {
   apiKey: "AIzaSyA4tMo0m5HMYVUqpavy1ELkAUNsRd3c9gA",
   authDomain: "f1-pickem-25550.firebaseapp.com",
   projectId: "f1-pickem-25550",
@@ -772,7 +772,7 @@
         const div = document.createElement('div');
         div.className = 'driver-card-market';
         div.dataset.price = d.price || 0; // Store price for filtering
-        div.dataset.name = d.name; // Tag for duplicate checking
+        div.dataset.name = d.name; // Tag for selection filtering
         div.style.setProperty('--team-color', d.color);
         div.innerHTML = `<img src="${d.img}" class="dcm-img"><div class="dcm-name">${d.name}</div>`;
         div.onclick = () => openDrillDown(d, 'driver');
@@ -783,7 +783,7 @@
         const div = document.createElement('div');
         div.className = 'team-card-market';
         div.dataset.price = t.price || 0; // Store price for filtering
-        div.dataset.name = t.name; // Tag for duplicate checking
+        div.dataset.name = t.name; // Tag for selection filtering
         div.style.setProperty('--team-color', t.color);
         // FORCE CAR IMAGE IN MARKET
         const carImg = t.img.replace('team_', 'car_');
@@ -844,6 +844,11 @@
         } else { isFia = true; } 
 
         div.className = `prediction-btn ${isTeam ? 'team-mode' : ''} ${isExpensive ? 'unaffordable' : ''}`;
+        
+        // Metadata for filtering
+        div.dataset.price = cost;
+        div.dataset.name = text;
+        div.dataset.owner = displayOwner;
 
         div.innerHTML = `
             <div class="pb-left ${isFia?'fia-bg':''}" style="background:${col}"><img src="${img}" class="pb-img"></div>
@@ -861,6 +866,7 @@
       
       // Get list of selected names from grid
       const selectedNames = currentGrid.filter(s => s).map(s => s.driver);
+      const selectedTexts = currentGrid.filter(s => s).map(s => s.text);
 
       // Filter Drivers
       document.querySelectorAll('.driver-card-market').forEach(card => {
@@ -893,6 +899,22 @@
                card.style.display = 'flex';
           }
       });
+
+      // Filter FIA
+        document.querySelectorAll('#fia-root .prediction-btn').forEach(btn => {
+            const price = parseInt(btn.dataset.price || 0);
+            const fullName = `${btn.dataset.owner} ${btn.dataset.name}`;
+            const isSelected = selectedTexts.includes(fullName);
+
+            if (price > remaining || isSelected) {
+                btn.classList.add('unaffordable'); // Reuse existing class for dimming
+                if (isAffordableOnly && !isSelected) btn.style.display = 'none';
+                else btn.style.display = 'flex';
+            } else {
+                btn.classList.remove('unaffordable');
+                btn.style.display = 'flex';
+            }
+        });
   }
 
   function confirmStrategy(type) {
