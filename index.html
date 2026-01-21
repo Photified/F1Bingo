@@ -448,13 +448,13 @@
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
 
   // --- FIREBASE CONFIGURATION ---
-  const firebaseConfig = {
-      apiKey: "AIzaSyA4tMo0m5HMYVUqpavy1ELkAUNsRd3c9gA",
-      authDomain: "f1-pickem-25550.firebaseapp.com",
-      projectId: "f1-pickem-25550",
-      storageBucket: "f1-pickem-25550.firebasestorage.app",
-      messagingSenderId: "698392572260",
-      appId: "1:698392572260:web:0ffda4c77e17d2a4f50a71"
+ const firebaseConfig = {
+  apiKey: "AIzaSyA4tMo0m5HMYVUqpavy1ELkAUNsRd3c9gA",
+  authDomain: "f1-pickem-25550.firebaseapp.com",
+  projectId: "f1-pickem-25550",
+  storageBucket: "f1-pickem-25550.firebasestorage.app",
+  messagingSenderId: "698392572260",
+  appId: "1:698392572260:web:0ffda4c77e17d2a4f50a71"
   };
   // ------------------------------
 
@@ -772,6 +772,7 @@
         const div = document.createElement('div');
         div.className = 'driver-card-market';
         div.dataset.price = d.price || 0; // Store price for filtering
+        div.dataset.name = d.name; // Tag for duplicate checking
         div.style.setProperty('--team-color', d.color);
         div.innerHTML = `<img src="${d.img}" class="dcm-img"><div class="dcm-name">${d.name}</div>`;
         div.onclick = () => openDrillDown(d, 'driver');
@@ -782,6 +783,7 @@
         const div = document.createElement('div');
         div.className = 'team-card-market';
         div.dataset.price = t.price || 0; // Store price for filtering
+        div.dataset.name = t.name; // Tag for duplicate checking
         div.style.setProperty('--team-color', t.color);
         // FORCE CAR IMAGE IN MARKET
         const carImg = t.img.replace('team_', 'car_');
@@ -856,13 +858,19 @@
       const isAffordableOnly = document.getElementById('budgetFilterToggle').checked;
       const currentSpent = currentGrid ? currentGrid.reduce((sum, item) => sum + (item ? item.cost : 0), 0) : 0;
       const remaining = BUDGET_CAP - currentSpent;
+      
+      // Get list of selected names from grid
+      const selectedNames = currentGrid.filter(s => s).map(s => s.driver);
 
       // Filter Drivers
       document.querySelectorAll('.driver-card-market').forEach(card => {
           const price = parseInt(card.dataset.price || 0);
-          if (price + 5 > remaining) {
+          const name = card.dataset.name;
+          const isSelected = selectedNames.includes(name);
+          
+          if (price + 5 > remaining || isSelected) {
               card.classList.add('dimmed');
-              if (isAffordableOnly) card.style.display = 'none';
+              if (isAffordableOnly && !isSelected) card.style.display = 'none'; // Keep selected visible but dimmed
               else card.style.display = 'flex';
           } else {
               card.classList.remove('dimmed');
@@ -873,9 +881,12 @@
       // Filter Teams
       document.querySelectorAll('.team-card-market').forEach(card => {
           const price = parseInt(card.dataset.price || 0);
-          if (price + 5 > remaining) {
+          const name = card.dataset.name;
+          const isSelected = selectedNames.includes(name);
+
+          if (price + 5 > remaining || isSelected) {
                card.classList.add('dimmed');
-               if (isAffordableOnly) card.style.display = 'none';
+               if (isAffordableOnly && !isSelected) card.style.display = 'none';
                else card.style.display = 'flex';
           } else {
                card.classList.remove('dimmed');
